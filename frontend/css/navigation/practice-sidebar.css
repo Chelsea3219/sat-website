@@ -1,0 +1,114 @@
+
+.sidebar{
+    width: 100%;
+    max-width: 380px;
+    margin:0;
+    flex-shrink: 0;
+    overflow-y: auto;        /* ← scroll inside sidebar only */
+    height:100%;  /* ← contained height */
+    border: 3px solid #6256e3;
+    border-radius: 1.5rem;
+    background-color:#d6dbf5;
+    transition: background-color 0.2s ease, padding-left 0.2s ease;
+}
+
+
+.sidebar-item{
+    cursor: pointer;
+    position: relative;
+    padding: .30em 1rem;
+    display: block;
+    border-radius: 5px;
+    transform-origin: left;
+    transition: transform 0.2s ease;
+    margin-bottom: 0.15rem;
+}
+
+
+
+.sidebar-title{
+    display: flex;
+    font-size: 1.3rem;
+    align-items: center;
+    font-weight: 800; /* font-medium */
+    color: #6256e3;
+    text-transform: uppercase;
+    letter-spacing: 0.10rem;
+}
+
+.sidebar-subtitle{
+    display: flex;
+    font-size: 0.90rem;
+    align-items: center;
+    font-weight: 600; /* font-medium */
+    color: #1e293b;
+    letter-spacing: 0.030rem;
+}
+
+.sidebar-leaf {
+    padding: .2em 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .15s;
+    font-size: 0.80rem;
+}
+
+.sidebar-title span i{
+    display: inline-block;
+    width: 1.5em;
+}
+
+.sidebar-content{
+    padding-top: .25em;
+    height: 0;
+    text-transform: lowercase;
+    letter-spacing: 0.025rem;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+    background: #6256e3;
+    border-radius: 999px;
+}
+
+
+.profile-sidebar-header {
+    display: block;
+    margin-bottom: 1.5px;
+    font-size: 1rem; 
+    font-weight: 700;
+    color: var(--color-primary) /* #94a3b8 */;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+
+.profile-sidebar-subheader {
+    display: block;
+    margin-bottom: 1px;
+    margin-left: 20px;
+    font-size: 0.8rem;
+    font-weight: 500; 
+    color: var(--color-main);
+    letter-spacing: 0.05rem;
+    cursor: pointer;
+}
+
+
+.profile-sidebar-subheader:hover, 
+.profile-sidebar-header:hover, 
+.profile-sidebar-header.active,
+.profile-sidebar-subheader.active{
+    font-weight: 700; 
+    color: var(--color-accent);
+    transform-origin: center;
+    transition: transform 0.2s ease;
+    transform: scale(1.10);
+}

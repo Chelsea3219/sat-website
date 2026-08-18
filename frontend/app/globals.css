@@ -1,0 +1,63 @@
+@layer theme, base, clerk, components, utilities;
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-primary: #6256e3;
+  --color-secondary: #d6dbf5;
+  --color-accent: #f59e0b;
+  --color-main: #0f172a;
+  --color-coolwhite:#FAFAFE
+
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  padding: var(--main-padding);
+}
+
+.rounded-btn {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 20px 20px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight:600;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s; 
+}
+
+
+.rounded-btn:hover {
+    background-color: var(--color-accent);
+    color: #ffffff;
+    border: 3px var(--color-accent);
+    transform: scale(1.10);
+}
+.rounded-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+

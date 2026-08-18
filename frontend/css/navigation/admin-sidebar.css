@@ -1,0 +1,29 @@
+
+
+.admin-topics header {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1rem; /* text-sm */
+    font-weight: 700; /* font-medium */
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+.subsection {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.775rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: var(--color-main);
+    letter-spacing: 0.05rem;
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.subsection:hover {
+    color: var(--color-accent);
+    transform: scale(1.1);
+    font-weight: 600;
+}
+

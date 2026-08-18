@@ -1,0 +1,33 @@
+# --- Environment secrets ---
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+
+# --- Node / Next.js (frontend) ---
+node_modules/
+.next/
+out/
+next-env.d.ts
+npm-debug.log*
+
+# --- Python (backend) ---
+__pycache__/
+*.pyc
+*.pyo
+backend-venv/
+.venv/
+*.egg-info/
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- Editor/IDE ---
+.vscode/
+.idea/
+
+# --- Build artifacts ---
+dist/
+build/

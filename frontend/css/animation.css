@@ -1,0 +1,14 @@
+@keyframes arrow-pulse {
+    0%, 100% {
+        opacity: 0.4;
+        transform: translateX(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(4px);
+    }
+}
+
+.arrow-flow {
+    animation: arrow-pulse 1.8s ease-in-out infinite;
+}
