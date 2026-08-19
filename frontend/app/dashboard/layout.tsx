@@ -11,13 +11,12 @@ export default async function DashboardLayout({children}: {children: React.React
             <DashboardNavbar />
 
             {/* Main Section */}
-            <main className="flex-1 pt-18 w-full">  
-                <div className='flex items-center justify-center'>
+            <main className="flex-1 pt-20 w-full">  
+                <div className='flex items-center justify-center max-w-5xl mx-auto'>
                     {children}
                 </div>
             </main>
             
-                                
         </div>
     );
 }
