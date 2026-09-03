@@ -12,8 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from app.domains.errors.router import general_http_exception_handler, validation_exception_handler
 from app.domains.admin.routers import marketing
 from app.domains.students.routers import register
-#from api import register, errors, landing
-#from api.admin import questions
+from app.domains.questions.routers import quiz_questions
 #from api.dashboard import practice, quiz, progress, profile, dashboard
 
 # Configuration
@@ -38,7 +37,8 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 # API ROUTES -----------------------------------------------------------------------------------------------------------
 app.include_router(marketing.router)
 app.include_router(register.router)
-#app.include_router(register.router)
+app.include_router(quiz_questions.router)
+
 #app.include_router(questions.router)
 #app.include_router(practice.router)
 #app.include_router(quiz.router)
