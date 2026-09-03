@@ -7,6 +7,7 @@ from html import escape # prevents the browser from intepreting user data or raw
 
 from app.core.database import get_db
 from app.core.config import settings
+from app.domains.errors.error_handler import handle_db_errors
 from app.models.bronze import ContactMessages
 from app.schemas.marketing import ContactUsForm
 
@@ -19,29 +20,18 @@ router = APIRouter(prefix="/api/landing", tags=["landing"])
 async def upload_contact_form(payload:ContactUsForm, db: Session = Depends(get_db) ):
 
     # Adds the message to the bronze schema
-    try:
-        message = ContactMessages(
-            full_name = payload.full_name,
-            email = payload.email,
-            role = payload.role, 
-            subject = payload.subject, 
-            message = payload.message, 
-            sent_at = func.now()
-        )
+    message = ContactMessages(
+        full_name = payload.full_name,
+        email = payload.email,
+        role = payload.role, 
+        subject = payload.subject, 
+        message = payload.message, 
+        sent_at = func.now()
+    )
+    with handle_db_errors(db, context="saving contact message"):
         db.add(message)
         db.commit()
-    except IntegrityError as e:
-        db.rollback()
-        logger.error(f"Database integrity error: {str(e)}")
-        raise HTTPException(status_code=400, detail="Invalid contact form data.")
-    except SQLAlchemyError:
-        db.rollback()
-        logger.exception("Database error while saving contact message")
-        raise HTTPException(status_code=500, detail="Unable to save your message.")
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Error uploading and sending the message: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+
     
     # Send the email to the business email 
     try:
