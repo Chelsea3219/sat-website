@@ -44,6 +44,6 @@ def fetch_questions(clerk_id: str, section: str, db=Depends(get_db)) -> List[Inc
     if mastery_data["max_score"] == 0:
         questions = fetch_assessment_questions(section, proficiency, questions)
     else:
-        questions = fetch_adaptive_questions(section, proficiency, questions)
+        questions = fetch_adaptive_questions(section, questions, weak_subtopics)
     return questions
 

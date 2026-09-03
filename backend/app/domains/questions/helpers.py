@@ -12,13 +12,16 @@ question_distribution = {
 }
 
 
-# Question Classification based on subtopics -------------------------------------------------------------------------------------------
-categorized_subtopics = {
-    "algebra": ["linear functions", "interpreting linear functions", "systems of equations"],
-    "advanced math": ["exponents", "quadratic equations", "systems of equations"],
-    "problem solving & data analysis": ["percents", "statistical analysis", "mean/median/range/mode", "ratios & proportions"],
-    "geometry & trigonometry":["angles", "shapes", "similar triangles", "trigonometry", "circle equation"]
-}
+# Mastery Score Classfication ----------------------------------------------------------------------------------------------------------
+def mastery_score_to_difficulty(mastery_score):
+    if mastery_score < 60: # ~500/800
+        difficulty = "easy"
+    elif mastery_score > 61 and mastery_score < 90: # between 510 and 720
+        difficulty = "medium"
+    else: 
+        difficulty = "hard"
+
+    return difficulty
 
 
 # Determines section's proficiency based on original score -----------------------------------------------------------------------------
@@ -76,15 +79,3 @@ def check_questions_distribution(questions):
 
     return question_spread
 
-
-# Organizes the subtopics based on topic
-categorized_subtopics = {
-    "algebra": ["linear functions", "interpreting linear functions", "systems of equations"],
-    "advanced_math": ["exponents", "quadratic equations", "systems of equations"],
-    "problem solving & data analysis": ["percents", "statistical analysis", "mean/median/range/mode", "ratios & proportions"],
-    "geometry & trigonometry":["angles", "shapes", "similar triangles", "trigonometry", "circle equation"]
-}
-
-def organize_subtopics(weak_subtopics):
-    organized_list = {i: [] for i in topics}
-    
