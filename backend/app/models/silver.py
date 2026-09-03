@@ -39,3 +39,30 @@ class TestScores(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
 
+
+class SilverQuestions(Base):
+    __tablename__ = "silver_questions"
+    __table_args__ = {"schema": "silver"}
+
+    question_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    section = Column(String, nullable=False)
+    topic = Column(String, nullable=False)
+    subtopic = Column(JSONB, nullable=False)
+
+    difficulty = Column(String, nullable=False)
+    time_estimate = Column(Integer)
+
+    question_preview = Column(Text, nullable=False)
+    question_type = Column(String, nullable=False)
+    mc_preview = Column(Text, nullable=True)
+
+    text = Column(Text, nullable=False)
+    equation = Column(Text)
+    diagram = Column(Text)
+
+    multiple_choices = Column(JSONB)
+    answer_key = Column(JSONB, nullable=False)
+
+    updated_at = Column(Date, nullable=False)
+    answer_active = Column(Boolean, nullable=False)
+

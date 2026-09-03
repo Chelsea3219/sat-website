@@ -40,3 +40,24 @@ class ContactMessages(Base):
     subject = Column(String, nullable=False)
     message = Column(String, nullable=False)
     sent_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+
+
+class BronzeQuestions(Base):
+    __tablename__ = "bronze_questions"
+    __table_args__ = {"schema": "bronze"}
+
+
+    question_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    section = Column(String, nullable=False)
+    topic = Column(String, nullable=False)
+    subtopic = Column(String, nullable=False)
+
+    question_preview = Column(String, nullable=False)
+    question_type = Column(String, nullable=False)
+    mc_preview = Column(String, nullable=True)
+    text = Column(String, nullable=False)
+
+    uploaded_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    source = Column(String, nullable=False)
+    reviewed = Column(Boolean, nullable=False)
