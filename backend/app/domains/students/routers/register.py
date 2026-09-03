@@ -7,8 +7,9 @@ from helpers import logger
 from app.core.database import get_db
 from app.models.bronze import BronzeUsers
 from app.models.silver import SilverUsers, TestScores
+from app.models.gold import UserAnalytics
 from app.schemas.students import RegisterStudents
-
+from app.domains.questions.helpers import reading_topics, math_topics
 
 router = APIRouter(prefix="/api", tags=["students"])
 
@@ -54,6 +55,28 @@ async def register_students(payload: RegisterStudents, db: Session=Depends(get_d
                 updated_at= func.now()
             )
             db.add(silver_student)
+
+            # Initializes the student's analytics in UserAnalytics
+            initial_mastery_score = {
+                "raw_score": 0, 
+                "max_score": 0,
+                "mastery_score": 0
+            }
+            user_analytics = UserAnalytics(
+                clerk_id = payload.clerk_id,
+                type = "initial", 
+                topic = "overall",
+                reading_mastery = initial_mastery_score,
+                reading_topics_mastery = {i: initial_mastery_score for i in reading_topics},
+                math_mastery = initial_mastery_score,
+                math_topics_mastery = {i: initial_mastery_score for i in math_topics},
+                weak_subtopics = {
+                    "reading": {},
+                    "math": {}
+                },
+                completed_at = func.now()
+            )
+            db.add(user_analytics)
 
             # Adds student's test_score to TestScores
             test_score = TestScores(

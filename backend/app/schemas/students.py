@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import Literal, Optional
+from typing import Literal, Optional, Dict 
 from datetime import date
 
 class OriginalScore(BaseModel):
@@ -11,7 +11,8 @@ class LearningTargets(BaseModel):
     daily_goal: int
     weekly_goal: int
 
-class RegisterStudents(BaseModel):
+# student base for bronze and silver users
+class StudentBase(BaseModel):
     clerk_id: str
     first_name: str 
     last_name: str
@@ -27,4 +28,24 @@ class RegisterStudents(BaseModel):
 
     subscription: str
     learning_targets: LearningTargets
+
+
+class RegisterStudents(StudentBase):
     referral: str
+
+
+class IncomingStudentInfo(StudentBase):
+    updated_at: str 
+
+
+class IncomingStudentAnalytics(BaseModel):
+    session_id: str
+    clerk_id: str
+    type: str
+    topic: str 
+    reading_mastery: Dict[str, int]
+    reading_topics_mastery: Dict[str, Dict[str, int]]
+    math_mastery: Dict[str, int]
+    math_topics_mastery: Dict[str, Dict[str, int]]
+    weak_subtopics: Dict[str, Dict]
+    completed_at: str 
