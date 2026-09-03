@@ -64,8 +64,8 @@ export default function Testimonials({testimonials}: CardProps) {
                 rounded-2xl shadow-xl p-8 text-white cursor-pointer select-none border-4 border-primary
                 transition-all duration-300 flex flex-col justify-between
                 ${isMiddle 
-                  ? 'w-[1000px] h-[600px] scale-100 z-20 shadow-2xl opacity-100 bg-white' 
-                  : 'w-[300px] h-[600px] scale-75 z-15 bg-primary/60 hover:bg-accent/80 hover:border-accent'
+                  ? 'w-150 h-90 scale-100 z-20 shadow-2xl opacity-100 bg-white' 
+                  : 'w-50 h-90 scale-75 z-15 bg-primary/60 hover:bg-accent/80 hover:border-accent'
                 }
               `}
             >

@@ -1,7 +1,5 @@
 import QuizClient from "@/components/dashboard/QuizClient"
-import * as sea from "node:sea"
 
-type Tab = "Reading" | "Math"
 type PageProps = {
     params: Promise<{section: string}>
 }

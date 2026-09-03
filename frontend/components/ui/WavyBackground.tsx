@@ -7,7 +7,7 @@ export default function WavyBackground() {
 
             {/* Decorative waves */}
             <svg
-                className="absolute top-0 left-0 w-full h-[350px]
+                className="absolute top-0 left-0 w-full h-50
                 "
                 viewBox="0 0 1440 250"
                 preserveAspectRatio="none"
