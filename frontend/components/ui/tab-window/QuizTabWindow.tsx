@@ -11,14 +11,14 @@ import ReadingQuestionTab from "./ReadingQuestionTab";
 type TabWindowProps = {
     section: string
     activeTab: "Reading" | "Math"
-    currentQuestion: Question
     progress: {
         completedQuestions: number
         numQuestions: number
     }
+    questionTabProps : QuestionTabProps
 }
 
-export default function QuizTabWindow({section, activeTab, currentQuestion, progress}: TabWindowProps) {
+export default function QuizTabWindow({section, activeTab, progress, questionTabProps}: TabWindowProps) {
     return (
         <>
             <div className="tab-window h-full flex flex-col">
@@ -66,8 +66,10 @@ export default function QuizTabWindow({section, activeTab, currentQuestion, prog
                     {activeTab === "Reading" && <ReadingQuestionTab/>}
                     {activeTab === "Math" &&
                         <div className="flex-1 overflow-y-auto scrollbar-thin">
-                            <MathQuestionTab/>
-                            {currentQuestion.text}
+                            <MathQuestionTab
+                                currentQuestion={questionTabProps.currentQuestion}
+                                timeElapsed={questionTabProps.timeElapsed}
+                        />
                         </div>
                     }
                 </div>

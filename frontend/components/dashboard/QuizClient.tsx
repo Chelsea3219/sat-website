@@ -1,3 +1,4 @@
+import { QuestionTabProps } from "@/types/questions"
 import QuizTabWindow from "../ui/tab-window/QuizTabWindow"
 import { sampleQuestions } from "../ui/tab-window/sampleQuestionSet"
 
@@ -10,7 +11,10 @@ type TabWindowProps = {
 export default function QuizClient({section, activeTab}: TabWindowProps) {
 
     // Sample Question
-    const sampleQuestion = sampleQuestions[1]
+    const questionTabProps : QuestionTabProps = {
+        currentQuestion: sampleQuestions[1],
+        timeElapsed: 0
+    }
     const progress = {
         completedQuestions: 1,
         numQuestions: 4
@@ -24,8 +28,8 @@ export default function QuizClient({section, activeTab}: TabWindowProps) {
                 <QuizTabWindow
                     section={section}
                     activeTab={activeTab}
-                    currentQuestion={sampleQuestion}
                     progress= {progress}
+                    questionTabProps={questionTabProps}
                     />
             </div>
         </>
