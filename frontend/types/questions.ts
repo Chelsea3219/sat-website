@@ -31,12 +31,8 @@ export type StudentAnswer = {
 
 
 export type QuestionTabProps = {
-    question: Question
-    answer: string
-    fieldChangeAction: (field: keyof StudentAnswer, value: string) => void // Adds the questions to the answerForm to later analyze
-    timeElasped: number
-    checkAnswerAction: () => void
-    numAttempts?: number
-    error: string
-}
+    currentQuestion: Question
+    timeElapsed: number
 
+
+}

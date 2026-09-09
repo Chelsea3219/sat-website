@@ -23,3 +23,83 @@ export type UserRegistration = {
         weekly_goal: number
     }
 }
+
+export type StudentInfo = {
+    clerk_id: string
+    first_name: string
+    last_name: string
+    email: string
+
+    school: string
+    state: string
+    grade_level: string
+    original_score: OriginalScore
+    dream_score: number
+    test_date: string
+
+    subscription: "free" | "starter" | "advanced"
+    referral: string
+    learning_targets: {
+        daily_goal: number
+        weekly_goal: number
+    }
+    updated_at: string 
+}
+
+export type OriginalScore = {
+    original_score: number
+    reading_score: number
+    math_score: number
+}
+
+export type TestScores = {
+    id: string 
+    clerk_id: string 
+    current_score: OriginalScore
+    dream_score: number
+    type: string
+    test_date: string
+    created_at: string 
+}
+
+type MasteryScore = {
+    max_score: number
+    raw_score: number
+    mastery_score: number
+}
+
+type ReadingTopicsMastery = {
+    "craft & structure": MasteryScore
+    "expression of ideas": MasteryScore
+    "information & ideas": MasteryScore
+    "standard english conventions": MasteryScore
+}
+
+type MathTopicsMastery = {
+    "algebra": MasteryScore
+    "advanced math": MasteryScore
+    "geometry & trigonometry": MasteryScore
+    "problem solving & data analysis": MasteryScore
+}
+
+export type StudentAnalytics = {
+    session_id: string
+    clerk_id: string
+    type: string
+    topic: string 
+    reading_mastery: MasteryScore
+    reading_topics_mastery: ReadingTopicsMastery
+    math_mastery: MasteryScore
+    math_topics_mastery: MathTopicsMastery
+    weak_subtopics: {
+        math: Record<string, unknown>
+        reading: Record<string, unknown>
+    }
+    completed_at: string
+}
+
+export type IncomingStudentInformation = {
+    student_info: StudentInfo
+    test_scores: TestScores
+    student_analytics: StudentAnalytics
+}

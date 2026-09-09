@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import Literal, Optional, Dict 
-from datetime import date
-
+from typing import Literal, Optional, Dict, List
+from datetime import date, datetime
+from uuid import UUID
 class OriginalScore(BaseModel):
     original_score: int
     reading_score: int
@@ -35,11 +35,20 @@ class RegisterStudents(StudentBase):
 
 
 class IncomingStudentInfo(StudentBase):
-    updated_at: str 
+    updated_at: datetime 
+
+class IncomingTestScores(BaseModel):
+    id: UUID
+    clerk_id: str
+    current_score: OriginalScore
+    dream_score: int
+    type: str 
+    test_date: date
+    created_at: datetime
 
 
 class IncomingStudentAnalytics(BaseModel):
-    session_id: str
+    session_id: UUID
     clerk_id: str
     type: str
     topic: str 
@@ -48,4 +57,10 @@ class IncomingStudentAnalytics(BaseModel):
     math_mastery: Dict[str, int]
     math_topics_mastery: Dict[str, Dict[str, int]]
     weak_subtopics: Dict[str, Dict]
-    completed_at: str 
+    completed_at: datetime
+
+
+class IncomingStudentInformation(BaseModel):
+    student_info: IncomingStudentInfo
+    test_scores: List[IncomingTestScores]
+    student_analytics: IncomingStudentAnalytics
