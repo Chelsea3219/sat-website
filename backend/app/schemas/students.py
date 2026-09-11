@@ -56,7 +56,6 @@ class IncomingStudentAnalytics(BaseModel):
     reading_topics_mastery: Dict[str, Dict[str, int]]
     math_mastery: Dict[str, int]
     math_topics_mastery: Dict[str, Dict[str, int]]
-    weak_subtopics: Dict[str, Dict]
     completed_at: datetime
 
 
@@ -64,3 +63,4 @@ class IncomingStudentInformation(BaseModel):
     student_info: IncomingStudentInfo
     test_scores: List[IncomingTestScores]
     student_analytics: IncomingStudentAnalytics
+

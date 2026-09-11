@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.silver import SilverUsers, TestScores
-from app.models.gold import UserAnalytics 
+from app.models.gold import GoldAnalytics, GoldSubtopicMastery
 from app.domains.errors.error_handler import handle_db_errors
 
 
@@ -22,8 +22,11 @@ def fetch_student_info(clerk_id:str, db:Session):
         test_score = db.query(TestScores).filter(TestScores.clerk_id == clerk_id).all()
 
         # Determines the last analytics for the student 
-        student_analytics = db.query(UserAnalytics).filter(UserAnalytics.clerk_id == clerk_id).order_by((UserAnalytics.completed_at).asc()).first()
+        student_analytics = db.query(GoldAnalytics).filter(GoldAnalytics.clerk_id == clerk_id).order_by((GoldAnalytics.completed_at).asc()).first()
 
-    return student_info, test_score, student_analytics
+        # Retrieves student's weak subtopics
+        weak_subtopics = db.query(GoldSubtopicMastery).filter(GoldSubtopicMastery.clerk_id == clerk_id).all()
+
+    return student_info, test_score, student_analytics, weak_subtopics
 
 

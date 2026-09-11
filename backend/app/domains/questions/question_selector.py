@@ -40,7 +40,6 @@ def fetch_assessment_questions(section, proficiency, questions):
 
 
 def fetch_adaptive_questions(section, questions, weak_subtopics):
-    # weak_subtopics = {[subtopic_1, mastery_score], [subtopic_2, mastery_score]}
     
     def random_sample(pool, target):
         return random.sample(pool, min(target, len(pool)))
