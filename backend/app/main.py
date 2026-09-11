@@ -11,15 +11,17 @@ from fastapi.exceptions import RequestValidationError
 # APIs
 from app.domains.errors.router import general_http_exception_handler, validation_exception_handler
 from app.domains.admin.routers import marketing
-from app.domains.students.routers import register
+from app.domains.students.routers import register, student_info
 from app.domains.questions.routers import quiz_questions
 #from api.dashboard import practice, quiz, progress, profile, dashboard
 
 # Configuration
 from app.core.config import settings
+from app.core.logging_config import setup_logging
 
 
 # DEFINE THE API -------------------------------------------------------------------------------------------------------
+setup_logging()
 app = FastAPI(
     title = "Elevate Learning",
     description="Master the SAT through adaptive learning",
@@ -37,6 +39,7 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 # API ROUTES -----------------------------------------------------------------------------------------------------------
 app.include_router(marketing.router)
 app.include_router(register.router)
+app.include_router(student_info.router)
 app.include_router(quiz_questions.router)
 
 #app.include_router(questions.router)
