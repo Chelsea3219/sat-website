@@ -5,18 +5,19 @@ import {IncomingStudentInformation} from "@/types/students"
 import { fetchStudentInformation } from "@/services/api.student-info"
 
 
-export default function useStudentInformation (clerk_id: string | null | undefined) {
+export default function useStudentInformation (clerkId: string | null | undefined) {
 
     // Initializes the paramaters 
     const [studentInformation, setStudentInformation] = useState<IncomingStudentInformation | null>(null)
 
     // Fetches the student's information, test scores, and latest analytics
     useEffect(() => {
-        if (!clerk_id) return 
+        if (!clerkId) return 
 
         const load = async() => {
             try {
-                const response = await fetchStudentInformation(clerk_id)
+                const response = await fetchStudentInformation(clerkId)
+                console.log("clerkId in useStudentInformation:", clerkId)
                 console.log("student's information => ", response)
                 setStudentInformation(response)
             } catch (error) {
@@ -24,7 +25,7 @@ export default function useStudentInformation (clerk_id: string | null | undefin
             }
         }
         load()
-    }, [clerk_id])
+    }, [clerkId])
 
 
     // Creates new parameters based on response 

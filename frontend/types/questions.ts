@@ -19,20 +19,26 @@ export type Question = {
 }
 
 // Format of student answer for each question
-export type StudentAnswer = {
-    id: string
+export type AnswerSheet = {
+    clerk_id: string
     question_id: string
     section: string
-    topic: string 
+    topic: string
     subtopic: string[]
     difficulty: string
     answer: string
+    is_correct: boolean
+    time_elapsed: number
+    completed_at: string
 }
 
 
 export type QuestionTabProps = {
     currentQuestion: Question
+    numAttempts?: number
+    answer: string
+    answerChangeAction: (value: string) => void
+    checkAnswerAction: () => void
     timeElapsed: number
-
-
+    error?: string 
 }

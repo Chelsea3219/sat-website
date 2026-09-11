@@ -15,7 +15,7 @@ export const ProgressBar = ({completed, numQuestions}: ProgressBarProps) => {
             <div className="w-full h-4 bg-white rounded-full border border-primary">
                 <div
                     className="h-4 bg-primary rounded-full transition-[width] duration-500 ease-out"
-                    style={{ width: `${percent}%` }}
+                    style={{ width: `${percent}%`, height: "100%" }}
                 />
             </div>
 

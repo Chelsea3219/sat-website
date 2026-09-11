@@ -20,8 +20,8 @@ type TabWindowProps = {
 
 export default function QuizTabWindow({section, activeTab, progress, questionTabProps}: TabWindowProps) {
     return (
-        <>
-            <div className="tab-window h-full flex flex-col">
+        <div className="">
+            <div className="tabwindow h-full flex flex-col">
 
                 {/* Header */}
                 <div role="tablist" className="header shrink-0 flex itmes-end justify-between px-4 gap-1 w-full">
@@ -68,13 +68,17 @@ export default function QuizTabWindow({section, activeTab, progress, questionTab
                         <div className="flex-1 overflow-y-auto scrollbar-thin">
                             <MathQuestionTab
                                 currentQuestion={questionTabProps.currentQuestion}
+                                answer={questionTabProps.answer}
+                                answerChangeAction={questionTabProps.answerChangeAction}
+                                checkAnswerAction={questionTabProps.checkAnswerAction}
                                 timeElapsed={questionTabProps.timeElapsed}
+
                         />
                         </div>
                     }
                 </div>
                 
             </div>
-        </>
+        </div>
     )
 }
