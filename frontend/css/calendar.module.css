@@ -1,0 +1,25 @@
+.calendarDay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem; /* Slightly smaller than 3rem to fit a 7-column grid layout */
+    height: 2.25rem;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+/* Style for logged in days: Circle with border, matching your design */
+.loggedDay {
+    background-color: transparent;
+    border: 3px solid var(--color-accent); /* Orange outline */
+    color: var(--color-accent);
+}
+
+/* Style for ordinary days with no activity */
+.emptyDay {
+    background-color: transparent;
+    border: 2px solid transparent;
+    color: #6b7280; /* Neutral gray */
+}

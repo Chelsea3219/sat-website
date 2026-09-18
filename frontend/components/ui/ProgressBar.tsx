@@ -12,14 +12,14 @@ export const ProgressBar = ({completed, numQuestions}: ProgressBarProps) => {
     return (
         <div className="flex flex-row items-center justify-center w-64 gap-x-2">
 
-            <div className="w-full h-4 bg-white rounded-full border border-primary">
+            <div className="w-full h-4 bg-white rounded-full border border-primary overflow-hidden">
                 <div
-                    className="h-4 bg-primary rounded-full transition-[width] duration-500 ease-out"
-                    style={{ width: `${percent}%`, height: "100%" }}
+                    className="h-full bg-primary rounded-full  transition-[width] duration-500 ease-out"
+                    style={{ width: `${percent}%`, minWidth: percent > 0 ? '1.25rem' : 0 }}
                 />
             </div>
 
-            <div className="uppercase text-primary text-lg font-bold">{completed}/{numQuestions}</div>
+            <div className="uppercase text-primary text-lg font-bold whitespace-nowrap">{completed}/{numQuestions}</div>
         </div>
     )
 }
