@@ -31,8 +31,11 @@ export default function useStudentInformation (clerkId: string | null | undefine
     // Creates new parameters based on response 
     const studentInfo = studentInformation?.student_info
     const testScores = studentInformation?.test_scores
+    const questionStats = studentInformation?.question_stats
+    const pastAnalytics = studentInformation?.past_analytics
     const studentAnalytics = studentInformation?.student_analytics
+    const subtopicMastery = studentInformation?.subtopic_mastery
 
 
-    return {studentInfo, studentAnalytics, testScores}
+    return {studentInfo, questionStats, pastAnalytics, studentAnalytics, testScores, subtopicMastery}
 }

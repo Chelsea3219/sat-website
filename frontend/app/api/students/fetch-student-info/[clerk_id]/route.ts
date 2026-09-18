@@ -25,7 +25,14 @@ export async function GET(
             method: 'GET'
         })
 
-        const data = await res.json()
+        const text = await res.text()
+        let data
+        try {
+            data = JSON.parse(text)
+        } catch {
+            console.error('Non-JSON response fro FastAPI:', res.status, text)
+        }
+        //const data = await res.json()
 
         if (!res.ok) {
             return NextResponse.json({ error: data.detail || "Cannot fetch student's information" }, { status: res.status })
