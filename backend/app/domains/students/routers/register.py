@@ -2,14 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import func
-from helpers import logger
 
 from app.core.database import get_db
-from app.models.bronze import BronzeUsers
-from app.models.silver import SilverUsers, TestScores, SilverAnalytics
-from app.models.gold import GoldAnalytics
-from app.schemas.students import RegisterStudents
-from app.domains.questions.helpers import reading_topics, math_topics
+from app.domains.students.models import BronzeUsers
+from app.domains.students.models import SilverUsers, TestScores
+from app.domains.analytics.models import SilverAnalytics, GoldAnalytics
+from app.domains.students.schemas import RegisterStudents
+from app.domains.questions.services.topic import reading_topics, math_topics
+
+import logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["students"])
 
@@ -55,25 +57,6 @@ async def register_students(payload: RegisterStudents, db: Session=Depends(get_d
                 updated_at= func.now()
             )
             db.add(silver_student)
-
-            # Initializes the student's analytics in UserAnalytics
-            initial_mastery_score = {
-                "raw_score": 0, 
-                "max_score": 0,
-                "mastery_score": 0
-            }
-            user_analytics = {
-                "clerk_id" : payload.clerk_id,
-                "type" : "initial", 
-                "topic" : "overall",
-                "reading_mastery" : initial_mastery_score,
-                "reading_topics_mastery" : {i: initial_mastery_score for i in reading_topics},
-                "math_mastery" : initial_mastery_score,
-                "math_topics_mastery" : {i: initial_mastery_score for i in math_topics},
-                "completed_at" : func.now()
-            }
-            db.add(SilverAnalytics(**user_analytics))
-            db.add(GoldAnalytics(**user_analytics))
 
             # Adds student's test_score to TestScores
             test_score = TestScores(

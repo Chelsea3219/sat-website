@@ -2,14 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import func
-from helpers import logger
 from html import escape # prevents the browser from intepreting user data or raw text as executable HTML code 
 
 from app.core.database import get_db
 from app.core.config import settings
 from app.domains.errors.error_handler import handle_db_errors
-from app.models.bronze import ContactMessages
-from app.schemas.marketing import ContactUsForm
+from app.domains.admin.models import ContactMessages
+from app.domains.admin.schemas import ContactUsForm
+
+import logging
+logger = logging.getLogger(__name__)
 
 import resend
 resend.api_key = settings.RESEND_API_KEY

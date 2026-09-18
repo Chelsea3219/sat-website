@@ -1,5 +1,7 @@
 import sys
 import os
+from rich.traceback import install
+install(show_locals=True)
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -12,8 +14,8 @@ from fastapi.exceptions import RequestValidationError
 from app.domains.errors.router import general_http_exception_handler, validation_exception_handler
 from app.domains.admin.routers import marketing
 from app.domains.students.routers import register, student_info
-from app.domains.questions.routers import quiz_questions
-#from api.dashboard import practice, quiz, progress, profile, dashboard
+from app.domains.questions.routers import fetch_questions
+from app.domains.analytics import router
 
 # Configuration
 from app.core.config import settings
@@ -40,11 +42,9 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.include_router(marketing.router)
 app.include_router(register.router)
 app.include_router(student_info.router)
-app.include_router(quiz_questions.router)
+app.include_router(fetch_questions.router)
+app.include_router(router.router)
 
-#app.include_router(questions.router)
-#app.include_router(practice.router)
-#app.include_router(quiz.router)
 #app.include_router(progress.router)
 #app.include_router(profile.router)
 #app.include_router(dashboard.router)
