@@ -1,12 +1,12 @@
 "use client"
 
 import { QuestionTabProps } from "@/types/questions"
-import QuizTabWindow from "../ui/tab-window/QuizTabWindow"
-import useQuizQuestionTab from "@/hooks/useQuizQuestionTab"
+import QuizTabWindow from "../ui/tab-window/quiz/QuizTabWindow"
+import useQuizQuestionTab from "@/hooks/dashboard/useQuizQuestionTab"
 import {useUserInformationContext} from "@/contexts/StudentInformationContext"
 
+
 type TabWindowProps = {
-    clerkId: string
     section: string
     activeTab: "Reading" | "Math"
 }
@@ -15,19 +15,24 @@ type TabWindowProps = {
 export default function QuizClient({section, activeTab}: TabWindowProps) {
     
     // Fetch student's information from useStudentInformationContext hook 
-    const {studentInfo, studentAnalytics, testScores} = useUserInformationContext()
+    const {studentInfo, studentAnalytics, testScores, sessionId} = useUserInformationContext()
     const clerkId = studentInfo?.clerk_id
     
     // Fetch questions from useQuizQuestionTab hook
-    const { quizQuestions, currentIndex, timeElapsed, currentQuestion, answer, checkAnswer, handleAnswerChange} = useQuizQuestionTab({clerkId, section})
+    const { 
+        quizQuestions, currentIndex, timeElapsed, currentQuestion, 
+        answer, checkAnswer, handleAnswerChange, 
+        quizResults, quizCompleted
+    } = useQuizQuestionTab({clerkId,sessionId, section})
 
-    // Sample Question
+    // Declare the variables
     const questionTabProps : QuestionTabProps = {
         currentQuestion: currentQuestion,
         answer: answer, 
         checkAnswerAction: checkAnswer,
         answerChangeAction: handleAnswerChange,
         timeElapsed: timeElapsed,
+        quizCompleted: quizCompleted
     }
 
     // Guard
@@ -44,6 +49,7 @@ export default function QuizClient({section, activeTab}: TabWindowProps) {
                         numQuestions: quizQuestions.length
                     }}
                     questionTabProps={questionTabProps}
+                    quizResults={quizResults}
                     />
             </div>
         </>
