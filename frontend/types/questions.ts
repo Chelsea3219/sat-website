@@ -18,15 +18,44 @@ export type Question = {
     answer_key: string | string[]
 }
 
-// Format of student answer for each question
+// Format of student answer for each quiz question
 export type AnswerSheet = {
     clerk_id: string
+    session_id: string 
     question_id: string
     section: string
     topic: string
     subtopic: string[]
     difficulty: string
     answer: string
+    is_correct: boolean
+    time_elapsed: number
+    completed_at: string
+}
+
+// Format of student answer for each quiz question
+export type PracticeAnswerSheet = {
+    clerk_id: string
+    session_id: string
+    question_id: string
+    section: string
+    topic: string
+    subtopic: string[]
+    difficulty: string
+    answer_attempts: string[]
+    is_correct: boolean
+    time_elapsed: number
+    num_hints: number
+    completed_at: string
+}
+
+export type QuestionAttempts = {
+    id: string
+    session_id: string
+    clerk_id: string
+    question_id: string
+    type: string
+    difficulty: string 
     is_correct: boolean
     time_elapsed: number
     completed_at: string
@@ -41,4 +70,5 @@ export type QuestionTabProps = {
     checkAnswerAction: () => void
     timeElapsed: number
     error?: string 
+    quizCompleted?: boolean
 }

@@ -22,6 +22,11 @@ export default function MathQuestionTab({currentQuestion, answer, answerChangeAc
     return (
         <>
             <div className="flex flex-col py-1 px-4 h-full space-y-1">
+                {!currentQuestion && 
+                    <>
+                        <HorizontalLoadingAnimation text="Loading Questions"/>
+                    </>
+                }
 
                 {/* Question ID and difficulty */}
                 <div className="flex flex-row items-center justify-end gap-x-2">
