@@ -1,0 +1,395 @@
+[
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "06d10804-3f1a-4663-bab6-a796bdc5e0d5",
+    "section": "math",
+    "topic": "geometry & trigonometry",
+    "subtopic": [
+      "shapes"
+    ],
+    "difficulty": "medium",
+    "answer": "B",
+    "is_correct": true,
+    "time_elapsed": 25,
+    "completed_at": "2026-09-17T09:00:53",
+    "num_hints": 2,
+    "answer_attempts": [
+      "C"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "0f24f033-074d-4fc7-9b8e-f1249648fabc",
+    "section": "math",
+    "topic": "problem solving & data analysis",
+    "subtopic": [
+      "statistical analysis",
+      "statistical bias"
+    ],
+    "difficulty": "medium",
+    "answer": "B",
+    "is_correct": true,
+    "time_elapsed": 16,
+    "completed_at": "2026-09-17T09:40:38",
+    "num_hints": 2,
+    "answer_attempts": [
+      "B"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "1755495e-b282-42e6-a66c-a011515a8ac2",
+    "section": "math",
+    "topic": "geometry & trigonometry",
+    "subtopic": [
+      "shapes",
+      "special triangles"
+    ],
+    "difficulty": "medium",
+    "answer": "B",
+    "is_correct": false,
+    "time_elapsed": 41,
+    "completed_at": "2026-09-17T09:16:12",
+    "num_hints": 2,
+    "answer_attempts": [
+      "C"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "000c84ca-5f59-4bca-83dc-7e39f2e0a980",
+    "section": "math",
+    "topic": "algebra",
+    "subtopic": [
+      "interpreting linear functions"
+    ],
+    "difficulty": "hard",
+    "answer": "A",
+    "is_correct": false,
+    "time_elapsed": 28,
+    "completed_at": "2026-09-17T09:07:04",
+    "num_hints": 0,
+    "answer_attempts": [
+      "B"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "069b9347-4d09-4821-b172-37684ebd209b",
+    "section": "math",
+    "topic": "algebra",
+    "subtopic": [
+      "linear functions",
+      "slope"
+    ],
+    "difficulty": "easy",
+    "answer": "C",
+    "is_correct": false,
+    "time_elapsed": 34,
+    "completed_at": "2026-09-17T09:57:32",
+    "num_hints": 1,
+    "answer_attempts": [
+      "D"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "1268fa7c-e7f7-4118-8172-1c8cd1009459",
+    "section": "math",
+    "topic": "advanced math",
+    "subtopic": [
+      "exponents"
+    ],
+    "difficulty": "medium",
+    "answer": "C",
+    "is_correct": false,
+    "time_elapsed": 24,
+    "completed_at": "2026-09-17T09:00:13",
+    "num_hints": 2,
+    "answer_attempts": [
+      "D"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "14e92c6e-0ae2-4a0e-aabf-6502364aa104",
+    "section": "math",
+    "topic": "geometry & trigonometry",
+    "subtopic": [
+      "angles"
+    ],
+    "difficulty": "easy",
+    "answer": "A",
+    "is_correct": false,
+    "time_elapsed": 57,
+    "completed_at": "2026-09-17T09:28:57",
+    "num_hints": 1,
+    "answer_attempts": [
+      "D"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "10225f94-46b8-4f5b-a2b2-b024dfb2e727",
+    "section": "math",
+    "topic": "geometry & trigonometry",
+    "subtopic": [
+      "angles",
+      "parallel lines & transversal"
+    ],
+    "difficulty": "medium",
+    "answer": "C",
+    "is_correct": true,
+    "time_elapsed": 24,
+    "completed_at": "2026-09-17T09:41:20",
+    "num_hints": 3,
+    "answer_attempts": [
+      "D"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "00dd88c5-b78a-4490-8c02-692e6170a5e9",
+    "section": "math",
+    "topic": "geometry & trigonometry",
+    "subtopic": [
+      "shapes",
+      "formulas"
+    ],
+    "difficulty": "easy",
+    "answer": "B",
+    "is_correct": true,
+    "time_elapsed": 69,
+    "completed_at": "2026-09-17T09:36:11",
+    "num_hints": 1,
+    "answer_attempts": [
+      "B"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "00de6dfd-1f7c-4b7f-b09a-425f6cf25c39",
+    "section": "math",
+    "topic": "problem solving & data analysis",
+    "subtopic": [
+      "probability"
+    ],
+    "difficulty": "medium",
+    "answer": "C",
+    "is_correct": true,
+    "time_elapsed": 114,
+    "completed_at": "2026-09-17T09:36:22",
+    "num_hints": 1,
+    "answer_attempts": [
+      "B"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "29851b0d-654d-492c-a773-abf8bde37491",
+    "section": "math",
+    "topic": "algebra",
+    "subtopic": [
+      "linear functions",
+      "intercepts",
+      "constants"
+    ],
+    "difficulty": "medium",
+    "answer": "D",
+    "is_correct": false,
+    "time_elapsed": 102,
+    "completed_at": "2026-09-17T09:04:19",
+    "num_hints": 1,
+    "answer_attempts": [
+      "B"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "22005765-a364-437f-a4b6-d8d90ff6c5c0",
+    "section": "math",
+    "topic": "advanced math",
+    "subtopic": [
+      "exponents"
+    ],
+    "difficulty": "hard",
+    "answer": "A",
+    "is_correct": true,
+    "time_elapsed": 96,
+    "completed_at": "2026-09-17T09:48:41",
+    "num_hints": 1,
+    "answer_attempts": [
+      "C"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "2a944573-5e62-40db-8236-9673727192a2",
+    "section": "math",
+    "topic": "problem solving & data analysis",
+    "subtopic": [
+      "statistical analysis",
+      "statistical bias"
+    ],
+    "difficulty": "medium",
+    "answer": "D",
+    "is_correct": true,
+    "time_elapsed": 61,
+    "completed_at": "2026-09-17T09:54:48",
+    "num_hints": 3,
+    "answer_attempts": [
+      "C"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "25777127-e5eb-4333-85a8-4eaa3257ddca",
+    "section": "math",
+    "topic": "algebra",
+    "subtopic": [
+      "linear functions",
+      "slope-intercept form"
+    ],
+    "difficulty": "medium",
+    "answer": "D",
+    "is_correct": false,
+    "time_elapsed": 116,
+    "completed_at": "2026-09-17T09:51:22",
+    "num_hints": 1,
+    "answer_attempts": [
+      "A"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "15023ce4-127d-456e-b834-a0b39013cb11",
+    "section": "math",
+    "topic": "problem solving & data analysis",
+    "subtopic": [
+      "probability"
+    ],
+    "difficulty": "medium",
+    "answer": "C",
+    "is_correct": true,
+    "time_elapsed": 41,
+    "completed_at": "2026-09-17T09:59:18",
+    "num_hints": 2,
+    "answer_attempts": [
+      "A"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "15323764-c5ee-4af6-96d1-35d253f8d919",
+    "section": "math",
+    "topic": "problem solving & data analysis",
+    "subtopic": [
+      "probability"
+    ],
+    "difficulty": "easy",
+    "answer": "C",
+    "is_correct": true,
+    "time_elapsed": 49,
+    "completed_at": "2026-09-17T09:45:41",
+    "num_hints": 0,
+    "answer_attempts": [
+      "B"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "21ce45aa-c630-4e4b-bb79-46ac683ff392",
+    "section": "math",
+    "topic": "advanced math",
+    "subtopic": [
+      "quadratic equations",
+      "vertex-form"
+    ],
+    "difficulty": "easy",
+    "answer": "B",
+    "is_correct": true,
+    "time_elapsed": 115,
+    "completed_at": "2026-09-17T09:35:55",
+    "num_hints": 1,
+    "answer_attempts": [
+      "C"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "05dd1674-5e75-40b2-be19-981090a922df",
+    "section": "math",
+    "topic": "geometry & trigonometry",
+    "subtopic": [
+      "shapes",
+      "special triangles",
+      "formulas"
+    ],
+    "difficulty": "medium",
+    "answer": "C",
+    "is_correct": false,
+    "time_elapsed": 112,
+    "completed_at": "2026-09-17T09:46:18",
+    "num_hints": 0,
+    "answer_attempts": [
+      "D"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "22d43ee0-4132-496c-8b40-23ddf43a4d40",
+    "section": "math",
+    "topic": "advanced math",
+    "subtopic": [
+      "quadratic equations"
+    ],
+    "difficulty": "easy",
+    "answer": "D",
+    "is_correct": true,
+    "time_elapsed": 47,
+    "completed_at": "2026-09-17T09:18:12",
+    "num_hints": 2,
+    "answer_attempts": [
+      "A"
+    ]
+  },
+  {
+    "clerk_id": "user_3I6KbSrNh746ta8wAzbtHYE1RFs",
+    "session_id": "sess_a1b3c4d4",
+    "question_id": "178e1946-d449-4d61-ac2c-5230ade22dd6",
+    "section": "math",
+    "topic": "algebra",
+    "subtopic": [
+      "linear functions",
+      "perpendicular lines"
+    ],
+    "difficulty": "medium",
+    "answer": "B",
+    "is_correct": true,
+    "time_elapsed": 23,
+    "completed_at": "2026-09-17T09:06:48",
+    "num_hints": 0,
+    "answer_attempts": [
+      "D"
+    ]
+  }
+]
