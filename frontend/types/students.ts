@@ -62,20 +62,20 @@ export type TestScores = {
     created_at: string 
 }
 
-type MasteryScore = {
+export type MasteryScore = {
     max_score: number
     raw_score: number
     mastery_score: number
 }
 
-type ReadingTopicsMastery = {
+export type ReadingTopicsMastery = {
     "craft & structure": MasteryScore
     "expression of ideas": MasteryScore
     "information & ideas": MasteryScore
     "standard english conventions": MasteryScore
 }
 
-type MathTopicsMastery = {
+export type MathTopicsMastery = {
     "algebra": MasteryScore
     "advanced math": MasteryScore
     "geometry & trigonometry": MasteryScore
@@ -98,8 +98,31 @@ export type StudentAnalytics = {
     completed_at: string
 }
 
+export type SubtopicMastery = {
+    id: string
+    clerk_id: string 
+    section: string
+    subtopic: string
+    mastery_score: MasteryScore
+    questions_answered: {
+        num_incorrect: number
+        num_questions: number 
+    }
+    avg_time_elapsed: number
+    status: string
+    last_wrong_at: string 
+    
+}
+
 export type IncomingStudentInformation = {
     student_info: StudentInfo
+    question_stats: {
+        num_questions: number 
+        num_correct: number
+        time_spent: number
+    }
     test_scores: TestScores
+    past_analytics: StudentAnalytics[]
     student_analytics: StudentAnalytics
+    subtopic_mastery: SubtopicMastery[]
 }

@@ -5,11 +5,11 @@ import useStudentInformation from "@/hooks/useStudentInformation";
 import { useAuth } from "@clerk/nextjs"
 
 function useUserInformation() {
-    const {userId, isLoaded} = useAuth();
+    const {userId, isLoaded, sessionId} = useAuth();
 
     const studentInformation = useStudentInformation(userId)
 
-    return {...studentInformation, isLoaded}
+    return {...studentInformation, isLoaded, sessionId}
 }
 
 type UserInformationContextType = ReturnType<typeof useUserInformation>

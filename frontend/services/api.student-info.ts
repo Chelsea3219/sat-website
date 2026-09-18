@@ -5,7 +5,11 @@ export async function fetchStudentInformation(clerk_id: string ) {
         method: 'GET'
     })
 
-    if (!res.ok) throw new Error("Failed to fetch student's information")
+    if (!res.ok) {
+        const text = await res.text()
+        console.error("API error:", res.status, text)
+        throw new Error("Failed to fetch student's information")
+    }
     const data = await res.json()
 
     return data 

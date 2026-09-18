@@ -7,7 +7,12 @@ export async function registerUser(userInfo: UserRegistration) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(userInfo),
     })
-
+    
+    if (!response.ok) {
+        const text = await response.text
+        console.error("API error:", response.status, text)
+        throw new Error("Failed to register student's information")
+    }
     const data = await response.json()
     return data
 }
