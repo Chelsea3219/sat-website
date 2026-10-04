@@ -1,25 +1,35 @@
 
-
 import AnswerTab from "./AnswerTab";
 import ReviewTab from "./ReviewTab";
 import Link from "next/link"
-import {QuestionTabProps} from "@/types/questions"
+import {PracticeQuestionTabProps} from "@/types/questions"
+import { SessionProgress, SubtopicMastery} from "@/types/students";
+import { PracticeGradedResponse } from "@/types/mastery-score";
 import ReadingQuestionTab from "../ReadingQuestionTab";
-import MathQuestionTab from "../MathQuestionTab";
+import MathPracticeTab from "./MathPracticeTab";
+import { ProgressBar } from "../../ProgressBar";
+//import {ArrowUp, ArrowDown} from "lucide-react"
+import HorizontalLoadingAnimation2 from "../../loading-animation/HorizontalLoadingAnimation";
+import PracticeResults from "./PracticeResults";
+
 
 type TabWindowProps = {
     section: string
     topic: string
     subtopic: string
     activeTab: "Review" | "Questions" | "Answer"
-    score:number // TODO: fix this so that is add the previous score
-
-    questionTabProps: QuestionTabProps
+    progress: SessionProgress
+    questionTabProps: PracticeQuestionTabProps
+    isLoading: boolean
+    practiceResults: PracticeGradedResponse | null
+    pastSubtopicMastery: SubtopicMastery[] | undefined
 }
 
 
 
-export default function PracticeTabWindow({section, topic, subtopic, activeTab, questionTabProps, score}:TabWindowProps) {
+export default function PracticeTabWindow({
+    section, topic, subtopic, activeTab, questionTabProps, progress, isLoading, practiceResults, pastSubtopicMastery
+}:TabWindowProps) {
 
     const base = `/dashboard/practice/${section}/${topic}/${subtopic}`
     const tabs = ["Review", "Questions", "Answer"]
@@ -29,8 +39,10 @@ export default function PracticeTabWindow({section, topic, subtopic, activeTab, 
     return (
         <div className="tabwindow h-full flex flex-col ">
 
-            {/* File Tabs */}
+            {/* Tab Header */}
             <div role="tablist" className="header shrink-0 flex items-end justify-between px-4 gap-1 w-full">
+
+                {/* File Tabs */}
                 <div className="flex items-end gap-1">
                     {tabs.map((tab, index) => {
                         const isDisabled = tab === "Answer" && numAttempts < 2
@@ -59,38 +71,65 @@ export default function PracticeTabWindow({section, topic, subtopic, activeTab, 
                     })}
                 </div>
 
-                <div className="py-1 px-3 border-2 rounded-2xl border-primary bg-white mb-1 text-primary">
-                    Score: {score}
+                {/* Mastery and Progress */}
+                <div className="flex items-center w-60 shrink-0 self-center">
+                    {!practiceResults
+                        ? (
+                            <div className="flex items-center space-x-2 w-full min-w-0">
+                                <ProgressBar completed={progress.numCompleted} numQuestions={progress.numQuestions ?? 0} showProgress={false}/>
+                                {/* TODO 
+                                    {progress.trend === "up" && <ArrowUp className="opacity-50"/>}
+                                    {progress.trend === "down" && <ArrowDown className="opacity-50"/>}
+                                s */}
+                                <p className="text-primary font-semibold">{Math.round(progress.masteryScore ?? 0) ?? "-"}%</p>
+                                
+                            </div>
+                        ): <div> </div>
+                    }
                 </div>
             </div>
 
             {/* Tab Context */}
             <div role="tabpanel" className="p-4 flex-1 h-full">
-                {activeTab === "Review" && <ReviewTab subtopic={subtopic}/>}
-                {activeTab === "Questions" &&
-                    questionTabProps.currentQuestion &&
-                    <div className="flex-1 overflow-y-auto scrollbar-thin">
-                        <>
-                            {section === "reading" && <ReadingQuestionTab/>}
-                            {section === "math" &&
-                                <div className="flex-1 overflow-y-auto scrollbar-thin">
-                                    <MathQuestionTab
-                                        currentQuestion={questionTabProps.currentQuestion}
-                                        answer={questionTabProps.answer}
-                                        answerChangeAction={questionTabProps.answerChangeAction}
-                                        checkAnswerAction={questionTabProps.checkAnswerAction}
-                                        timeElapsed={questionTabProps.timeElapsed}
-                                    />
-                                </div>
-                            }
-
-                        </>
+                {isLoading ? (
+                    <div className="flex items-center justify-center">
+                        <HorizontalLoadingAnimation2 text="Loading Questions"/>
                     </div>
-                }
-                {activeTab === "Answer"
-                    && questionTabProps.currentQuestion
-                    && <AnswerTab questionId={questionTabProps.currentQuestion.question_id}/>
-                }
+                ): (
+                    <>
+                        {activeTab === "Review" && <ReviewTab subtopic={subtopic}/>}
+                        {activeTab === "Questions" && (
+                            <div className="flex-1 overflow-y-auto scrollbar-thin">
+                                {practiceResults ? (
+                                    <PracticeResults topic={topic} subtopic={subtopic} practiceResults={practiceResults} pastSubtopicMastery={pastSubtopicMastery ?? []}/>
+                                ) : questionTabProps.currentQuestion ? (
+                                    <>
+                                        {section === "reading" && <ReadingQuestionTab/>}
+                                        {section === "math" &&
+                                            <MathPracticeTab
+                                                currentQuestion={questionTabProps.currentQuestion}
+                                                answer={questionTabProps.answer}
+                                                numAttempts={questionTabProps.numAttempts}
+                                                answerChangeAction={questionTabProps.answerChangeAction}
+                                                checkAnswerAction={questionTabProps.checkAnswerAction}
+                                                timeElapsed={questionTabProps.timeElapsed}
+                                                nextQuestion={questionTabProps.nextQuestion}
+                                                checkHintAction={questionTabProps.checkHintAction}
+                                                isCorrect={questionTabProps.isCorrect}
+                                            />
+                                        }
+                                    </>
+                                    ) : (
+                                        <p className="text-center text-gray-500">No questions available.</p>
+                                    )}
+                            </div>
+                            )}
+                        {activeTab === "Answer"
+                            && questionTabProps.currentQuestion
+                            && <AnswerTab questionId={questionTabProps.currentQuestion.question_id}/>
+                        }
+                    </>
+                )}
             </div>
         </div>
     )

@@ -4,9 +4,9 @@ import PracticeSidebar from "@/components/navigation/sidebar/practice/PracticeSi
 
 export default function PracticeLayout({children}: { children: React.ReactNode }) {
     return (
-        <div className="w-full px-2 md:px-6 lg:px-8">
-            <div className="flex pt-2 sm:gap-x-2 md:gap-x-4">
-                <aside className="hidden md:block w-64">
+        <div className="w-full bg-[#F8F9FC]">
+            <div className="flex space-x-0.5 px-4 ">
+                <aside className="hidden md:block w-64 shrink-0">
                     <PracticeSidebar/>
                 </aside>
                 <main className="flex-1 min-w-0 h-full">

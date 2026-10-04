@@ -38,6 +38,7 @@ export type PracticeAnswerSheet = {
     clerk_id: string
     session_id: string
     question_id: string
+    question_type: string 
     section: string
     topic: string
     subtopic: string[]
@@ -62,13 +63,20 @@ export type QuestionAttempts = {
 }
 
 
-export type QuestionTabProps = {
+export type QuizQuestionTabProps = {
     currentQuestion: Question
-    numAttempts?: number
     answer: string
     answerChangeAction: (value: string) => void
     checkAnswerAction: () => void
     timeElapsed: number
-    error?: string 
-    quizCompleted?: boolean
+    error?: string
+}
+
+
+export type PracticeQuestionTabProps = QuizQuestionTabProps & {
+    numAttempts: number
+    checkHintAction: () => void 
+    nextQuestion: () => void 
+    isCorrect: boolean | null 
+
 }

@@ -6,6 +6,7 @@ type QuestionsAnswered = {
 }
 type SubtopicMastery2 = {
     subtopic: string
+    section: string 
     mastery_score: MasteryScore
     questions_answered: QuestionsAnswered
     avg_time_elapsed: number
@@ -21,7 +22,17 @@ type GoldAnalytics = {
 }
 export type IncomingGradedAnswerSheet = {
     section_mastery: MasteryScore
-    topics_mastery: Record<string, MasteryScore>
-    subtopics_mastery: SubtopicMastery2[]
-    gold_analytics: GoldAnalytics
+    topic_mastery: Record<string, MasteryScore>
+    subtopic_mastery: SubtopicMastery2[]
+    updated_quiz_analytics: GoldAnalytics
+}
+
+
+type SessionSubtopicMastery = {
+    current_subtopic_mastery: SubtopicMastery2
+    updated_subtopic_mastery: SubtopicMastery2
+}
+
+export type PracticeGradedResponse = {
+    subtopics: Record<string, SessionSubtopicMastery>
 }

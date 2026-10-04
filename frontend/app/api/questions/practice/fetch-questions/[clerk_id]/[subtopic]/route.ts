@@ -4,7 +4,7 @@ import { PracticeAnswerSheet} from "@/types/questions"
 
 export async function POST(
     req: NextRequest,
-    {params}: {params: Promise<{clerk_id:string, subtopic: string, sessionAnswers: PracticeAnswerSheet[]}> }
+    {params}: {params: Promise<{clerk_id:string, subtopic: string}> }
 ) {
 
     try {
@@ -12,7 +12,8 @@ export async function POST(
         const { userId } = await auth()
         if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        const {clerk_id, subtopic, sessionAnswers} = await params
+        const {clerk_id, subtopic} = await params
+        const sessionAnswers: PracticeAnswerSheet[] = await req.json().catch(() => [])
         if (!clerk_id || !subtopic) return NextResponse.json({ error: "Missing clerk_id" }, { status: 400 })
 
         // Checks to make sure that the frontend is connected to the backend

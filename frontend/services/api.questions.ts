@@ -37,21 +37,47 @@ export async function fetchPracticeQuestions(clerk_id: string, subtopic: string,
 
 
 // Grade answersheet
-export async function gradeQuizQuestions(answerSheet:AnswerSheet[]) {
+export async function gradeQuizQuestions(
+    answerSheet:AnswerSheet[], 
+    section: string, clerkId: string, sessionId:string
+) {
 
     const response = await fetch(`/api/questions/quiz/grade-questions`, {
         method: 'POST', 
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(answerSheet)
+        body: JSON.stringify({answerSheet, section, clerkId, sessionId})
     })
 
     if (!response.ok) {
-        const text = await response.text
+        const text = await response.text()
         console.error("API error:", response.status, text)
         throw new Error("Failed to grade answerSheet")
     }
     
     const data = await response.json()
 
+    return data 
+}
+
+// Grade answersheet
+export async function gradePracticeQuestions(
+    answerSheet:PracticeAnswerSheet[], 
+    subtopic: string, clerkId: string, sessionId:string
+) {
+    if (!subtopic || !clerkId || !sessionId) return 
+
+    const response = await fetch(`/api/questions/practice/grade-questions`, {
+        method: 'POST', 
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({answerSheet, subtopic, clerkId, sessionId})
+    })
+
+    if (!response.ok) {
+        const text = await response.text()
+        console.error("API error:", response.status, text)
+        throw new Error("Failed to grade practice answerSheet")
+    }
+    
+    const data = await response.json()
     return data 
 }

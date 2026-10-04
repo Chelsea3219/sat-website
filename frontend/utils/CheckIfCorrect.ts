@@ -6,16 +6,18 @@ export const checkIfCorrect = (answer: string, question: Question): boolean => {
 
     {/* 
         console.log("ANSWER DEBUG:", {
-            answer,
-            rawKey,
-            keyType: typeof rawKey,
-            isArray: Array.isArray(rawKey),
-        });
+        answer,
+        rawKey,
+        keyType: typeof rawKey,
+        isArray: Array.isArray(rawKey),
+        isCorrect
+    });
     */}
 
     // Multiple choice
     if (question.question_type === "multiple choice") {
-        return normalized === String(rawKey).trim().toLowerCase();
+        const isCorrect = normalized === String(rawKey).trim().toLowerCase();
+        return isCorrect;
     }
 
     // Convert JSON string → array if necessary
@@ -39,7 +41,9 @@ export const checkIfCorrect = (answer: string, question: Question): boolean => {
         keys = [String(rawKey)];
     }
 
-    return keys.some(
+    const isCorrect = keys.some(
         key => normalized === key.trim().toLowerCase()
-    );
+    )
+
+    return isCorrect;
 };

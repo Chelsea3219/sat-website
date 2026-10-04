@@ -1,6 +1,6 @@
 
 
-import PracticeClient from "@/components/dashboard/PracticeClient"
+import PracticeClient from "@/components/dashboard-client/PracticeClient"
 
 type Tab  = "Review" | "Questions" | "Answer"
 
