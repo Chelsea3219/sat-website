@@ -9,7 +9,7 @@
     flex-shrink: 0;
     
     background-color: #ffffff;
-    border: 3px solid var(--color-primary);
+    border: 2px solid var(--color-primary);
     border-radius: 1.3rem;
     overflow: hidden;
 }

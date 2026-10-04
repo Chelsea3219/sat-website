@@ -13,7 +13,7 @@ export default function Page() {
 
     return(
         <>
-            <div>
+            <div className=" px-10">
                 <Hero/>
                 <Problem/>
                 <Solution/>
