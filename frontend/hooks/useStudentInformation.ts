@@ -32,10 +32,9 @@ export default function useStudentInformation (clerkId: string | null | undefine
     const studentInfo = studentInformation?.student_info
     const testScores = studentInformation?.test_scores
     const questionStats = studentInformation?.question_stats
-    const pastAnalytics = studentInformation?.past_analytics
-    const studentAnalytics = studentInformation?.student_analytics
+    const quizAnalytics = studentInformation?.quiz_analytics
     const subtopicMastery = studentInformation?.subtopic_mastery
 
 
-    return {studentInfo, questionStats, pastAnalytics, studentAnalytics, testScores, subtopicMastery}
+    return {studentInfo, questionStats, quizAnalytics, testScores, subtopicMastery}
 }
