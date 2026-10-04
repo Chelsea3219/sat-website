@@ -17,7 +17,7 @@ export default function LandingNavbar() {
     // Dynamic class generator 
     const linkClass = (path: string) => 
         `font-semibold transition-all cursor ${isActive(path)
-            ? 'text-accent scale-120 font-bold border-2 border-accent rounded-full p-1 px-2' // 'text-main rounded-full bg-secondary p-2' 
+            ? 'text-accent scale-120 font-bold border-b-3 border-accent px-1' // 'text-main rounded-full bg-secondary p-2' 
             : 'text-main hover:text-accent hover:scale-110'
         }`
     

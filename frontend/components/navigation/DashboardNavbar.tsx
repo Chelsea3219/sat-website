@@ -15,12 +15,19 @@ export default function DashboardNavbar() {
     const pathname = usePathname();
     const isPractice = pathname.startsWith("/dashboard/practice");
 
-    const topicClass = "text-white text-xs sm:text-sm md:text-base font-semibold hover:text-accent hover:scale-115 transition-all"
     const buttonClass = `
         px-2 py-1 rounded-full text-xs sm:text-sm md:text-base font-semibold 
         bg-white text-primary
         hover:scale-115 hover:bg-accent hover:text-white transition-all
     `
+
+    const isActive = (path:string) => pathname === path
+    const linkClass = (path: string) => 
+        `text-white text-xs sm:text-sm md:text-base font-semibold ${isActive(path)
+            ? 'scale-120 font-bold border-b-3 border-white px-1' // 'text-main rounded-full bg-secondary p-2' 
+            : 'hover:text-accent hover:scale-115 transition-all'
+        }`
+    
     return(
         <nav className=" fixed left-0 top-0 z-50 bg-primary w-full">
             <div className="max-w-7xl mx-auto px-2 md:px-6 lg:px-8">
@@ -50,11 +57,11 @@ export default function DashboardNavbar() {
 
                     {/* Navigation Links */}
                     <div className="hidden md:flex md:text-sm lg:gap-x-6 md:gap-x-4 items-center">
-                        <Link href="/dashboard" className={topicClass}>Home</Link>
-                        <Link href="/dashboard/practice" className={topicClass}>Practice</Link>
-                        <Link href="/dashboard/progress" className={topicClass}>Progress</Link>
-                        <Link href="/dashboard/quiz" className={topicClass}>Quiz</Link>
-                        <Link href="/dashboard/profile/account" className={topicClass}>Profile</Link>
+                        <Link href="/dashboard" className={linkClass('/dashboard')}>Home</Link>
+                        <Link href="/dashboard/practice" className={linkClass('/dashboard/practice')}>Practice</Link>
+                        <Link href="/dashboard/progress" className={linkClass('/dashboard/progress')}>Progress</Link>
+                        <Link href="/dashboard/quiz" className={linkClass('/dashboard/quiz')}>Quiz</Link>
+                        <Link href="/dashboard/profile/account" className={linkClass('/dashboard/profile')}>Profile</Link>
                         <SignOutButton className={buttonClass}/>
                         {/* rounded-btn text-md h-7 border-2 border-primary bg-primary text-white */}
                     </div>
@@ -126,7 +133,6 @@ export default function DashboardNavbar() {
                     </div>
                 </div>
             }
-
         </nav>
     )
 }
