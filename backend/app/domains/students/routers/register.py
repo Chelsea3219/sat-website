@@ -1,11 +1,11 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import func
 
 from app.core.database import get_db
-from app.domains.students.models import BronzeUsers
-from app.domains.students.models import SilverUsers, TestScores
+from app.domains.students.models import SilverUsers, TestScores, BronzeUsers
 from app.domains.analytics.models import SilverAnalytics, GoldAnalytics
 from app.domains.students.schemas import RegisterStudents
 from app.domains.questions.services.topic import reading_topics, math_topics
@@ -68,6 +68,16 @@ async def register_students(payload: RegisterStudents, db: Session=Depends(get_d
                 created_at = func.now()
             )
             db.add(test_score)
+
+            db.add( GoldAnalytics(
+                clerk_id = payload.clerk_id,
+                session_id = 0, 
+                reading_mastery = {"raw_score": 0, "max_score": 0, "mastery_score": 0}, 
+                reading_topics_mastery = {t: {"raw_score": 0, "max_score": 0, "mastery_score": 0} for t in reading_topics},
+                math_mastery = {"raw_score": 0, "max_score": 0, "mastery_score": 0},
+                math_topics_mastery =  {t: {"raw_score": 0, "max_score": 0, "mastery_score": 0} for t in math_topics},
+                completed_at = datetime.now()
+            ))
             db.commit()
         except IntegrityError as e:
             db.rollback()
