@@ -57,6 +57,8 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
 
     // Checks the answer, updates the current question index, and resets the timer ---------------------------------
     const checkAnswer = async () => {
+        if (!clerkId || !sessionId) return 
+
         // Checks to see if the asnwer is correct
         const isCorrect = checkIfCorrect(answer, quizQuestions[currentIndex])
         //console.log(`Answer for question ${quizQuestions[currentIndex].question_id} is ${isCorrect ? "correct" : "incorrect"}`)
@@ -76,7 +78,8 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
             completed_at: new Date().toISOString().split('T')[0] // Sets the completed_at to the current date at midnight
         }
         //console.log("Current Answer => ", currentAnswer)
-        setAnswerSheet((prev) => [...prev, currentAnswer])
+        const updatedAnswerSheet = [...answerSheet, currentAnswer]
+        setAnswerSheet(updatedAnswerSheet)
         //console.log("Answer Sheet => ", answerSheet)
 
         // Resets 
@@ -86,12 +89,15 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
         // Score the answerSheet and send it to the backend if it's the last question
         const isLastQuestion = currentIndex == quizQuestions.length - 1
         if (isLastQuestion) {
-            const response = await gradeQuizQuestions(answerSheet)
-            setQuizResults(response)
-            console.log("results after grading => ", response)
-
-            // redirects to the quiz results
-            setQuizCompleted(true)
+            try{
+                const response = await gradeQuizQuestions(answerSheet, section, clerkId, sessionId)
+                setQuizResults(response)
+                console.log("results after grading => ", response)
+                
+                setQuizCompleted(true)
+            } catch (error) {
+                console.error("Failed to grade quiz: ", error)
+            }
             return
         } else {
             setCurrentIndex(prevIndex => prevIndex + 1)

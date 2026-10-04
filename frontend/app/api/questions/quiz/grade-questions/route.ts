@@ -9,13 +9,14 @@ export async function POST(req: NextRequest) {
         if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
         // Guard against an empty answer sheet 
-        const answerSheet = await req.json()
-        if (!answerSheet) return NextResponse.json({error: "No answer sheet provided."}, {status: 400})
+        const {answerSheet, section, sessionId} = await req.json()
+        if (!answerSheet || answerSheet.length===0) return NextResponse.json({error: "No answer sheet provided."}, {status: 400})
+        if (!section || !userId || !sessionId) return NextResponse.json({error: "No answer sheet provided."}, {status: 400})
 
         // Checks to make sure that the frontend is connected to the backend
         if (!process.env.FASTAPI_URL) return NextResponse.json({ error: "Server misconfigured" }, { status: 500 })
 
-        const res = await fetch(`${process.env.FASTAPI_URL}/api/questions/quiz/grade-questions`, {
+        const res = await fetch(`${process.env.FASTAPI_URL}/api/questions/quiz/${encodeURIComponent(section)}/grade-questions/${userId}/${sessionId}`, {
             method: 'POST', 
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(answerSheet)

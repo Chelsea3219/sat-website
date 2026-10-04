@@ -1,4 +1,4 @@
-import QuizClient from "@/components/dashboard/QuizClient"
+import QuizClient from "@/components/dashboard-client/QuizClient"
 
 type PageProps = {
     params: Promise<{section: string}>

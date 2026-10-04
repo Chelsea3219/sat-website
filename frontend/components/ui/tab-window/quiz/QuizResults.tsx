@@ -2,6 +2,7 @@ import { IncomingGradedAnswerSheet } from "@/types/mastery-score"
 import { estimateSATSectionScore2 } from "@/utils/scoreAlgorithms"
 import { SegmentedProgressBar } from "../../SegmentedProgressBar"
 import { MoveRight} from "lucide-react"
+import { colorChange } from "@/utils/renderColor"
 
 type QuizResultsProp = {
     section: string
@@ -12,9 +13,9 @@ export default function QuizResults({section, quizResults}: QuizResultsProp) {
 
     // Declare the variables
     const section_mastery = quizResults?.section_mastery
-    const topics_mastery = quizResults?.topics_mastery
-    const subtopics_mastery = quizResults?.subtopics_mastery
-    const gold_analytics =  quizResults?.gold_analytics
+    const topics_mastery = quizResults?.topic_mastery
+    const subtopics_mastery = quizResults?.subtopic_mastery
+    const gold_analytics =  quizResults?.updated_quiz_analytics
     
 
     // Declare the font styles
@@ -42,18 +43,6 @@ export default function QuizResults({section, quizResults}: QuizResultsProp) {
         {label: "Mastery Score", newScore:gold_analytics[sectionMastery].mastery_score, oldScore:section_mastery.mastery_score}, 
         {label: "SAT Score", newScore: estimateSATSectionScore2(gold_analytics[sectionMastery].mastery_score), oldScore:estimateSATSectionScore2(section_mastery.mastery_score)}, 
     ]
-
-    const colorChange = (newScore: number, oldScore:number): string => {
-        const change = newScore - oldScore
-        const base = "circleWrapper font-bold text-3xl"
-        if (change < 0) {
-            return `${base} text-red-500`
-        } else if (change > 0) {
-            return `${base} text-green-500`
-        } else {
-            return ""
-        }
-    }
     
     return (
         <>
@@ -148,10 +137,13 @@ export default function QuizResults({section, quizResults}: QuizResultsProp) {
                     <div className="flex-1">
                         <div className="flex flex-col space-y-2">
                             <p className={headerStyle}>Weaknesses</p>
-                            <div className="pl-4 w-72">
+                            <div className="pl-4 w-96">
                                 {weakSubtopics.map((sub) => (
                                     <div key={sub.subtopic} className="flex flex-row justify-between gap-x-8">
-                                        <p className={subHeaderStyle}>{sub.subtopic}</p>
+                                        <div className="flex flex-row space-x-1 items-center">
+                                            <p className={subHeaderStyle}>{sub.subtopic}</p>
+                                            <p className="text-xs text-primary font-bold uppercase mt-1">{(sub.section).slice(0,1)}</p>
+                                        </div>
                                         <p className="text-lg text-primary font-semibold">{sub.mastery_score.mastery_score}%</p>
                                     </div>
                                 ))}

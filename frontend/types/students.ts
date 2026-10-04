@@ -82,7 +82,7 @@ export type MathTopicsMastery = {
     "problem solving & data analysis": MasteryScore
 }
 
-export type StudentAnalytics = {
+export type QuizAnalytics = {
     session_id: string
     clerk_id: string
     type: string
@@ -98,10 +98,20 @@ export type StudentAnalytics = {
     completed_at: string
 }
 
+export type SilverQuizAnalytics = {
+    session_id: string 
+    clerk_id: string 
+    section: string 
+    section_mastery: MasteryScore
+    topics_mastery: Record<string, MasteryScore>
+    completed_at: string 
+}
+
 export type SubtopicMastery = {
     id: string
     clerk_id: string 
     section: string
+    topic: string
     subtopic: string
     mastery_score: MasteryScore
     questions_answered: {
@@ -122,7 +132,20 @@ export type IncomingStudentInformation = {
         time_spent: number
     }
     test_scores: TestScores
-    past_analytics: StudentAnalytics[]
-    student_analytics: StudentAnalytics
+    quiz_analytics: QuizAnalytics[]
     subtopic_mastery: SubtopicMastery[]
+}
+
+
+export type PastQuizAnalytics = {
+    past_quizzes: SilverQuizAnalytics[]
+    num_quizzes: number 
+}
+
+
+export type SessionProgress = {
+    masteryScore: number | null 
+    numCompleted: number 
+    numQuestions?: number 
+    trend: "up" | "down" | "flat"
 }

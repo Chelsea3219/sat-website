@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link";
-import {QuestionTabProps } from "@/types/questions"
+import {QuizQuestionTabProps } from "@/types/questions"
 import { IncomingGradedAnswerSheet } from "@/types/mastery-score";
 import { ProgressBar } from "../../ProgressBar";
-import "../../../css/tab-window.css"
+import "@/css/tab-window.css"
 import MathQuestionTab from "../MathQuestionTab"
 import ReadingQuestionTab from "../ReadingQuestionTab";
 import QuizResults from "./QuizResults";
@@ -17,7 +17,7 @@ type TabWindowProps = {
         completedQuestions: number
         numQuestions: number
     }
-    questionTabProps : QuestionTabProps
+    questionTabProps : QuizQuestionTabProps
     quizResults: IncomingGradedAnswerSheet | null 
 }
 
@@ -49,8 +49,6 @@ export default function QuizTabWindow({section, activeTab, progress, questionTab
                                     >
                                         {tab}
                                     </Link>
-
-                                    
                                 </div>
                             )
                         })}
@@ -58,7 +56,10 @@ export default function QuizTabWindow({section, activeTab, progress, questionTab
 
                     {/* Progress Bar */}
                     <div className="flex items-center w-48">
-                        <ProgressBar completed={progress.completedQuestions} numQuestions={progress.numQuestions}/>
+                        {!quizResults  
+                            ? <ProgressBar completed={progress.completedQuestions} numQuestions={progress.numQuestions}/>
+                            : <div> </div>
+                        }
                     </div>
 
                 </div>
@@ -66,7 +67,7 @@ export default function QuizTabWindow({section, activeTab, progress, questionTab
 
                 {/* Tab Context */}
                 <div role="tabpanel" className="p-4 flex-1 h-full">
-                    {questionTabProps.quizCompleted
+                    {quizResults
                         ? <QuizResults section={section} quizResults={quizResults}/>
                         : (
                             <>
