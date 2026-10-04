@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState} from "react"
 import {ChevronRight, ChevronDown} from "lucide-react";
 import Link from "next/link"
 import "@/css/navigation/practice-sidebar.css"
@@ -19,20 +19,36 @@ type PracticeProps = {
 }
 
 export default function PracticeSidebarItem({ item, defaultOpen = false }: PracticeProps) {
-    const [open, setOpen] = useState(defaultOpen)
+
+    // Normalize the full path 
+    const BASE = "/dashboard/practice"
+    const toFullPath = (path: string) => `${BASE}${path}`
+
+    // Helper function to auto-expand the active branch 
+    const containsPath = (item: SidebarItem, pathname: string): boolean =>
+        (item.path != null && pathname === toFullPath(item.path)) ||
+        (item.children?.some(child => containsPath(child, pathname)) ?? false)
+
+    // Declare the parameters 
     const pathname = usePathname()
     const searchParams = useSearchParams()
     const activeTab = searchParams.get("tab") ?? "Review"
 
+    // Open the sidebar 
+    const [manualOpen, setManualOpen] = useState<boolean | null>(null)
+    const isActiveBranch = containsPath(item, pathname)
+    const open = manualOpen ?? (defaultOpen || isActiveBranch)
+
     const hasChildren = item.children && item.children.length > 0
+
 
     // ROOT NODES (Reading / Math)
     if (item.title === "Reading" || item.title === "Math") {
         return (
             <div className="mb-4">
-                {item.children?.map((child, index: number) => (
+                {item.children?.map((child) => (
                     <PracticeSidebarItem
-                        key={index}
+                        key={child.title}
                         item={child}
                     />
                 ))}
@@ -46,20 +62,19 @@ export default function PracticeSidebarItem({ item, defaultOpen = false }: Pract
             <div className="sidebar-item">
                 <div
                     className="sidebar-subtitle flex items-center gap-1 cursor-pointer"
-                    onClick={() => setOpen(!open)}
+                    onClick={() => setManualOpen(!open)}
                 >
                     <div>
                         {open ? <ChevronDown /> : <ChevronRight />}
                     </div>
-
                     <span>{item.title}</span>
                 </div>
 
                 {open && (
                     <div>
-                        {item.children?.map((child, index: number) => (
+                        {item.children?.map((child) => (
                             <PracticeSidebarItem
-                            key={index}
+                            key={child.title}
                             item={child}
                         />
                         ))}
@@ -70,14 +85,19 @@ export default function PracticeSidebarItem({ item, defaultOpen = false }: Pract
     }
 
     // LEAF NODE
+    const fullPath = item.path ? toFullPath(item.path) : ""
+    const isActive = pathname === fullPath
+    //console.log({ pathname, fullPath, isActive })
     return (
         <div className="sidebar-leaf ml-4">
             {item.path ? (
                 <Link
-                    href={`/dashboard/practice/${item.path}?tab=${activeTab}`}
+                    href={`${fullPath}?tab=${activeTab}`}
+                    aria-current = {isActive ? "page" : undefined}
                     className={
-                    pathname === item.path
-                        ? "text-accent font-semibold" : "text-slate-900 hover:text-accent hover:font-semibold transition-colors"
+                        isActive
+                            ? "text-primary font-semibold text-[115%]" 
+                            : "text-slate-900 hover:text-accent hover:font-semibold transition-colors"
                     }
                 >
                     {item.title}
