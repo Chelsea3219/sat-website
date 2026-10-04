@@ -12,7 +12,7 @@ export default async function SignInPage() {
 
     return (
        <div className="flex justify-center items-center">
-            <div className="-mt-10">
+            <div className="mt-10">
                 <SignIn/>
             </div>
         </div>
