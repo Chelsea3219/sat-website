@@ -6,7 +6,7 @@ export const sampleQuizResults: IncomingGradedAnswerSheet = {
         raw_score: 7,
         mastery_score: 70
     },
-    topics_mastery: {
+    topic_mastery: {
         "Algebra": {
             max_score: 4,
             raw_score: 3,
