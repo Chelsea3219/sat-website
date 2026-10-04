@@ -12,3 +12,56 @@
 .arrow-flow {
     animation: arrow-pulse 1.8s ease-in-out infinite;
 }
+
+
+.animate-shine {
+  position: relative;
+  background-color: color-mix(in srgb, var(--shine-color, var(--color-primary)) 6%, white);
+  overflow: hidden;
+}
+
+.animate-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--shine-color, var(--color-primary)) 25%, white) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  animation: shine-sweep 1.8s ease-in-out infinite;
+}
+
+@keyframes shine-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shine-progress {
+    position: relative;
+    background-color: color-mix(in srgb, var(--shine-color, var(--color-primary)) 20%, white);
+    overflow: hidden;
+}
+
+.animate-shine-progress::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        100deg,
+        transparent 20%,
+        color-mix(in srgb, var(--shine-color, var(--color-primary)) 45%, white) 50%,
+        transparent 80%
+    );
+    transform: translateX(-100%);
+    animation: shine-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes shine-sweep {
+    100% {
+        transform: translateX(100%);
+    }
+}

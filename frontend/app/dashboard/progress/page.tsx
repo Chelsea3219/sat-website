@@ -1,4 +1,4 @@
-import ProgressClient from "@/components/dashboard/ProgressClient"
+import ProgressClient from "@/components/dashboard-client/ProgressClient"
 
 export default function Page() {
 
