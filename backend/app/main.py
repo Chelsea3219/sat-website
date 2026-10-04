@@ -15,7 +15,9 @@ from app.domains.errors.router import general_http_exception_handler, validation
 from app.domains.admin.routers import marketing
 from app.domains.students.routers import register, student_info
 from app.domains.questions.routers import fetch_questions
-from app.domains.analytics import router
+from app.domains.analytics.routers import router as analytics_router, past_analytics
+from app.domains.document_processing.routers import extract_questions, fetch_questions_parameters, upload, add_questions, update_questions
+from app.domains.achievements import router as achievement
 
 # Configuration
 from app.core.config import settings
@@ -43,12 +45,14 @@ app.include_router(marketing.router)
 app.include_router(register.router)
 app.include_router(student_info.router)
 app.include_router(fetch_questions.router)
-app.include_router(router.router)
-
-#app.include_router(progress.router)
-#app.include_router(profile.router)
-#app.include_router(dashboard.router)
-#app.include_router(landing.router)
+app.include_router(analytics_router.router)
+app.include_router(past_analytics.router)
+app.include_router(extract_questions.router)
+app.include_router(upload.router)
+app.include_router(fetch_questions_parameters.router)
+app.include_router(add_questions.router)
+app.include_router(update_questions.router)
+app.include_router(achievement.router)
 
 
 # MIDDLEWARE -----------------------------------------------------------------------------------------------------------
