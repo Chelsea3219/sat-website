@@ -2,9 +2,9 @@
 
 .admin-topics header {
     display: block;
-    margin-bottom: 4px;
-    font-size: 1rem; /* text-sm */
-    font-weight: 700; /* font-medium */
+    margin-bottom: 1px;
+    font-size: 1.1rem; /* text-sm */
+    font-weight: 800; /* font-medium */
     color: var(--color-primary);
     text-transform: uppercase;
     letter-spacing: 0.05rem;
@@ -21,9 +21,23 @@
     transition: color 0.15s ease, transform 0.15s ease;
 }
 
-.subsection:hover {
+.subsection:hover,
+.subsection.active {
+    font-weight: 700; 
     color: var(--color-accent);
-    transform: scale(1.1);
-    font-weight: 600;
+    transform-origin: left center;
+    transition: transform 0.2s ease;
+    transform: scale(1.10);
 }
 
+
+.profile-sidebar-subheader:hover, 
+.profile-sidebar-header:hover, 
+.profile-sidebar-header.active,
+.profile-sidebar-subheader.active{
+    font-weight: 700; 
+    color: var(--color-accent);
+    transform-origin: right center;
+    transition: transform 0.2s ease;
+    transform: scale(1.10);
+}

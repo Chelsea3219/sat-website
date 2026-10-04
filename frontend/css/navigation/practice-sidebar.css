@@ -6,9 +6,9 @@
     flex-shrink: 0;
     overflow-y: auto;        /* ← scroll inside sidebar only */
     height:100%;  /* ← contained height */
-    border: 3px solid #6256e3;
+    border: 2px solid #6256e3;
     border-radius: 1.5rem;
-    background-color:#d6dbf5;
+    background-color:#F8F8FC;
     transition: background-color 0.2s ease, padding-left 0.2s ease;
 }
 
@@ -25,7 +25,6 @@
 }
 
 
-
 .sidebar-title{
     display: flex;
     font-size: 1.3rem;
@@ -35,6 +34,7 @@
     text-transform: uppercase;
     letter-spacing: 0.10rem;
 }
+
 
 .sidebar-subtitle{
     display: flex;
@@ -106,8 +106,7 @@
 .profile-sidebar-header:hover, 
 .profile-sidebar-header.active,
 .profile-sidebar-subheader.active{
-    font-weight: 700; 
-    color: var(--color-accent);
+    font-weight: 700;
     transform-origin: center;
     transition: transform 0.2s ease;
     transform: scale(1.10);

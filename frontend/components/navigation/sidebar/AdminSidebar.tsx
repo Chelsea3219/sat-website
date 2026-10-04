@@ -1,34 +1,68 @@
-import "../../styles/admin-sidebar.css"
+import "@/css/navigation/admin-sidebar.css"
 import Link from 'next/link'
+import { usePathname } from "next/navigation"
+
+type SidebarLink = {
+    label: string 
+    href: string
+}
+const adminSidebarData: {title: string, links: SidebarLink[] }[] = [
+
+    {
+        title: "Questions",
+        links: [
+            {label: "Upload Questions", href:"/admin/questions/upload-questions"},
+            {label: "Add Questions", href:"/admin/questions/add-questions"},
+            {label: "Edit Questions", href:"/admin/questions/edit-questions"},
+            {label: "Search Questions", href:"/admin/questions/search-questions"}
+        ]
+    }, 
+
+    {
+        title: "Students",
+        links: [
+            {label: "Search Students", href:"/admin/students/search-students"},
+            {label: "Student Performance", href:"/admin/students/students-performance"}
+        ]
+    }, 
+
+    {
+        title: "Finance",
+        links: [
+            {label: "Monthly Revenue", href:"/admin/finance/monthly-revenue"},
+            {label: "Monthly Costs", href:"/admin/finance/monthly-costs"},
+            {label: "Projections", href:"/admin/finance/projections"},
+        ]
+    }, 
+]
+
 export default function AdminSidebar() {
+    const pathname = usePathname() // grabs the current URL path
+
     return (
         <>
-            <div className="fixed w-48 top-16 h-[calc(100vh-64px)] bg-white border-r border-t border-black">
-                <div className="admin-topics flex flex-col items-start mt-6">
-                    <header>Questions</header>
-                    <div className=" flex flex-col items-start pl-4">
-                        <Link href="/admin/questions/upload-questions" className="subsection">Upload Questions</Link>
-                        <Link href="/admin/questions/add-questions" className="subsection">Add Questions</Link>
-                        <Link href="/admin/questions/edit-questions" className="subsection">Edit Questions</Link>
-                        <Link href="/admin/questions/search-questions" className="subsection">Search Questions</Link>
-                    </div>
-                </div>
-
-                <div className="admin-topics flex flex-col items-start mt-6">
-                    <header>Students</header>
-                    <div className=" flex flex-col items-start pl-4">
-                        <Link href="/students/search-students" className="subsection">Search Students</Link>
-                        <Link href="/students/student-performance" className="subsection">Student Performance</Link>
-                    </div>
-                </div>
-
-                <div className="admin-topics flex flex-col items-start mt-6">
-                    <header>Finance</header>
-                    <div className=" flex flex-col items-start pl-4">
-                        <Link href="/finance/monthly-revenue" className="subsection">Monthy Revnue </Link>
-                        <Link href="/finance/monthy-costs" className="subsection">Monthy Costs</Link>
-                        <Link href="/finance/projections" className="subsection">Projections</Link>
-                    </div>
+            <div className="fixed w-44 top-16 h-[calc(100vh-64px)] bg-white border-r border-t border-black">
+                <div>
+                    {adminSidebarData.map(section => (
+                        <div key={section.title} className="admin-topics mt-6">
+                            <header>{section.title}</header>
+                            <div className="ml-4">
+                                {section.links.map(link => {
+                                    const isActive = pathname.startsWith(link.href)
+                                    return (
+                                        <div key={link.href}>
+                                            <Link
+                                                href={link.href}
+                                                className={`subsection ${isActive ? "active" : ""}`}
+                                            >
+                                                {link.label}
+                                            </Link>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </>
