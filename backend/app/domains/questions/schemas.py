@@ -31,3 +31,8 @@ class IncomingQuestions(BaseModel):
 
     class Config:
         from_attributes = True  # allows creating this from SQLAlchemy model instances (Pydantic v2 name; use orm_mode=True on v1)
+
+
+class PracticeSession(BaseModel):
+    selected_questions: List[IncomingQuestions]
+    in_session_score: float 
