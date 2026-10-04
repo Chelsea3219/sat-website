@@ -55,8 +55,8 @@ class IncomingStudentInformation(BaseModel):
     student_info: IncomingStudentInfo
     question_stats: QuestionStats
     test_scores: List[IncomingTestScores]
-    past_analytics: Optional[List[IncomingSilverAnalytics]] = None 
-    student_analytics: Optional[IncomingGoldAnalytics] = None
+    # past_analytics: Optional[List[IncomingSilverAnalytics]] = None
+    quiz_analytics: Optional[List[IncomingGoldAnalytics]] = None
     subtopic_mastery: Optional[List[IncomingGoldSubtopicMastery]] = None 
     
 

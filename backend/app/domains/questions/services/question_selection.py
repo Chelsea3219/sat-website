@@ -19,8 +19,8 @@ def random_sample(pool, target):
 
 # Function to select practice questions based on the student's mastery score
 def practice_question_selection(
-        questions: List[IncomingQuestions], 
-        mastery_score: int
+    questions: List[IncomingQuestions], 
+    mastery_score: int
 ) -> List[IncomingQuestions]:
     """
     Most of the questions (80%) are pulled from a loaded deck that's stacked in favor of the student's
@@ -149,7 +149,7 @@ def quiz_assessment_selection(section:str , proficiency:str, questions: List[Inc
         medium_questions = random_sample(grouped[(topic, "medium")], medium_target)
         hard_questions = random_sample(grouped[(topic, "hard")], hard_target)
 
-        selected_ids = {q.question for q in (easy_questions + medium_questions + hard_questions)}
+        selected_ids = {q.question_id for q in (easy_questions + medium_questions + hard_questions)}
         shortfall = topic_count - len(selected_ids)
 
         if shortfall > 0:

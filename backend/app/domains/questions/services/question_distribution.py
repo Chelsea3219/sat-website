@@ -12,10 +12,10 @@ question_distribution = {
 
 # Question Distrubution based on topic ------------------------------------------------------------------------------------------------
 math_questions_per_topic = {
-    "algebra": 15,
-    "advanced math": 15,
-    "problem solving & data analysis": 7,
-    "geometry & trigonometry": 7
+    "algebra": 8,
+    "advanced math": 7,
+    "problem solving & data analysis": 3,
+    "geometry & trigonometry": 4
 }
 reading_questions_per_topic = {
     "information & ideas": 15,

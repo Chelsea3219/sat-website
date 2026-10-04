@@ -11,7 +11,7 @@ def difficulties_to_try(primary_difficulty):
 
 
 # Mastery Score Classfication ----------------------------------------------------------------------------------------------------------
-def mastery_score_to_difficulty(mastery_score: int):
+def mastery_score_to_difficulty(mastery_score: int) -> str:
     """
     Converts the student's numeric mastery score into a difficulty label 
     """
