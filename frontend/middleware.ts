@@ -1,6 +1,7 @@
 // Grants authentication state throughout your app -- allows you to protect specify routes from unauthenticated register
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
+
 export default clerkMiddleware();
 
 export const config = {
