@@ -1,11 +1,12 @@
 
+import DashboardClient2 from "@/components/dashboard-client/DashboardClient2";
 
-
-export default async function DashboardPage() {
+export default async function Page() {
 
     return (
-        <main>
-            <h1>Dashboard</h1>
+        <main className="min-h-screen ">
+            <DashboardClient2/>
+            
         </main>
     );
 }

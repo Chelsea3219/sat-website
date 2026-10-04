@@ -10,7 +10,7 @@ export default async function DashboardLayout({children}: {children: React.React
 
     return (
         <UserInformationProvider>
-            <div className='flex flex-col min-h-screen w-full'>
+            <div className='flex flex-col min-h-screen w-full bg-coolwhite'>
                 {/* NavBar */}
                 <DashboardNavbar />
 
