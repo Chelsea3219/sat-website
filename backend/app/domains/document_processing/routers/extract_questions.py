@@ -26,26 +26,25 @@ async def extract_text(
     text = await file.read()
     extracted_questions = [] # just in case, there is an error
     try:
+        if source != "preppros":
+            raise HTTPException(status_code=400, detail="Source not supported.")
+        
         # Save to temp file so your function gets the path it expects
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
             tmp.write(text)
             tmp_path = tmp.name
 
         # Extract the text
-        if source == "preppros":
-            extracted_questions = extract_text_pp(tmp_path, section, topic, subtopic, source)
+        extracted_questions = extract_text_pp(tmp_path, section, topic, subtopic, source)
 
-            # Clean the text
-            normalized_questions = normalize_questions(extracted_questions)
-            organized_questions = mcq_diagram_identifier(normalized_questions)
+        # Clean the text
+        normalized_questions = normalize_questions(extracted_questions)
+        organized_questions = mcq_diagram_identifier(normalized_questions)
 
-            #Upload the images to cloudinary
-            questions = upload_image_to_cloudinary(organized_questions, section, topic, subtopic)
-        else:
-            return {"success": False, "error":"Source not supported"}
-
+        #Upload the images to cloudinary
+        questions = upload_image_to_cloudinary(organized_questions, section, topic, subtopic)
+        
         return questions
-
     except Exception as e:
         logger.error(f"Unexpected error during questions extraction : {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Error during questions extraction")
