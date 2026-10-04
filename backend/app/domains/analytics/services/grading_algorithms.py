@@ -6,11 +6,11 @@ from collections import defaultdict
 
 from app.domains.errors.error_handler import handle_db_errors
 from app.domains.analytics.schemas import IncomingPracticeSheet, MasteryScore, IncomingAnswerSheet, QuizResultsBreakdown
-from app.domains.analytics.services.score_distribution import score_distribution
+from app.domains.analytics.services.score_distribution import score_distribution, attempt_factor, time_factor
 from app.domains.questions.services.topic import reading_topics, math_topics
 
 
-
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def get_effective_mastery_score(persisted_score: float, session_answers: List[IncomingPracticeSheet]) -> float:
     # If the number of questions is less than 10, do not calculate the mastery_score
     if len(session_answers) < 10:
@@ -24,20 +24,24 @@ def get_effective_mastery_score(persisted_score: float, session_answers: List[In
     Assumes the session eventually accumulates up to 30 answers before the session influence caps at 70%.
     If NUM_QUESTIONS = 30, the cap is reached after 33 full batches """
     session_weight = min(0.7, len(session_answers)/30)
-    return persisted_score *(1 - session_weight) + overall_score["mastery_score"]*session_weight
+    return persisted_score *(1 - session_weight) + overall_score.mastery_score*session_weight
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def grade_practice_answer_sheet(session_answers: List[IncomingPracticeSheet]) -> MasteryScore:
     # Formats the mastery score
     overall_score = {"raw_score":0, "max_score":0, "mastery_score":0}
     for ans in session_answers:
-        overall_score["raw_score"] += score_distribution(ans.difficulty, ans.is_correct)
-        overall_score["max_score"] += score_distribution(ans.difficulty, True)
-    overall_score["mastery_score"] = 100*overall_score["raw_score"] / overall_score["max_score"] if overall_score["mastery_score"] > 0 else 0
+        question_credit = attempt_factor(len(ans.answer_attempts), ans.question_type) * time_factor(ans.time_elapsed, ans.difficulty)
+        max_points = score_distribution(ans.difficulty, True)
+        overall_score["raw_score"] += question_credit*max_points
+        overall_score["max_score"] += max_points
+    overall_score["mastery_score"] = ( round(100 * overall_score["raw_score"] / overall_score["max_score"], 1) if overall_score["max_score"] > 0 else 0)
 
     return MasteryScore(**overall_score)
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def grade_quiz_answer_sheet(section: str, answer_sheet: List[IncomingAnswerSheet]) -> QuizResultsBreakdown: 
     # Determine the parameters 
     topics = reading_topics if section == "reading" else math_topics
@@ -106,8 +110,7 @@ def grade_quiz_answer_sheet(section: str, answer_sheet: List[IncomingAnswerSheet
     return QuizResultsBreakdown(**results)
 
 
-
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Determine student's progress status based on mastery score ------------------------------------------------------------
 REVIEWED_THRESHOLD = 50
 MASTERED_THRESHOLD = 90

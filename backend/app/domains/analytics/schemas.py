@@ -20,11 +20,12 @@ class IncomingAnswerSheet(BaseModel):
     clerk_id: str 
     session_id: str
     question_id: UUID
+    question_type: str
     section: str
     topic: str
     subtopic: List[str]
     difficulty: str
-    answer: str
+    answer: Optional[str] = None 
     is_correct: bool
     time_elapsed: int
     completed_at: datetime 
@@ -48,20 +49,17 @@ class QuestionAttempts(BaseModel):
 
 
 class MasteryScore(BaseModel):
-    raw_score: int
-    max_score: int
+    raw_score: float
+    max_score: float
     mastery_score: float 
 
 
 class SilverAnalytics(BaseModel):
     session_id: str
     clerk_id: str
-    session_type: str
     section: str
     section_mastery: MasteryScore
     topics_mastery: Dict[str, MasteryScore]
-    subtopic: str 
-    subtopic_mastery: Optional[Dict[str, MasteryScore]] = None
 
 
 class IncomingSilverAnalytics(SilverAnalytics):
@@ -100,6 +98,12 @@ class PracticeSessionSummary(BaseModel):
     current_subtopic_mastery: BaseSubtopicMastery
     updated_subtopic_mastery: Optional[BaseSubtopicMastery] = None 
 
+class SubtopicSummary(BaseModel):
+    current_subtopic_mastery: dict
+    updated_subtopic_mastery: dict
+
+class PracticeGradeResponse(BaseModel):           # overall score for this set
+    subtopics: Dict[str, SubtopicSummary]
 
 class QuizSubtopicMastery (BaseModel):
     section: str
@@ -115,3 +119,8 @@ class QuizResultsBreakdown(BaseModel):
     section_mastery: MasteryScore
     topic_mastery: Dict[str, MasteryScore]
     subtopic_mastery: List[QuizSubtopicMastery]
+
+
+class PastQuizAnalytics(BaseModel):
+    past_quizzes: List[IncomingSilverAnalytics]
+    num_quizzes: int 

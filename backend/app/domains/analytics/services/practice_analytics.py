@@ -20,7 +20,7 @@ def build_subtopic_mastery(
     for ans in answer_sheet:
         num_questions += 1
         time_elapsed.append(ans.time_elapsed)
-        if not ans.is_correct:
+        if len(ans.answer_attempts) > 1:
             num_incorrect += 1
 
     # Format the subtopic_record
