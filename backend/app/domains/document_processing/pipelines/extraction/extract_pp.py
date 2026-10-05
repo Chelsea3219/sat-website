@@ -4,7 +4,7 @@ import os
 import pprint
 from pdf2image import convert_from_path
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = '/opt/homebrew/bin/tesseract'
+pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_CMD", "/opt/homebrew/bin/tesseract")
 
 from app.domains.document_processing.pipelines.image_processing import *
 

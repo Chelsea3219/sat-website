@@ -1,0 +1,28 @@
+# Render Blueprint for the FastAPI backend.
+# In Render: New + -> Blueprint -> pick this repo. Render reads this file and asks for the
+# secret values marked "sync: false" (paste them in the dashboard; never commit them).
+services:
+  - type: web
+    name: sat-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: ENV
+        value: production
+      - key: DATABASE_URL          # Supabase "Session pooler" connection string
+        sync: false
+      - key: FRONTEND_URL          # e.g. https://your-app.vercel.app
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false

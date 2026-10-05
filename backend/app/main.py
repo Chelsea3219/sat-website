@@ -26,13 +26,30 @@ from app.core.logging_config import setup_logging
 
 # DEFINE THE API -------------------------------------------------------------------------------------------------------
 setup_logging()
+
+# Hide the interactive API docs on the deployed server (set ENV=production on Render)
+IS_PRODUCTION = os.getenv("ENV", "").lower() == "production"
+
 app = FastAPI(
     title = "Elevate Learning",
     description="Master the SAT through adaptive learning",
     version="0.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url=None if IS_PRODUCTION else "/docs",
+    redoc_url=None if IS_PRODUCTION else "/redoc",
+    openapi_url=None if IS_PRODUCTION else "/openapi.json",
 )
+
+
+# HEALTH CHECK ---------------------------------------------------------------------------------------------------------
+# Used by Render's health check and the weekly keep-alive workflow. Runs a tiny query so the
+# Supabase project registers activity and doesn't auto-pause on the free tier.
+@app.get("/health", include_in_schema=False)
+def health():
+    from sqlalchemy import text
+    from app.core.database import engine
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    return {"status": "ok"}
 
 
 # ERROR HANDLING -------------------------------------------------------------------------------------------------------
