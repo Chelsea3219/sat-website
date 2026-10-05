@@ -11,7 +11,7 @@ from app.domains.questions.services.difficulty_to_mastery_score import determine
 from app.domains.questions.services.fetch_questions import fetch_subtopic_questions, fetch_section_questions
 from app.domains.questions.services.question_selection import practice_question_selection, quiz_question_selection, quiz_assessment_selection
 from app.domains.analytics.services.grading_algorithms import get_effective_mastery_score
-from app.domains.students.services.fetch_student_info import fetch_student_info, fetch_subtopic_mastery, fetch_question_attempts
+from app.domains.students.services.fetch_student_info import fetch_student_info, fetch_subtopic_mastery, fetch_test_scores, fetch_topic_mastery
 
 router = APIRouter(prefix="/api/questions", tags=["questions"])
 
@@ -65,14 +65,16 @@ def fetch_quiz_questions(
     section_mastery = "math_mastery" if section == "math" else "reading_mastery"
 
     # Fetches student's information 
-    student_info, question_attempts, test_score, past_analytics, quiz_analytics, subtopics_mastery = fetch_student_info(clerk_id, db)
+    test_score = fetch_test_scores(clerk_id, db)
+    topic_mastery = fetch_topic_mastery(clerk_id, db)
+    subtopics_mastery = fetch_subtopic_mastery(clerk_id, db)
 
     # Fetch questions based on section
     # already_seen_ids = [a.question_id for a in question_attempts] TODO decide if you need to do this
     questions = fetch_section_questions(section, db)
     
     # Quiz versus Assessment
-    mastery_data = getattr(quiz_analytics, section_mastery)
+    mastery_data = getattr(topic_mastery[0], section_mastery)
     if mastery_data["max_score"] == 0:
         # Determine student's proficiency
         section_score = "math_score" if section == "math" else "reading_score"

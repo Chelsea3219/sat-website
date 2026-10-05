@@ -12,7 +12,7 @@ from app.domains.errors.error_handler import handle_db_errors
 
 # Fetches the student's info, test scores, and most recent analysis based on clerk_id 
 def fetch_student_information(clerk_id:str, db:Session):
-     # Fetch student's information (eg first and last name, school)
+    # Fetch student's information (eg first and last name, school)
     student_info = fetch_student_info(clerk_id, db)
 
     # Retrieves the student test scores 
