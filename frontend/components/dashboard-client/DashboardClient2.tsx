@@ -7,7 +7,7 @@ import "@/css/animation.css"
 import Link from "next/link"
 import GlowButton from "../ui/GlowButton"
 import TopicMasteryChart from "../progress/TopicMasteryChart"
-import { Target, ChartColumnIncreasing, CircleAlert, BookOpen, Calculator, Clock, Calendar, ArrowBigRight} from "lucide-react"
+import { Target, ChartColumnIncreasing, BookOpen, Calculator, Clock, Calendar, ArrowBigRight} from "lucide-react"
 import { toTitleCase } from "@/utils/renderFormattedText"
 import WeaknessCard from "../progress/WeaknessCard"
 
@@ -20,10 +20,10 @@ export default function DashboardClient2() {
     const cardTitleStyle = "text-lg items-start font-bold uppercase tracking-wide"
 
     return (
-        <div className="space-y-4 px-4">
+        <div className="flex flex-col gap-4 px-4 pb-4 min-h-[calc(100dvh-8rem)]">
 
             {/* FIRST ROW : helloBanner and Current & Target Score */}
-            <div className="flex flex-row w-full space-x-4 items-stretch">
+            <div className="flex flex-row w-full gap-4 items-stretch">
                 <HelloBanner
                     fullName={uploader.fullName ?? ""}
                     weeklyGoal={uploader.weeklyGoal ?? 0}
@@ -75,7 +75,7 @@ export default function DashboardClient2() {
             </div>
 
             {/* SECOND ROW : Weaknesses, Back to Practice, Daily and Weekly Progress */}
-            <div className="flex flex-row space-x-4 w-full h-54">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full ">
                 {/* Weaknesses */}
                 <DashboardCard 
                     color="accent"
@@ -90,16 +90,16 @@ export default function DashboardClient2() {
                 <DashboardCard 
                     color="secondary"
                     bgColor="whiteblueOne"
-                    className="w-full"
+                    className="w-full flex flex-col"
                     isLoading={uploader.isLoading}
                 >
                     <div className="flex flex-row space-x-2 items-center mb-1">
-                        <ArrowBigRight style={{strokeWidth:3}} className="w-6 h-6 text-primary"/>
+                        <ArrowBigRight style={{strokeWidth:2}} className="w-6 h-6 text-primary"/>
                         <p className="uppercase text-lg text-primary font-bold">Back To</p>
                     </div>
                     <GlowButton text={uploader.currentSubtopicAnalytics?.subtopic ?? ""}/>
                     <p className="border-2 border-b border-primary/50 mt-3 mb-1 "></p>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col flex-1 items-center justify-evenly">
                         {[
                             {label: "Correct", value: Math.abs((uploader.currentSubtopicAnalytics?.questions_answered.num_questions ?? 0) - (uploader.currentSubtopicAnalytics?.questions_answered.num_incorrect ?? 0))},
                             {label: "Incorrect", value:uploader.currentSubtopicAnalytics?.questions_answered.num_incorrect},
@@ -118,7 +118,7 @@ export default function DashboardClient2() {
                 <DashboardCard 
                     color="secondary"
                     bgColor="whiteblueOne"
-                    className="w-full"
+                    className="w-full flex flex-col"
                     isLoading={uploader.isLoading}
                 >
                     <div className="flex flex-row space-x-4 items-center mb-1">
@@ -129,12 +129,13 @@ export default function DashboardClient2() {
                         {label: "Num of Questions", value: uploader.dailyWeeklyStats?.num_questions ?? 0},
                         {label: "Time Spent", value: uploader.dailyWeeklyStats?.time_spent},
                     ].map(({label, value}) => (
-                        <div key={label} className="flex flex-row justify-between items-center ml-10">
+                        <div key={label} className="flex-1 flex flex-row justify-between items-center ml-10">
                             <p className="text-left text-sm text-main/90">{label}</p>
                             <p className="text-primary font-bold text-lg">{value}</p>
                         </div>
                     ))}
-                    <p className="border-b-3 border-primaryTwo/50 mt-3 mb-1 "></p>
+
+                    <p className="border-b-3 border-primaryTwo/50 my-3 "></p>
 
                     <div className="flex flex-row space-x-4 items-center mb-1">
                         <Target style={{strokeWidth:2}} className="w-6 h-6 text-primary"/>
@@ -144,7 +145,7 @@ export default function DashboardClient2() {
                         {label: "Num of Questions", value: uploader.dailyWeeklyStats?.weekly_num_questions ?? 0},
                         {label: "Time Spent", value: uploader.dailyWeeklyStats?.weekly_time_spent},
                     ].map(({label, value}) => (
-                        <div key={label} className="flex flex-row justify-between items-center ml-10">
+                        <div key={label} className="flex-1 flex flex-row justify-between items-center ml-10">
                             <p className="text-left text-sm text-main/90">{label}</p>
                             <p className="text-primary font-bold text-lg">{value}</p>
                         </div>
@@ -154,77 +155,66 @@ export default function DashboardClient2() {
 
 
             {/* THIRD ROW : Section Breakdown and Quiz History */}
-            <div className="flex flex-row space-x-3 w-full h-54">
-                {/* Section Breakdown */}
-                <DashboardCard 
-                    color="secondary"
-                    bgColor="whiteblueOne"
-                    className="w-full"
-                    isLoading={uploader.isLoading}
-                >
-                    <div className="flex w-full flex-row gap-6">
-                        <div className="min-w-0 flex-1">
-                            <TopicMasteryChart
-                                title="Reading"
-                                sectionMastery={uploader.readingScore ?? 0}
-                                scores={uploader.readingTopicBreakdown ?? {}}
-                                color="primary"
-                                Icon={BookOpen}
-                            />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full flex-1">
+                {/* Section Breakdown — wrapper owns the column span */}
+                <div className="lg:col-span-2 flex">
+                    <DashboardCard
+                        color="secondary"
+                        bgColor="whiteblueOne"
+                        className="w-full flex flex-col items-center justify-center"
+                        isLoading={uploader.isLoading}
+                    >
+                        <div className="flex w-full flex-col md:flex-row gap-6 md:items-center">
+                            <div className="min-w-0 flex-1">
+                                <TopicMasteryChart
+                                    title="Reading"
+                                    sectionMastery={uploader.readingScore ?? 0}
+                                    scores={uploader.readingTopicBreakdown ?? {}}
+                                    color="primary"
+                                    Icon={BookOpen}
+                                />
+                            </div>
+
+                            <div className="hidden md:block w-px self-stretch bg-secondaryOne" />
+
+                            <div className="min-w-0 flex-1">
+                                <TopicMasteryChart
+                                    title="Math"
+                                    sectionMastery={uploader.mathScore ?? 0}
+                                    scores={uploader.mathTopicBreakdown ?? {}}
+                                    color="primary"
+                                    Icon={Calculator}
+                                />
+                            </div>
                         </div>
+                    </DashboardCard>
+                </div>
 
-                        <div className="w-px self-stretch bg-secondaryOne" />
-
-                        <div className="min-w-0 flex-1">
-                            <TopicMasteryChart
-                                title="Math"
-                                sectionMastery={uploader.mathScore ?? 0}
-                                scores={uploader.mathTopicBreakdown ?? {}}
-                                color="primary"
-                                Icon={Calculator}
-                            />
-                        </div>
-                    </div>`
-                </DashboardCard>
-
-                {/* Past Quiz History */}
-                <div>
-                    <DashboardCard 
+                {/* Past Quiz History — no fixed width */}
+                <div className="flex">
+                    <DashboardCard
                         color="accent"
                         bgColor="accent"
                         className="w-full"
-                        style={{"width": 600}}
                         isLoading={uploader.isLoading}
                     >
                         <div className="flex flex-row space-x-2 items-center mb-4">
                             <Clock style={{strokeWidth:3}} className="text-orange-500 w-6 h-6"/>
                             <p className={`text-orange-500 ${cardTitleStyle}`}>Quiz History</p>
                         </div>
-                        {uploader.pastQuizAnalytics 
-                            ?   (
-                                (uploader.pastQuizAnalytics ?? []).map((quiz) => (
-                                    <div key={quiz.session_id} className="flex flex-row justify-between px-4 items-center">
-                                        <p className="tracking-wide font-semibold text-base">{toTitleCase(quiz.section)}</p>
-                                        <p className="text-gray-500 text-sm">{new Date(quiz.completed_at).toLocaleDateString()}</p>
-                                        <p className="font-bold text-orange-500 text-xl">{quiz.section_mastery.mastery_score}%</p>
-                                    </div>
-                                )))
-                            : "Not enough information"
+                        {uploader.pastQuizAnalytics?.length
+                            ? uploader.pastQuizAnalytics.map((quiz) => (
+                                <div key={quiz.session_id} className="flex flex-row justify-between px-4 items-center">
+                                    <p className="tracking-wide font-semibold text-base">{toTitleCase(quiz.section)}</p>
+                                    <p className="text-gray-500 text-sm">{new Date(quiz.completed_at).toLocaleDateString()}</p>
+                                    <p className="font-bold text-orange-500 text-xl">{quiz.section_mastery.mastery_score}%</p>
+                                </div>
+                            ))
+                            : <p className="text-sm text-gray-500 px-4">Not enough information</p>
                         }
                     </DashboardCard>
                 </div>
             </div>
-
-            {/* 
-            <div className="flex flex-row space-x-3 ">
-                <DashboardCard color="secondaryOne" className="" isLoading={uploader.isLoading}>
-                    Past Quiz History
-                </DashboardCard>
-                <DashboardCard color="accent" className="" isLoading={uploader.isLoading}>
-                    achievements
-                </DashboardCard>
-            </div>
-            */}
         </div>
     )
 }

@@ -1,6 +1,7 @@
 
 import DashboardClient2 from "@/components/dashboard-client/DashboardClient2";
 
+
 export default async function Page() {
 
     return (

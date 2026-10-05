@@ -24,7 +24,7 @@ export default function DashboardNavbar() {
     const isActive = (path:string) => pathname === path
     const linkClass = (path: string) => 
         `text-white text-xs sm:text-sm md:text-base font-semibold ${isActive(path)
-            ? 'scale-120 font-bold border-b-3 border-white px-1' // 'text-main rounded-full bg-secondary p-2' 
+            ? 'scale-120 font-bold border-b-2 border-white px-1' // 'text-main rounded-full bg-secondary p-2' 
             : 'hover:text-accent hover:scale-115 transition-all'
         }`
     

@@ -22,32 +22,39 @@ export default function Achievements({cardTitleStyle, achievements}:Achievements
 
     return (
 
-        <>
+        <div className="">
+            {/* Title */}
             <div className="flex flex-row space-x-2 items-center mb-2">
                 <Trophy style={{strokeWidth:2}} className="text-accent w-6 h-6"/>
                 <p className={`text-accent ${cardTitleStyle}`}>Achievements</p>
             </div>
+
+            {/* Achievements  */}
             {/* TODO add more acheivements */}
-            <div className = "ml-10">
+            <div className = "grid grid-cols-1 gap-x-6 gap-y-2">
                 {(achievements ?? []).map(({id, description, progress, target, tier}) => {
                     const goalDone = progress >= target
                     const tierColor = tierColorChange(tier ?? "")
                     return (
-                        <div key={id} className="flex items-center flex-row space-x-2 mb-3">
-                            <div className="flex items-center flex-row space-x-2 ">
-                                {goalDone ? <SquareCheckBig/> : <Square/>}
+                        <div key={id} className="flex items-center gap-2 min-w-0">
+                            <div className="flex items-center flex-row space-x-2 ml-8">
+                                {goalDone
+                                    ? <SquareCheckBig className="w-4 h-4 shrink-0" />
+                                    : <Square className="w-4 h-4 shrink-0" />
+                                }
                                 <p>{description}</p>
+                                {tier && (
+                                    <span className={`ml-auto shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${tierColor}`}>
+                                        {tier}
+                                    </span>
+                                )}
                             </div>
-                            {tier && (
-                            <span className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${tierColor}`}>
-                                {tier}
-                            </span>
-                            )}
+                            
                         </div>
                         
                     )}
                 )}
             </div> 
-        </>
+        </div>
     )
 }

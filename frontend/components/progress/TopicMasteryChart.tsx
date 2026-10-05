@@ -26,13 +26,13 @@ export default function TopicMasteryChart({scores, Icon, title, sectionMastery, 
         <>
             <div className="w-full">
                 {/* Title */}
-                <div className="flex flex-row items-center justify-between">
-                    <div className="flex flex-row space-x-4 items-center mb-2">
+                <div className="flex flex-row flex-wrap items-center justify-between gap-3 mb-3">
+                    <div className="flex flex-row gap-3 shrink-0 items-center">
                         <Icon style={{strokeWidth:2}} className="w-6 h-6 text-primary"/>
                         <p className="uppercase text-xl text-primary font-bold">{title}</p>
                     </div>
                     <div 
-                        className="flex flex-row gap-2 rounded-3xl px-4 py-1 border-2 border-primary font-semibold text-center"
+                        className="flex flex-row gap-2 rounded-2xl px-4 py-1 border-2 border-primary font-semibold text-center"
                         style={{ borderColor: `var(--color-${color})` } as React.CSSProperties}
                     >
                         <p style={{ color: `var(--color-${color})` } as React.CSSProperties} className="text-primary">{sectionMastery}%</p>
@@ -40,14 +40,14 @@ export default function TopicMasteryChart({scores, Icon, title, sectionMastery, 
                             className="border-l-2"
                             style={{ borderColor: `var(--color-${color})` } as React.CSSProperties}
                         ></p>
-                        <p style={{ Color: `var(--color-${color})` } as React.CSSProperties} className="text-primary">{estimateSATSectionScore2(sectionMastery)}</p>
+                        <p style={{ color: `var(--color-${color})` } as React.CSSProperties} className="text-primary">{estimateSATSectionScore2(sectionMastery)}</p>
                     </div>
                 </div>
 
 
                 {/* map function is an array method. So you need to convert scores to an array of entries using Object.entries() */}
                 {Object.entries(scores).map(([label, score]) => (
-                    <div key={label} className="flex flex-col mb-2">
+                    <div key={label} className="flex flex-col mb-1.5">
                         {/* Label row with score on the right */}
                         <div className="flex items-center justify-between gap-x-4">
                             <span className="text-md text-slate-600">{label}</span>

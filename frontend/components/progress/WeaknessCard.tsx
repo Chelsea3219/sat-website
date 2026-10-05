@@ -25,10 +25,10 @@ export default function WeaknessCard({cardTitleStyle, weakSubtopicBreakdown}: We
             <div className="w-full h-full">
                 <div className="flex flex-row space-x-2 items-center mb-2">
                     <CircleAlert style={{strokeWidth:2}} className="text-orange-500 w-6 h-6"/>
-                    <p className={`text-orange-500 ${cardTitleStyle}`}>Weaknesess</p>
+                    <p className={`text-orange-500 ${cardTitleStyle}`}>Weaknesses</p>
                 </div>
                 {weakSubtopicBreakdown?.map((sub) => (
-                    <div key={sub.subtopic} className="flex flex-row justify-between items-center space-y ml-2">
+                    <div key={sub.subtopic} className="flex flex-row justify-between items-center space-y-1">
                         <div className="flex flex-row space-x-1 items-center">
                             <Link
                                 href={`/dashboard/practice/${sub.section}/${sub.topic}/${sub.subtopic}`}
@@ -36,7 +36,7 @@ export default function WeaknessCard({cardTitleStyle, weakSubtopicBreakdown}: We
                             >
                                 {sub.subtopic}
                             </Link>
-                            <p className="text-xs text-orange-500 font-bold mt-1 uppercase">{sub.section.slice(0,1)}</p>
+                            <p className="text-xs text-orange-500 font-bold uppercase">{sub.section.slice(0,1)}</p>
                         </div>
                         <div>
                             <p className=" text-xs font-semibold">{sub.mastery_score.mastery_score}%</p>

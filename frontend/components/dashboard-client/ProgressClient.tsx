@@ -9,10 +9,10 @@ import TopicMasteryChart from "../progress/TopicMasteryChart"
 import ProgressHistogramChart from "../progress/ProgressHistogramChart"
 import useProgress from "@/hooks/dashboard/useProgress"
 import Link from "next/link"
-import { formatMinutes} from "@/utils/renderFormattedText"
+import { formatMinutes, toTitleCase} from "@/utils/renderFormattedText"
 import DashboardCard from "../dashboard/DashboardCard"
 import "@/css/buttons.css"
-import { Calculator, BookOpen} from "lucide-react"
+import { Calculator, BookOpen, Compass} from "lucide-react"
 import WeaknessCard from "../progress/WeaknessCard"
 import Achievements from "../progress/Acheivements"
 
@@ -36,24 +36,22 @@ export default function ProgressClient() {
         <>
             {/* */}
 
-            <div className="space-y-4 px-4 mb-4">
-
+            <div className="flex flex-col gap-4 px-4 pb-4 min-h-[calc(100dvh-6rem)]">
                 {/* FIRST ROW : Student's Overall Performance and Consistency */}
                 <div className="flex flex-row items-stretch w-full h-52 gap-4">
                     {/* Owl Animation */}
                     <DashboardCard 
                             color={"secondaryOne"} bgColor={"white"}
-                            className="flex items-center justify-center" 
+                            className="flex items-center justify-center w-full" 
                             isLoading={uploader.isLoading}
                             style={{
-                                width: 300,
                                 backgroundColor: "#faf8ff",
                                 backgroundImage: "radial-gradient(#d9d0ff 1.2px, transparent 1.2px)",
                                 backgroundSize: "18px 18px",
                             }}
                         >
-                            <div style={{ position: "relative", width: "100%", overflow: "hidden", borderRadius: 12 }}>
-                                <Lottie animationData={owlAnimation} className="w-full h-full" loop />
+                            <div className="h-full max-h-72 aspect-square overflow-hidden rounded-xl " style={{ position: "relative", width: "100%", overflow: "hidden", borderRadius: 12 }}>
+                                <Lottie animationData={owlAnimation} className="w-full h-full scale-135" loop />
                             </div>
                     </DashboardCard>
 
@@ -116,13 +114,13 @@ export default function ProgressClient() {
                 </div>
 
                 {/* SECOND ROW : Reading and Math Mastery Scores by topic */}
-                <div className="flex flex-row items-stretch w-full h-60 gap-4">
+                {/* <div className="flex flex-row items-stretch w-full h-60 gap-4"> */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full flex-1">
                     {/* Achievements */}
                     <ProgressCard 
                             color="accent" 
                             isLoading={uploader.isLoading} 
                             className="flex flex-1 flex-col "
-                            style={{"width":1000}}
                     >
                         <Achievements achievements={uploader.achievements ?? []} cardTitleStyle={cardTitleStyle}/>
                     </ProgressCard>
@@ -135,13 +133,15 @@ export default function ProgressClient() {
                             isLoading={uploader.isLoading} 
                             className="flex flex-1 "
                         >
-                            <TopicMasteryChart
-                                title = "Reading"
-                                sectionMastery={uploader.readingScore ?? 200}
-                                scores = {uploader.readingTopicBreakdown ?? {}}
-                                color="primary"
-                                Icon={BookOpen}
-                            />
+                            <div className="flex flex-col justify-center w-full ">
+                                <TopicMasteryChart
+                                    title = "Reading"
+                                    sectionMastery={uploader.readingScore ?? 200}
+                                    scores = {uploader.readingTopicBreakdown ?? {}}
+                                    color="primary"
+                                    Icon={BookOpen}
+                                />
+                            </div>
                         </ProgressCard>
 
                         {/* Math */}
@@ -150,22 +150,24 @@ export default function ProgressClient() {
                             isLoading={uploader.isLoading} 
                             className="flex flex-1 "
                         >
-                            <TopicMasteryChart
-                                title = "Math"
-                                sectionMastery={uploader.mathScore ?? 200}
-                                scores = {uploader.mathTopicBreakdown ?? {}}
-                                color="primary"
-                                Icon={Calculator}
-                            />
+                            <div className="flex flex-col justify-center w-full ">
+                                <TopicMasteryChart
+                                    title = "Math"
+                                    sectionMastery={uploader.mathScore ?? 200}
+                                    scores = {uploader.mathTopicBreakdown ?? {}}
+                                    color="primary"
+                                    Icon={Calculator}
+                                />
+                            </div>
                         </ProgressCard>
                     </div>
                 </div>
 
                 {/* THIRD ROW : Performance Trend and Weaknesses */}
-                <div className="flex flex-row items-stretch w-full h-70 gap-4">
+                <div className="grid grid-cols-[2.8fr_1fr_0.8fr] gap-4 w-full flex-1">
 
                     {/* Performance Trend */}
-                    <div className="flex w-1/2">
+                    <div className="flex w-full">
                         <ProgressCard 
                             color="secondary" 
                             isLoading={uploader.isLoading} 
@@ -190,19 +192,31 @@ export default function ProgressClient() {
 
 
                     {/* Weaknesses */}
-                    <ProgressCard color="orange-500" isLoading={uploader.isLoading} style={{width:500}} className="flex flex-col flex-1">
+                    <ProgressCard color="orange-500" isLoading={uploader.isLoading} className="flex flex-col flex-1">
                         <WeaknessCard cardTitleStyle={cardTitleStyle} weakSubtopicBreakdown={uploader.weakSubtopicBreakdown}/>
                     </ProgressCard>
 
 
                     {/* TODO : UI  */}
-                    <ProgressCard color="primary" isLoading={uploader.isLoading} style={{width:200}} className="flex flex-col flex-1 bg-[#F8F7FF]">
-                        <p className={`text-primary text-center ${cardTitleStyle}`}>Next Step </p>
-                        <p>Focus on</p>
-                        <p>{nextSubtopic?.subtopic}</p>
-                        <p>Your current mastery : {nextSubtopic?.mastery_score.mastery_score}</p>
+                    <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex flex-col bg-[#F8F7FF] p-2 space-y-4">
+                        <div className="flex items-center gap-x-2 mb-4">
+                            <Compass style={{ strokeWidth: 2 }} className="w-6 h-6 text-primary shrink-0" />
+                            <p className={`text-primary ${cardTitleStyle}`}>Next Topic</p>
+                        </div>
+                        
+                        <div className="flex flex-col items-center">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Focus on</p>
+                            <p className="text-2xl font-bold text-main leading-tight mt-1">
+                                {toTitleCase(nextSubtopic?.subtopic ?? "")}
+                            </p>
+                        </div>
+
                         <Link
-                            href={`/dashboard/practice/{}`}></Link>
+                            href={`/dashboard/practice/${nextSubtopic?.section}/${nextSubtopic?.topic}/${nextSubtopic?.subtopic}`}
+                            className="mt-4 w-full rounded-xl bg-primary py-2.5 text-center text-sm font-bold uppercase tracking-wide text-white hover:bg-primary/90 transition"
+                        >
+                            Practice Now
+                        </Link>
                     </ProgressCard>
                 </div>
             </div>
