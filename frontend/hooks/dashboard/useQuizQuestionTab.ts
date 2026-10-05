@@ -20,7 +20,6 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
     const [answer, setAnswer] = useState<string>("")
     const [answerSheet, setAnswerSheet] = useState<AnswerSheet[]>([]) // Stores the student's answers for each question
     const [quizResults, setQuizResults] = useState<IncomingGradedAnswerSheet | null>(null)
-    const [quizCompleted, setQuizCompleted] = useState(false)
 
 
     // Fetches the quiz questions for the specific clerk_id and section ---------------------------------------
@@ -94,7 +93,6 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
                 setQuizResults(response)
                 console.log("results after grading => ", response)
                 
-                setQuizCompleted(true)
             } catch (error) {
                 console.error("Failed to grade quiz: ", error)
             }
@@ -108,5 +106,5 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
     // Declare the current question based on the current index 
     const currentQuestion = quizQuestions[currentIndex] ?? null 
 
-    return { quizQuestions, currentIndex, timeElapsed, currentQuestion, answer, answerSheet, checkAnswer, handleAnswerChange, quizCompleted, quizResults}
+    return { quizQuestions, currentIndex, timeElapsed, currentQuestion, answer, answerSheet, checkAnswer, handleAnswerChange, quizResults}
 }

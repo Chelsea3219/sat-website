@@ -22,7 +22,7 @@ export default function QuizClient({section, activeTab}: TabWindowProps) {
     const { 
         quizQuestions, currentIndex, timeElapsed, currentQuestion, 
         answer, checkAnswer, handleAnswerChange, 
-        quizResults, quizCompleted
+        quizResults,
     } = useQuizQuestionTab({clerkId,sessionId, section})
 
     // Declare the variables
@@ -31,8 +31,7 @@ export default function QuizClient({section, activeTab}: TabWindowProps) {
         answer: answer, 
         checkAnswerAction: checkAnswer,
         answerChangeAction: handleAnswerChange,
-        timeElapsed: timeElapsed,
-        quizCompleted: quizCompleted
+        timeElapsed: timeElapsed
     }
 
     // Guard

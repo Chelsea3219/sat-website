@@ -73,7 +73,7 @@ export default function QuizTabWindow({section, activeTab, progress, questionTab
                             <>
                                 {activeTab === "Reading" && <ReadingQuestionTab/>}
                                 {activeTab === "Math" &&
-                                    <div className="flex-1 overflow-y-auto scrollbar-thin">
+                                    <div className="flex-1 tabwindow-content scrollbar-thin">
                                         <MathQuestionTab
                                             currentQuestion={questionTabProps.currentQuestion}
                                             answer={questionTabProps.answer}

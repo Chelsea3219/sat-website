@@ -13,9 +13,9 @@ export default async function Page() {
     `
 
     return (
-        <div className="flex justify-center w-full">
+        <div >
             <div className="w-full flex justify-center ">
-                <div className="p-4 border-[3px] rounded-2xl border-primary max-w-5xl w-full mx-4">
+                <div className="p-4 border-2 rounded-2xl border-primary w-full h-full mx-4">
                     <div className="flex flex-row gap-2">
 
                         {/* Right-side (reading versus math) */}
