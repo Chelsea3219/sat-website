@@ -20,7 +20,7 @@ export default function HelloBanner(
     return (
         <div
             className={`
-                relative w-full h-40 rounded-lg border-4 border-secondary overflow-hidden px-4 flex flex-row justify-between items-center
+                relative w-full h-40 rounded-lg border-2 border-secondary overflow-hidden px-4 flex flex-row justify-between items-center
                 ${isLoading ? "animate-shine" : ""}
             `}
         >

@@ -5,8 +5,6 @@ import PracticeClient from "@/components/dashboard-client/PracticeClient"
 type Tab  = "Review" | "Questions" | "Answer"
 
 type PageProps = {
-    userId: string
-    isLoaded: boolean
     params: Promise<{section: string, topic:string, subtopic:string}>
     searchParams: Promise<{tab?:string}>
 }

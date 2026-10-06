@@ -4,8 +4,12 @@
     max-width: 380px;
     margin:0;
     flex-shrink: 0;
-    overflow-y: auto;        /* ← scroll inside sidebar only */
-    height:100%;  /* ← contained height */
+
+    height: auto;          /* size to content (was height: 100%) */
+    max-height: 100%;      /* but never taller than the parent */
+    align-self: flex-start; /* don't stretch in a flex row */
+    overflow-y: auto;      /* scroll once it hits max-height */
+    
     border: 2px solid #6256e3;
     border-radius: 1.5rem;
     background-color:#F8F8FC;
