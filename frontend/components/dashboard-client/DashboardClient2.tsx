@@ -27,7 +27,7 @@ export default function DashboardClient2() {
                 <HelloBanner
                     fullName={uploader.fullName ?? ""}
                     weeklyGoal={uploader.weeklyGoal ?? 0}
-                    timeSpent={100}
+                    timeSpent={Number(uploader.weeklyTimeSpent )?? 0}
                     isLoading={uploader.isLoading}
                 />
 
@@ -75,7 +75,7 @@ export default function DashboardClient2() {
             </div>
 
             {/* SECOND ROW : Weaknesses, Back to Practice, Daily and Weekly Progress */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full ">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full min-h-20">
                 {/* Weaknesses */}
                 <DashboardCard 
                     color="accent"
@@ -102,9 +102,9 @@ export default function DashboardClient2() {
                     <div className="flex flex-col flex-1 items-center justify-evenly">
                         {[
                             {label: "Correct", value: Math.abs((uploader.currentSubtopicAnalytics?.questions_answered.num_questions ?? 0) - (uploader.currentSubtopicAnalytics?.questions_answered.num_incorrect ?? 0))},
-                            {label: "Incorrect", value:uploader.currentSubtopicAnalytics?.questions_answered.num_incorrect},
-                            {label: "Questions", value:uploader.currentSubtopicAnalytics?.questions_answered.num_questions},
-                            {label: "Mastery Score", value: `${uploader.currentSubtopicAnalytics?.mastery_score.mastery_score}%`}
+                            {label: "Incorrect", value:uploader.currentSubtopicAnalytics?.questions_answered.num_incorrect ?? 0},
+                            {label: "Questions", value:uploader.currentSubtopicAnalytics?.questions_answered.num_questions ?? 0},
+                            {label: "Mastery Score", value: `${uploader.currentSubtopicAnalytics?.mastery_score.mastery_score ?? 0}%`}
                         ].map(({label, value}) => (
                             <div key={label} className=" w-60 flex flex-row items-center justify-between ml-2">
                                 <p className="text-left text-sm font-semibold text-main/90">{label}</p>
@@ -209,8 +209,12 @@ export default function DashboardClient2() {
                                     <p className="text-gray-500 text-sm">{new Date(quiz.completed_at).toLocaleDateString()}</p>
                                     <p className="font-bold text-orange-500 text-xl">{quiz.section_mastery.mastery_score}%</p>
                                 </div>
-                            ))
-                            : <p className="text-sm text-gray-500 px-4">Not enough information</p>
+                            )) : (
+                                <div className="flex flex-col items-center h-full mt-8 gap-2">
+                                    <span className="text-2xl">🎉</span>
+                                    <span className="text-slate-600 font-semibold">No quiz history yet — take a quiz!</span>
+                                </div>
+                            )
                         }
                     </DashboardCard>
                 </div>

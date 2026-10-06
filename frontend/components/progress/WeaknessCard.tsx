@@ -13,9 +13,15 @@ export default function WeaknessCard({cardTitleStyle, weakSubtopicBreakdown}: We
     // Guard 
     if (!weakSubtopicBreakdown || weakSubtopicBreakdown.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center h-full gap-2">
-                <span className="text-2xl">🎉</span>
-                <span className="text-slate-600 font-semibold">No weaknesses yet — keep practicing!</span>
+            <div className="w-full h-full">
+                <div className="flex flex-row space-x-2 items-center mb-2">
+                    <CircleAlert style={{strokeWidth:2}} className="text-orange-500 w-6 h-6"/>
+                    <p className={`text-orange-500 ${cardTitleStyle}`}>Weaknesses</p>
+                </div>
+                <div className="flex flex-col items-center h-full mt-8 gap-2">
+                    <span className="text-2xl">🎉</span>
+                    <span className="text-slate-600 font-semibold">No weaknesses yet — keep practicing!</span>
+                </div>
             </div>
         )
     }

@@ -44,9 +44,10 @@ export default function useDashboard(){
 
     // Formats the Daily and Weekly Stats
     const weeklyGoal = studentInfo.learning_targets.weekly_goal ?? 0
+    const weeklyTimeSpent = apiResponse?.time_spent ?? 0 
     const dailyWeeklyStats = {
         num_questions: apiResponse?.num_questions ?? 0, 
-        time_spent: `${formatMinutes(Number(apiResponse?.time_spent ?? 0), false)} / ${studentInfo.learning_targets.daily_goal ?? 0} m`, 
+        time_spent: `${formatMinutes(Number(weeklyTimeSpent ?? 0), false)} / ${studentInfo.learning_targets.daily_goal ?? 0} m`, 
         weekly_num_questions: apiResponse?.weekly_num_questions ?? 0,
         weekly_time_spent: `${formatMinutes(Number(apiResponse?.weekly_time_spent ?? 0), true)} / ${studentInfo.learning_targets.weekly_goal} h`, 
         weeklyGoal : studentInfo.learning_targets.weekly_goal
@@ -86,7 +87,7 @@ export default function useDashboard(){
     
     return {
         fullName, currentScore, targetScore, isLoading:false,
-        subtopicMastery, weakSubtopicBreakdown, currentSubtopicAnalytics, dailyWeeklyStats, weeklyGoal,
+        subtopicMastery, weakSubtopicBreakdown, currentSubtopicAnalytics, dailyWeeklyStats, weeklyGoal, weeklyTimeSpent,
         readingScore, mathScore, readingSATScore, mathSATScore, readingTopicBreakdown, mathTopicBreakdown, scoreChange, 
         sortedQuizAnalytics, pastQuizAnalytics: pastQuizzes
     }
