@@ -40,7 +40,7 @@ export default function QuestionAdder(
 
     return (
         <>
-            <div className="pt-16 md:px-2 lg:px-4">
+            <div className="pt-16 md:px-2 lg:px-4 pb-4">
 
                 {/* Question Editor */}
                 <div className="flex gap-4 mt-4">

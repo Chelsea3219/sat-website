@@ -51,7 +51,7 @@ export default function WhyMe() {
                                 className={buttonClass}>
                                 <CircleArrowLeft strokeWidth="2" size={40} />
                                 <p className="text-xl font-semibold">
-                                    Learn More About Me
+                                    Learn More
                                 </p>
                             </Link>
                         </div>

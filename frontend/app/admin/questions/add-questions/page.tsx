@@ -36,15 +36,15 @@ export default function Page () {
     }
 
     return (
-       <div className="pt-1 w-full">
-           {error &&
-               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                   <ErrorMessage
-                       error={error}
-                       onDismiss={()=> setError("")}
-                   />
-               </div>
-           }
+        <div className="pt-1 w-full">
+            {error &&
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                    <ErrorMessage
+                        error={error}
+                        onDismiss={()=> setError("")}
+                    />
+                </div>
+            }
 
             <AdminHeader
                 title="Add Questions"
@@ -70,14 +70,14 @@ export default function Page () {
                 }
             />
 
-           <QuestionAdder
-               form={form}
-               fieldChangeAction={fieldChange}
-               handleImageAction={handleImageUpload}
-               mcFieldChangeAction={mcFieldChange}
-               previewUploader={previewUploader}
-               diagramUploader={diagramUploader}
-           />
-       </div>
+            <QuestionAdder
+                form={form}
+                fieldChangeAction={fieldChange}
+                handleImageAction={handleImageUpload}
+                mcFieldChangeAction={mcFieldChange}
+                previewUploader={previewUploader}
+                diagramUploader={diagramUploader}
+            />
+        </div>
     )
 }
