@@ -5,10 +5,11 @@ from typing import List
 from datetime import datetime
 
 from app.core.database import get_db
+from app.core.config import settings
 from app.domains.questions.schemas import IncomingQuestions, PracticeSession
 from app.domains.analytics.schemas import IncomingPracticeSheet
 from app.domains.questions.services.difficulty_to_mastery_score import determine_proficiency
-from app.domains.questions.services.fetch_questions import fetch_subtopic_questions, fetch_section_questions
+from app.domains.questions.services.fetch_questions import fetch_subtopic_questions, fetch_section_questions, fetch_guest_quiz_questions
 from app.domains.questions.services.question_selection import practice_question_selection, quiz_question_selection, quiz_assessment_selection
 from app.domains.analytics.services.grading_algorithms import get_effective_mastery_score
 from app.domains.students.services.fetch_student_info import fetch_student_info, fetch_subtopic_mastery, fetch_test_scores, fetch_topic_mastery
@@ -59,15 +60,25 @@ def fetch_quiz_questions(
     section: str, 
     db=Depends(get_db)
 ) : # -> List[IncomingQuestions]
-    
+
     # Normalizes the section 
     section = section.lower()
+    if section not in ("math", "reading"):
+        raise HTTPException(status_code=400, detail="Section must be 'math' or 'reading'.")
     section_mastery = "math_mastery" if section == "math" else "reading_mastery"
+
+    # Guard against a guest session
+    if clerk_id == settings.GUEST_CLERK_ID:
+        selected_questions= fetch_guest_quiz_questions(section, db) 
+        return selected_questions
 
     # Fetches student's information 
     test_score = fetch_test_scores(clerk_id, db)
     topic_mastery = fetch_topic_mastery(clerk_id, db)
     subtopics_mastery = fetch_subtopic_mastery(clerk_id, db)
+
+    if not test_score or not topic_mastery:
+        raise HTTPException(status_code=404, detail="Student analytics not found.")
 
     # Fetch questions based on section
     # already_seen_ids = [a.question_id for a in question_attempts] TODO decide if you need to do this
