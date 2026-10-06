@@ -37,6 +37,9 @@ class Config:
         # EMAIL CORRESPONDENCES
         self.RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
 
+        # GUEST CLERK_ID
+        self.GUEST_CLERK_ID: str = os.getenv("GUEST_CLERK_ID", "")
+
 # Single instance to import everywhere
 settings = Config()
 
