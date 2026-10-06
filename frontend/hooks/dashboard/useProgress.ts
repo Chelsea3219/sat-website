@@ -69,11 +69,13 @@ export default function useProgress() {
         deltaScore = currentSATScore - prevSATScore
     }
 
-    const numCorrect = questionStats.num_correct
+    const numCorrect = questionStats.num_correct ?? 0
     const numQuestions = questionStats.num_questions
     const timeSpent = questionStats.time_spent
     const numQuizzes = apiResponse?.num_quizzes
-    const accuracyRate = 100*Math.round(numCorrect/(numQuestions ? numQuestions : 0))
+    const accuracyRate = numQuestions > 0
+        ? Math.round((numCorrect / numQuestions) * 100)
+        : 0;
 
     const loggedDatesOnly = quizAnalytics.map(pa => pa.completed_at.slice(0, 10))
     const trendData = Object.values(
