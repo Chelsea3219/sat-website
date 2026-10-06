@@ -1,4 +1,3 @@
-import {mathSubjects} from "@/components/landingpage/marketing/examSubjects"
 export default function SATSubjects() {
 
     return (

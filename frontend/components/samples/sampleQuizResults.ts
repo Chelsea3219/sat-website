@@ -29,9 +29,10 @@ export const sampleQuizResults: IncomingGradedAnswerSheet = {
             mastery_score: 67
         },
     },
-    subtopics_mastery: [
+    subtopic_mastery: [
         {
             subtopic: "Linear Equations",
+            section: "Math",
             mastery_score: {
                 max_score: 2,
                 raw_score: 2,
@@ -46,6 +47,7 @@ export const sampleQuizResults: IncomingGradedAnswerSheet = {
         },
         {
             subtopic: "Quadratic Equations",
+            section: "Math",
             mastery_score: {
                 max_score: 2,
                 raw_score: 1,
@@ -60,6 +62,7 @@ export const sampleQuizResults: IncomingGradedAnswerSheet = {
         },
         {
             subtopic: "Triangle Properties",
+            section: "Math",
             mastery_score: {
                 max_score: 3,
                 raw_score: 2,
@@ -74,6 +77,7 @@ export const sampleQuizResults: IncomingGradedAnswerSheet = {
         },
         {
             subtopic: "Data Interpretation",
+            section: "Math",
             mastery_score: {
                 max_score: 3,
                 raw_score: 2,
@@ -87,7 +91,7 @@ export const sampleQuizResults: IncomingGradedAnswerSheet = {
             status: "in_progress"
         }
     ],
-    gold_analytics: {
+    updated_quiz_analytics: {
         reading_mastery: {
             max_score: 100,
             raw_score: 82,

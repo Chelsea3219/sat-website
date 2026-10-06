@@ -1,4 +1,4 @@
-import {QuestionTabProps} from "@/types/questions"
+import {QuizQuestionTabProps} from "@/types/questions"
 import ReadOnlyContent from "./helpers/ReadOnlyEditor"
 import katex from 'katex'; 
 import 'katex/dist/katex.min.css'
@@ -8,7 +8,7 @@ import Image from "next/image";
 import HorizontalLoadingAnimation from "../loading-animation/HorizontalLoadingAnimation";
 
 
-export default function MathQuestionTab({currentQuestion, answer, answerChangeAction, checkAnswerAction, timeElapsed, error}:QuestionTabProps) {
+export default function MathQuestionTab({currentQuestion, answer, answerChangeAction, checkAnswerAction, timeElapsed, error}:QuizQuestionTabProps) {
     // Guard clause to handle the case when currentQuestion is null or undefined
     if (!currentQuestion) return <HorizontalLoadingAnimation text="Loading question..." />
 

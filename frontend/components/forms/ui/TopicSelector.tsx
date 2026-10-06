@@ -1,5 +1,3 @@
-import {CleanQuestions} from "../../../types/types";
-
 type Props = {
     section: string
     topic: string

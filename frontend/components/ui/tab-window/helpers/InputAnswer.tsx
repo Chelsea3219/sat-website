@@ -44,10 +44,10 @@ type AnswerProps = {
     question: Question
     answer: string
     fieldChangeAction: (value: string) => void
-    isCorrect: boolean | null 
+    isCorrect?: boolean | null 
 }
 
-export default function InputAnswer({ question, answer, fieldChangeAction, isCorrect}: AnswerProps) {
+export default function InputAnswer({ question, answer, fieldChangeAction, isCorrect=null}: AnswerProps) {
     const state = getAnswerState(answer.trim() !== "", isCorrect)
     return (
         <>
