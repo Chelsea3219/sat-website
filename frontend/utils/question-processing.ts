@@ -41,6 +41,6 @@ export const validateEditorForm = (form: IncomingSilverQuestions) => {
         if (!form[i]) missing.push(i)
     })
 
-    console.log("missing", missing)
+    //console.log("missing", missing)
     return missing
 }

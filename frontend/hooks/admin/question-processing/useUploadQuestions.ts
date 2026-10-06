@@ -69,7 +69,7 @@ export default function useUploadQuestion() {
 
             // Send to backend to preprocess, extract, and organize the questions
             const response = await extractQuestions(form)
-            console.log("raw questions ==>> ",  response)
+            //console.log("raw questions ==>> ",  response)
 
             if (!Array.isArray(response)) {
                 setError("Invalid response from server")

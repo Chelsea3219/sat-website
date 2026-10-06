@@ -30,8 +30,8 @@ export default function useDashboard(){
                 setAPIResponse(response1)
                 setAPIResponse2(response2)
             } catch (error) {
-                console.log("Unable to fetch daily and weekly stats.", error)
-                console.log("Unable to fetch past quiz analytics.", error)
+                console.error("Unable to fetch daily and weekly stats.", error)
+                console.error("Unable to fetch past quiz analytics.", error)
             } 
         }
         load()

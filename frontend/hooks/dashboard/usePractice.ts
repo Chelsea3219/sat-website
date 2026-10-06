@@ -132,7 +132,7 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
     // Move onto the next question --------------------------------------------------------------------------------
     const GRADE_EVERY = 30
     const nextQuestion = async () => {
-        console.log("numCompleted", numCompleted)
+        //console.log("numCompleted", numCompleted)
 
         // Guard against an empty answer 
         if (!clerkId || !sessionId || isCorrect !== true) return 
@@ -150,10 +150,10 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
             const toGrade = unsentAnswers.current
             unsentAnswers.current = []
             try {
-                console.log("answerSheet just sent to the backend: ", answerSheet)
+                //console.log("answerSheet just sent to the backend: ", answerSheet)
                 const response = await gradePracticeQuestions(toGrade, subtopic, clerkId!, sessionId!)
                 setSessionResults(response)
-                console.log(" current mastery score ", response.in_session_score)
+                //console.log(" current mastery score ", response.in_session_score)
 
             } catch (error) {
                 unsentAnswers.current = [...toGrade, ...unsentAnswers.current]

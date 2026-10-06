@@ -12,7 +12,7 @@ export async function POST(
     try {
         // Makes sure that the user is authenticated
         const { userId, sessionClaims } = await auth()
-        console.log("ROLE CHECK:", userId, JSON.stringify(sessionClaims?.metadata))
+        //console.log("ROLE CHECK:", userId, JSON.stringify(sessionClaims?.metadata))
         if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
         const {clerk_id, subtopic} = await params
@@ -37,7 +37,7 @@ export async function POST(
         })
 
         const data = await res.json()
-        console.log("incoming practice questions ==>> ", data)
+        //console.log("incoming practice questions ==>> ", data)
 
         if (!res.ok) {
             return NextResponse.json({ error: data.detail || "Cannot fetch practice questions" }, { status: res.status })
