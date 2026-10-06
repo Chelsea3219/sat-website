@@ -31,7 +31,7 @@ export default function Achievements({cardTitleStyle, achievements}:Achievements
 
             {/* Achievements  */}
             {/* TODO add more acheivements */}
-            <div className = "grid grid-cols-1 gap-x-6 gap-y-2">
+            <div className = "grid grid-cols-1 gap-y-2">
                 {(achievements ?? []).map(({id, description, progress, target, tier}) => {
                     const goalDone = progress >= target
                     const tierColor = tierColorChange(tier ?? "")
