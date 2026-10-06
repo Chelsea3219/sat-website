@@ -33,7 +33,7 @@ export default function MathPracticeTab({
 
     return (
         <>
-            <div className="flex flex-col py-1 px-4 h-full space-y-1">
+            <div className="flex flex-col py-1 px-4 space-y-1">
                 {!currentQuestion && 
                     <>
                         <HorizontalLoadingAnimation text="Loading Questions"/>
@@ -152,7 +152,7 @@ export default function MathPracticeTab({
                 </div>
 
                 {/* Stopwatch and Submit Button */}
-                <div className="mt-auto border-t py-4 bg-white">
+                <div className="sticky bottom-0 border-t py-4 bg-white">
                     <p className="flex justify-center text-red-700">{error}</p>
                     <div className="flex flex-row items-center gap-4 mt-2">
                         <button

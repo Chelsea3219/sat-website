@@ -1,7 +1,8 @@
 .tabwindow{
     width: 100%;
-    height: calc(100dvh - 4rem - 2rem); /* screen − navbar − page padding */
-    min-height: 0;  
+    height: auto;
+    max-height: calc(100dvh - 4rem - 2rem); /* screen − navbar − page padding */;
+    min-height: 20rem;  
 
     margin:0;
     display: flex;
@@ -22,16 +23,31 @@
 
 .header{
     width: 100%;
-    height: clamp(50px, 6vh, 76px);
+    height: clamp(50px, 6vh, 80px);
     flex-shrink: 0;
     border-bottom: 2px solid var(--color-primary);
     background-color: var(--color-secondary);
     border-top-left-radius: 1.3rem;
     border-top-right-radius: 1.3rem;
-    border-bottom: 2px solid var(--color-primary);
     transition-property: width;
-    transition-duration: 500;
+    transition: width 500ms ease-out;;
     transition-timing-function: ease-out;
+}
+
+/* Large desktops (Tailwind's xl and 2xl breakpoints) */
+@media (min-width: 1280px) {
+    .header {
+        height: clamp(60px, 7vh, 88px);
+    }
+    .tabwindow { border-radius: 1.6rem; };
+}
+@media (min-width: 1536px) {
+    .header {
+        height: clamp(68px, 7.5vh, 100px);
+        border-top-left-radius: 1.6rem;
+        border-top-right-radius: 1.6rem;
+    }
+    .tabwindow { border-radius: 1.6rem; };
 }
 
 .tabs {
@@ -42,6 +58,13 @@
     transition-duration: 300ms;
     white-space: nowrap;
     cursor: pointer;
+
+    border: 2px solid transparent; 
+    border-bottom: none;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+
+    transition: background-color 300ms, border-color 300ms, opacity 150ms;
 }
 
 .tabs:active {
@@ -50,18 +73,11 @@
 
 .tabs-selected {
     background-color:#ffffff;
-    color: var(--color-primary);
-    font-weight: 700;
-    border-top-left-radius: 0.75rem;
-    border-top-right-radius: 0.75rem;
-    border-top: 2px solid var(--color-primary);
-    border-left: 2px solid var(--color-primary);
-    border-right: 2px solid var(--color-primary);
+    border-color: var(--color-primary);
     border-bottom: 2px solid #ffffff;
-    margin-bottom: -2.3px;
-    transition-duration: 300ms;
-    white-space: nowrap;
-    cursor: pointer;
+    margin-bottom: -2.3px; /* covers the header's 2px bottom border */
+
+    text-shadow: 0 0 0.4px currentColor;
 }
 
 .sidebar-scroll::-webkit-scrollbar {

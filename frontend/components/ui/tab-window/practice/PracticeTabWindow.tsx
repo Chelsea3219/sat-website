@@ -90,7 +90,7 @@ export default function PracticeTabWindow({
             </div>
 
             {/* Tab Context */}
-            <div role="tabpanel" className="p-4 flex-1 h-full">
+            <div role="tabpanel" className="p-4 flex-auto min-h-0 flex flex-col">
                 {isLoading ? (
                     <div className="flex items-center justify-center">
                         <HorizontalLoadingAnimation2 text="Loading Questions"/>
@@ -99,7 +99,7 @@ export default function PracticeTabWindow({
                     <>
                         {activeTab === "Review" && <ReviewTab subtopic={subtopic}/>}
                         {activeTab === "Questions" && (
-                            <div className="flex-1 overflow-y-auto scrollbar-thin">
+                            <div className="flex-auto min-h-0 overflow-y-auto scrollbar-thin">
                                 {practiceResults ? (
                                     <PracticeResults topic={topic} subtopic={subtopic} practiceResults={practiceResults} pastSubtopicMastery={pastSubtopicMastery ?? []}/>
                                 ) : questionTabProps.currentQuestion ? (

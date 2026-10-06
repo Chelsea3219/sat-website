@@ -66,14 +66,14 @@ export default function QuizTabWindow({section, activeTab, progress, questionTab
 
 
                 {/* Tab Context */}
-                <div role="tabpanel" className="p-4 flex-1 h-full">
+                <div role="tabpanel" className="p-4 flex-auto min-h-0 flex flex-col">
                     {quizResults
                         ? <QuizResults section={section} quizResults={quizResults}/>
                         : (
                             <>
                                 {activeTab === "Reading" && <ReadingQuestionTab/>}
                                 {activeTab === "Math" &&
-                                    <div className="flex-1 tabwindow-content scrollbar-thin">
+                                    <div className="flex-auto min-h-0 overflow-y-auto scrollbar-thin">
                                         <MathQuestionTab
                                             currentQuestion={questionTabProps.currentQuestion}
                                             answer={questionTabProps.answer}
