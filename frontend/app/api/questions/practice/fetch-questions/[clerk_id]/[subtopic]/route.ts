@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import {auth} from "@clerk/nextjs/server"
 import { PracticeAnswerSheet} from "@/types/questions"
+import { isGuestAllowedSubtopic } from '@/utils/guest'
+
 
 export async function POST(
     req: NextRequest,
@@ -9,10 +11,17 @@ export async function POST(
 
     try {
         // Makes sure that the user is authenticated
-        const { userId } = await auth()
+        const { userId, sessionClaims } = await auth()
+        console.log("ROLE CHECK:", userId, JSON.stringify(sessionClaims?.metadata))
         if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
         const {clerk_id, subtopic} = await params
+
+        // Guests can only practice the demo subtopics 
+        if (sessionClaims?.metadata?.role === "guest" && !isGuestAllowedSubtopic(subtopic)) {
+            return NextResponse.json({ error: "This subtopic is locked in the demo." }, { status: 403 })
+        }
+
         const sessionAnswers: PracticeAnswerSheet[] = await req.json().catch(() => [])
         if (!clerk_id || !subtopic) return NextResponse.json({ error: "Missing clerk_id" }, { status: 400 })
 

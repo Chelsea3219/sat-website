@@ -1,11 +1,12 @@
 "use client"
 
+import {useUser} from "@clerk/nextjs"
 import { useState} from "react"
-import {ChevronRight, ChevronDown} from "lucide-react";
+import {ChevronRight, ChevronDown, Lock} from "lucide-react";
 import Link from "next/link"
 import "@/css/navigation/practice-sidebar.css"
 import {usePathname, useSearchParams} from "next/navigation";
-
+import { isGuestAllowedSubtopic } from "@/utils/guest";
 
 type SidebarItem = {
     title: string
@@ -19,6 +20,9 @@ type PracticeProps = {
 }
 
 export default function PracticeSidebarItem({ item, defaultOpen = false }: PracticeProps) {
+
+    const {user} = useUser()
+    const isGuest = user?.publicMetadata?.role === "guest"
 
     // Normalize the full path 
     const BASE = "/dashboard/practice"
@@ -87,10 +91,13 @@ export default function PracticeSidebarItem({ item, defaultOpen = false }: Pract
     // LEAF NODE
     const fullPath = item.path ? toFullPath(item.path) : ""
     const isActive = pathname === fullPath
+    const slug = item.path?.split("/").filter(Boolean).pop()
+    const locked = isGuest && !isGuestAllowedSubtopic(slug)
+    if (!item.title) return null 
     //console.log({ pathname, fullPath, isActive })
     return (
         <div className="sidebar-leaf ml-4">
-            {item.path ? (
+            {item.path && !locked? (
                 <Link
                     href={`${fullPath}?tab=${activeTab}`}
                     aria-current = {isActive ? "page" : undefined}
@@ -103,7 +110,15 @@ export default function PracticeSidebarItem({ item, defaultOpen = false }: Pract
                     {item.title}
                 </Link>
             ) : (
-                <span className="text-slate-900">{item.title}</span>
+                <span 
+                    className={`flex items-center gap-1 ${locked ? "text-slate-400! cursor-not-allowed" : "text-slate-900"}`}
+                    title={locked ? "Sign up to unlock this subtopic" : undefined}
+                >
+                    <div className="flex flex-row gap-x-2 items-center ">
+                        {locked && <Lock className="w-3 h-3 shrink-0"/>}
+                        {item.title}
+                    </div>
+                </span>
             )}
         </div>
     )

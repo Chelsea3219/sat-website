@@ -14,9 +14,9 @@ export default function WhyMe() {
     ]
 
     const buttonClass = `
-        flex flex-row items-center gap-2 w-72 mt-4
+        flex flex-row items-center justify-center gap-2 mt-4
         bg-primary text-white px-6 py-2.5 rounded-full
-        hover:bg-accent hover:scale-105 transition-all duration-300
+        hover:bg-accent hover:scale-105 transition-all duration-400
     `
 
     return (

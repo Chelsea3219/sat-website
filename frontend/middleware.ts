@@ -1,8 +1,21 @@
 // Grants authentication state throughout your app -- allows you to protect specify routes from unauthenticated register
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import {NextResponse} from "next/server";
 
+const GUEST_BLOCKED_PATHS = ["/admin", "/dashboard/billing", "/register"];
 
-export default clerkMiddleware();
+export default clerkMiddleware(async (auth, req) => {
+    const { sessionClaims } = await auth();
+    const path = req.nextUrl.pathname;
+
+    const isBlocked = GUEST_BLOCKED_PATHS.some(
+        (blocked) => path === blocked || path.startsWith(`${blocked}/`)
+    );
+
+    if (sessionClaims?.metadata?.role === "guest" && isBlocked) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+});
 
 export const config = {
     matcher: [

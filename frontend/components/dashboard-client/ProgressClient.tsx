@@ -69,11 +69,11 @@ export default function ProgressClient() {
 
                     {/* Total hours spent AND Total questions answered AND total quizzes taken */}
                     <div className="flex flex-col space-y-4 flex-1 basis-0 min-h-0 items-stretch">
-                        <ProgressCard color="orange-500" isLoading={uploader.isLoading} className="flex-1 basis-0">
-                            <div className="flex flex-col space-y-1 w-full px-2">
+                        <ProgressCard color="orange-500" isLoading={uploader.isLoading} className="flex-1 basis-0 flex flex-col justify-center">
+                            <div className="flex justify-center flex-col space-y-1 w-full px-2">
                                 {[
-                                    {label: "Total Questions", value: uploader.numQuestions}, 
-                                    {label: "Accuracy Rate %", value: uploader.accuracyRate}
+                                    {label: "Total Questions", value: uploader.numQuestions ?? 0 }, 
+                                    {label: "Accuracy Rate %", value: uploader.accuracyRate ?? 0}
                                 ].map(({label, value}) => (
                                     <div
                                         key={label}
@@ -87,7 +87,7 @@ export default function ProgressClient() {
                             </div>
                         </ProgressCard>
 
-                        <ProgressCard color="orange-500" isLoading={uploader.isLoading} className="flex-1 basis-0">
+                        <ProgressCard color="orange-500" isLoading={uploader.isLoading} className="flex-1 basis-0 flex flex-col justify-center">
                             <div className="flex flex-col space-y-1 w-full px-2">
                                 {[
                                     {label: "Time Spent", value: formatMinutes((uploader.timeSpent ?? 0), true)}, 
@@ -114,8 +114,7 @@ export default function ProgressClient() {
                 </div>
 
                 {/* SECOND ROW : Reading and Math Mastery Scores by topic */}
-                {/* <div className="flex flex-row items-stretch w-full h-60 gap-4"> */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full flex-1">
+                <div className="grid grid-cols-[1fr_2fr] gap-4 w-full flex-[0.8_1_0%] min-h-0">
                     {/* Achievements */}
                     <ProgressCard 
                             color="accent" 
@@ -126,7 +125,7 @@ export default function ProgressClient() {
                     </ProgressCard>
 
                     {/* Reading and Math Mastery Scores by topic */}
-                    <div className="flex flex-row space-x-4 w-190">
+                    <div className="flex flex-row space-x-4">
                         {/* Reading */}
                         <ProgressCard 
                             color="secondary" 
@@ -164,31 +163,29 @@ export default function ProgressClient() {
                 </div>
 
                 {/* THIRD ROW : Performance Trend and Weaknesses */}
-                <div className="grid grid-cols-[2.8fr_1fr_0.8fr] gap-4 w-full flex-1">
+                <div className="grid grid-cols-[2.8fr_1fr_0.8fr] gap-4 w-full flex-[1.4_1_0%] min-h-0">
 
                     {/* Performance Trend */}
-                    <div className="flex w-full">
-                        <ProgressCard 
-                            color="secondary" 
-                            isLoading={uploader.isLoading} 
-                            className="flex flex-1 w-1/2"
-                        >
-                            {!uploader.trendData || uploader.trendData?.length >=5
-                                ? (
-                                    <ProgressHistogramChart trendData={(uploader.trendData ?? []).slice(-10)}/>
-                                ) : (
-                                    <div className="w-full flex flex-col items-center justify-center space-y-2">
-                                        <p className="text-2xl font-bold ">Not enough information yet</p>
-                                        <p className="">Practice more questions to see your progress over time.</p>
-                                        <Link
-                                            href="/dashboard/quiz"
-                                            className=" buttonOne">
-                                                Take a Quiz!
-                                        </Link>
-                                    </div>
-                                )}
-                        </ProgressCard>
-                    </div>
+                    <ProgressCard 
+                        color="secondary" 
+                        isLoading={uploader.isLoading} 
+                        className="flex flex-1"
+                    >
+                        {!uploader.trendData || uploader.trendData?.length >=5
+                            ? (
+                                <ProgressHistogramChart trendData={(uploader.trendData ?? []).slice(-10)}/>
+                            ) : (
+                                <div className="w-full flex flex-col items-center justify-center space-y-2">
+                                    <p className="text-2xl font-bold ">Not enough information yet</p>
+                                    <p className="">Practice more questions to see your progress over time.</p>
+                                    <Link
+                                        href="/dashboard/quiz"
+                                        className=" buttonOne">
+                                            Take a Quiz!
+                                    </Link>
+                                </div>
+                            )}
+                    </ProgressCard>
 
 
                     {/* Weaknesses */}
@@ -197,26 +194,35 @@ export default function ProgressClient() {
                     </ProgressCard>
 
 
-                    {/* TODO : UI  */}
+                    {/* Next Topic  */}
                     <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex flex-col bg-[#F8F7FF] p-2 space-y-4">
                         <div className="flex items-center gap-x-2 mb-4">
                             <Compass style={{ strokeWidth: 2 }} className="w-6 h-6 text-primary shrink-0" />
                             <p className={`text-primary ${cardTitleStyle}`}>Next Topic</p>
                         </div>
                         
-                        <div className="flex flex-col items-center">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Focus on</p>
-                            <p className="text-2xl font-bold text-main leading-tight mt-1">
-                                {toTitleCase(nextSubtopic?.subtopic ?? "")}
-                            </p>
-                        </div>
+                        {nextSubtopic?.subtopic ? (
+                            <>
+                                <div className="flex flex-col items-center">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Focus on</p>
+                                    <p className="text-2xl font-bold text-main leading-tight mt-1">
+                                        {toTitleCase(nextSubtopic?.subtopic ?? "")}
+                                    </p>
+                                </div>
 
-                        <Link
-                            href={`/dashboard/practice/${nextSubtopic?.section}/${nextSubtopic?.topic}/${nextSubtopic?.subtopic}`}
-                            className="mt-4 w-full rounded-xl bg-primary py-2.5 text-center text-sm font-bold uppercase tracking-wide text-white hover:bg-primary/90 transition"
-                        >
-                            Practice Now
-                        </Link>
+                                <Link
+                                    href={`/dashboard/practice/${nextSubtopic?.section}/${nextSubtopic?.topic}/${nextSubtopic?.subtopic}`}
+                                    className="mt-4 w-full rounded-xl bg-primary py-2.5 text-center text-sm font-bold uppercase tracking-wide text-white hover:bg-primary/90 transition"
+                                >
+                                    Practice Now
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <p className="text-center text-gray-500">No upcoming topics</p>
+                                <p className="text-center text-gray-500">Take a quiz right now!</p>
+                            </>
+                        )}
                     </ProgressCard>
                 </div>
             </div>
