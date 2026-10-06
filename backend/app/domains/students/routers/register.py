@@ -57,6 +57,7 @@ async def register_students(payload: RegisterStudents, db: Session=Depends(get_d
                 updated_at= func.now()
             )
             db.add(silver_student)
+            db.flush()
 
             # Adds student's test_score to TestScores
             test_score = TestScores(

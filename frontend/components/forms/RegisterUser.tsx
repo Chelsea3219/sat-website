@@ -20,7 +20,7 @@ export default function RegisterUser() {
 
     return (
         <>
-            <div className="flex p-2">
+            <div className="flex p-4">
 
                 {/* Left-side Image */}
                 <div className="hidden sm:block flex-1 flex-col justify-center items-center">
@@ -254,14 +254,16 @@ export default function RegisterUser() {
                     </div>
 
                     {/* Submit */}
-                    <button
-                        type="button"
-                        className="rounded-btn bg-primary text-white text-lg font-semibold"
-                        onClick={handleSaveClick}
-                        disabled={ !!uploader.error}
-                    >
-                        DONE
-                    </button>
+                    <div className="flex justify-center">
+                        <button
+                            type="button"
+                            className="flex justify-center items-center rounded-2xl p-2 bg-primary text-white text-lg font-semibold w-3/4 hover:scale-110 transition-all"
+                            onClick={handleSaveClick}
+                            disabled={ !!uploader.error}
+                        >
+                            DONE
+                        </button>
+                    </div>
 
                 </div>
             </div>
