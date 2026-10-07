@@ -8,5 +8,5 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/dashboard')
   }
 
-  return <div className='max-w-7xl mx-auto'>{children}</div>
+  return <div className='max-w-7xl mx-auto pb-10'>{children}</div>
 }
