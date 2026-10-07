@@ -56,11 +56,11 @@ export default function RegisterUser() {
                         <h1 className="flex flex-row space-x-1">
                             <Image
                                 src="/marketing/landingpage_logo.svg"
-                                alt="Elevate Learning"
+                                alt="PrepForward"
                                 width={32} height={32}
                                 className="w-6 h-6 sm:w-8 sm:h-8"
                             />
-                            <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-primary">Elevate Learning</span>
+                            <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-primary">PrepForward</span>
                         </h1>
 
                         <h2 className="text-sm sm:text-base md:text-lg font-semibold">Complete your profile</h2>

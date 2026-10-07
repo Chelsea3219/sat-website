@@ -35,7 +35,7 @@ export default function DashboardNavbar() {
 
                     {/* Logo and Website Title */}
                     <div className="flex flex-row gap-x-1 items-center">
-                        <Image src="/dashboard/dashboard_logo1.svg" alt="Elevate Learning" width={32} height={32} className="w-10 h-10 hidden md:block"/>
+                        <Image src="/dashboard/dashboard_logo1.svg" alt="PrepForward" width={32} height={32} className="w-10 h-10 hidden md:block"/>
                         {isPractice && (
                             <button className="md:hidden p-1 text-white font-bold hover:text-accent hover:scale-115 text-xl cursor-pointer"
                                     onClick={() => {
@@ -52,7 +52,7 @@ export default function DashboardNavbar() {
                                 )}
                             </button>
                         )}
-                        <span className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white whitespace-nowrap">Elevate Learning</span>
+                        <span className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white whitespace-nowrap">PrepForward</span>
                     </div>
 
                     {/* Navigation Links */}

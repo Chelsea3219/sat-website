@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Elevate Learning",
+    title: "PrepForward",
     description: "Adaptive Learning to Ace the SAT",
 };
 

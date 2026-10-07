@@ -31,7 +31,7 @@ setup_logging()
 IS_PRODUCTION = os.getenv("ENV", "").lower() == "production"
 
 app = FastAPI(
-    title = "Elevate Learning",
+    title = "PrepForward",
     description="Master the SAT through adaptive learning",
     version="0.0.0",
     docs_url=None if IS_PRODUCTION else "/docs",

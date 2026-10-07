@@ -25,8 +25,8 @@ export default function Footer() {
                         <div className="flex flex-col gap-y-2">
                             {/* Logo and Website Title */}
                             <div className="flex flex-row gap-x-2 items-center">
-                                <Image src="/marketing/footer_logo.png" alt="Elevate Learning" width={90} height={90} className="hidden w-full h-full md:block"/>
-                                <span className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white whitespace-nowrap">Elevate Learning</span>
+                                <Image src="/marketing/footer_logo.png" alt="PrepForward" width={90} height={90} className="hidden w-full h-full md:block"/>
+                                <span className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white whitespace-nowrap">PrepForward</span>
                             </div>
 
                             {/* Contact Information */}
@@ -51,7 +51,7 @@ export default function Footer() {
 
                     {/* Divider + bottom bar */}
                     <div className="mt-6 text-center text-xs text-white/50">
-                        © {new Date().getFullYear()} Elevate Learning. All rights reserved.
+                        © {new Date().getFullYear()} PrepForward All rights reserved.
                     </div>
 
                 </div>

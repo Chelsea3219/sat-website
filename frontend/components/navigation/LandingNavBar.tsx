@@ -28,8 +28,8 @@ export default function LandingNavbar() {
 
                     {/* Logo and Website Title */}
                     <div className="flex flex-row gap-x-1 items-center">
-                        <Image src="/marketing/landingpage_logo.svg" alt="Elevate Learning" width={32} height={32} className="w-10 h-10"/>
-                        <span className="text-xl sm:text-2xl lg:text-3xl font-semibold text-main whitespace-nowrap">Elevate Learning</span>
+                        <Image src="/marketing/landingpage_logo.svg" alt="PrepForward" width={32} height={32} className="w-10 h-10"/>
+                        <span className="text-xl sm:text-2xl lg:text-3xl font-semibold text-main whitespace-nowrap">PrepForward</span>
                     </div>
 
                     {/* Navigation Links */}
