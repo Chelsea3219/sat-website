@@ -32,11 +32,13 @@ export default function Page () {
     // Save one question into the queue
     const handleSaveQuestionClick = async () => {
         try{
-            saveQuestion(form)
+            const ok = await saveQuestion(form)
+            if (!ok) return
+            diagramUploader.resetUpload()
+            nextIndex()
         } finally{
             diagramUploader.resetUpload()
             resetForm()
-            nextIndex()
         }
     }
     
@@ -45,8 +47,6 @@ export default function Page () {
         setUploading(true)
         try {
             await handleSave(completedQuestions)
-            setSavedKey(prev => prev + 1)
-            diagramUploader.resetUpload()
         } catch (error) {
             console.error("Unable to save question.", error)
             setError("Failed to save question")

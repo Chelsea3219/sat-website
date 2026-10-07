@@ -36,7 +36,7 @@ export default function useQuestionEditor(
 
     // Track what (currentIndex, savedKey) the form was last synced to. -------------------------------------------------
     const [syncedKey, setSyncedKey] = useState<string | null>(null)
-    const resetKey = `${currentQuestion?.question_id ?? "none"}-${savedKey}`
+    const resetKey = currentQuestion?.question_id ?? "none"
     // Adjust state during render instead of in an Effect: avoids the extra
     // commit-then-recommit cycle an Effect would cause here.
     if (resetKey !== syncedKey) {

@@ -96,7 +96,6 @@ export default function useEditorNavigation(){
         }
         // Resets the search bar
         setSearch(emptySearch)
-        setError("")
     }
 
 
@@ -164,19 +163,22 @@ export default function useEditorNavigation(){
     const handleSave = async (saved:IncomingSilverQuestions[]) => {
         //console.log("questions being sent ==>> ", completedQuestions)
 
-        if (completedQuestions.length === 0) return 
+        if (saved.length === 0) return 
         try {
             await updateRawQuestions(saved)
 
-            resetCompleted()
-
             // Update local array so that you don't navigate to completed questions
+            const currentId = questions[currentIndex]?.question_id
             const savedIds = new Set(saved.map(q => q.question_id))
             const updatedQuestions = questions.filter(q => !savedIds.has(q.question_id))
             setQuestions(updatedQuestions)
 
+            // Stay on the saem question if it still exists 
+            const sameIdx = updatedQuestions.findIndex(q => q.question_id === currentId)
+            setCurrentIndex(sameIdx >- 0 ? sameIdx : Math.max(0, Math.min(currentIndex, updatedQuestions.length - 1)))
+
             // Clamp index in case we just removed the last question
-            setCurrentIndex(prev => Math.max(0, Math.min(prev, updatedQuestions.length - 1)))
+            // Maybe delete setCurrentIndex(prev => Math.max(0, Math.min(prev, updatedQuestions.length - 1)))
             setProcessedCount(prev => prev + saved.length)
             setCompletedQuestions([])
             setError("")
