@@ -2,7 +2,7 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import {NextResponse} from "next/server";
 
-const GUEST_BLOCKED_PATHS = ["/admin", "/dashboard/billing", "/register"];
+const GUEST_BLOCKED_PATHS = ["/admin", "/dashboard/billing", "/register", "/dashboard/profile"];
 
 export default clerkMiddleware(async (auth, req) => {
     const { sessionClaims } = await auth();

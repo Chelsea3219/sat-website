@@ -58,9 +58,9 @@ export default function DashboardNavbar() {
                     {/* Navigation Links */}
                     <div className="hidden md:flex md:text-sm lg:gap-x-6 md:gap-x-4 items-center">
                         <Link href="/dashboard" className={linkClass('/dashboard')}>Home</Link>
-                        <Link href="/dashboard/practice" className={linkClass('/dashboard/practice')}>Practice</Link>
+                        <Link href="/dashboard/practice/" className={linkClass('/dashboard/practice/')}>Practice</Link>
                         <Link href="/dashboard/progress" className={linkClass('/dashboard/progress')}>Progress</Link>
-                        <Link href="/dashboard/quiz" className={linkClass('/dashboard/quiz')}>Quiz</Link>
+                        <Link href="/dashboard/quiz/" className={linkClass('/dashboard/quiz/')}>Quiz</Link>
                         <Link href="/dashboard/profile/account" className={linkClass('/dashboard/profile')}>Profile</Link>
                         <SignOutButton className={buttonClass}/>
                         {/* rounded-btn text-md h-7 border-2 border-primary bg-primary text-white */}
@@ -90,7 +90,7 @@ export default function DashboardNavbar() {
                             Home
                         </Link>
 
-                        <Link href="/dashboard/practice"
+                        <Link href="/dashboard/practice/"
                             onClick={() => setOpen(false)}
                             className="block text-main hover:text-accent origin-right hover:scale-110 transition-all"
                         >
@@ -104,7 +104,7 @@ export default function DashboardNavbar() {
                             Progress
                         </Link>
 
-                        <Link href="#quiz"
+                        <Link href="/dashboard/quiz/"
                             onClick={() => setOpen(false)}
                             className="block text-main hover:text-accent origin-right hover:scale-110 transition-all"
                         >

@@ -33,3 +33,4 @@ dist/
 build/
 # --- Logs ---
 *.log
+backend/app.log

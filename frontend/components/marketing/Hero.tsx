@@ -1,4 +1,5 @@
 import Image from "next/image"
+import GuestLoginButton from "@/components/ui/buttons/GuestLoginButton"
 
 export default function Hero() {
     return(
@@ -32,6 +33,9 @@ export default function Hero() {
                         <a href="https://storyset.com/education" className="text-gray-400">Education Illustrations by Storyset</a>
                     </p>
                 </div>
+
+                <GuestLoginButton />
+                
 
             </div>
         </section>
