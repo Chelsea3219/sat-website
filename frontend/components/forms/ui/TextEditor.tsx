@@ -30,7 +30,7 @@ export default function TextEditor({text, fieldChangeAction}:TextProps) {
 
     return (
         <>
-            <div className="border border-primary rounded-lg p-2 min-h-[120px]">
+            <div className="border border-primary rounded-lg p-2 min-h-30">
                 <div className="flex flex-wrap gap-2 mb-2 pb-1 border-b border-primary">
                     <Bold
                         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -47,7 +47,7 @@ export default function TextEditor({text, fieldChangeAction}:TextProps) {
                 </div>
                 <EditorContent
                     editor={editor}
-                    className="prose text-sm font-medium min-h-[100px] p-2 overflow-hidden break-words"
+                    className="prose text-sm font-medium min-h-25 p-2 overflow-hidden wrap-break-words"
                     style={{width: '100%'}}
                 />
             </div>
