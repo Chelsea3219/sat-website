@@ -25,3 +25,8 @@ export function renderLatex(text: string) {
         displayMode: false,
     })
 }
+
+export const setLatex = (text: string) => {
+    if (!text) return ""
+    return `\\(${text}\\)`   
+}

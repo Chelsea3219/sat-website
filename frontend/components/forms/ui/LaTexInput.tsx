@@ -17,8 +17,8 @@ type LaTexInputProps = {
 const LatexInput = forwardRef<HTMLTextAreaElement, LaTexInputProps>(({ value, onChangeAction, onKeyDownAction, className}, ref) => {
 
     const rendered = katex.renderToString(formatLatex(value) || "\\space", {
-        throwOnError: false,
-        displayMode: false,
+        throwOnError: false, // half typed LaTeX will show up in red and not throw an error
+        displayMode: false, // renders inline-sezed math rather than a large centered block
     })
     
     return (
@@ -35,7 +35,7 @@ const LatexInput = forwardRef<HTMLTextAreaElement, LaTexInputProps>(({ value, on
             />
 
             <div
-                className="flex-1 border rounded p-2 bg-gray-50"
+                className="flex-1 min-w-0 overflow-x-auto border rounded p-2 bg-gray-50"
                 dangerouslySetInnerHTML={{ __html: rendered }}
             />
 

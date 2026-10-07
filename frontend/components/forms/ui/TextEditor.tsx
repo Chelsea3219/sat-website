@@ -4,8 +4,8 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React, {useEffect} from "react";
-import {Bold, Italic, LucideUnderline} from "lucide-react";
-import Underline from "@tiptap/extension-underline";
+import {Bold, Italic, LucideUnderline, Sigma, Braces} from "lucide-react";
+
 
 type TextProps = {
     text: string,
@@ -17,6 +17,11 @@ export default function TextEditor({text, fieldChangeAction}:TextProps) {
         extensions: [StarterKit],
         content: text,
         immediatelyRender: false,
+        editorProps: { // Makes sure the editor is styled correctly and has a minimum height
+            attributes: {
+                class: "outline-none break-words [overflow-wrap:anywhere] min-h-25",
+            },
+        },
         onUpdate : ({editor} )=> fieldChangeAction(editor.getHTML())
     })
 
@@ -27,6 +32,19 @@ export default function TextEditor({text, fieldChangeAction}:TextProps) {
     }, [text, editor])
 
     if (!editor) return null
+
+    const wrapWith = (open: string, close: string) => {
+        const { from, to, empty } = editor.state.selection
+        const selected = empty ? "" : editor.state.doc.textBetween(from, to, " ")
+
+        editor
+            .chain()
+            .focus()
+            .insertContentAt({ from, to }, { type: "text", text: `${open}${selected}${close}` })
+            // Cursor inside the brackets, or the wrapped text stays selected
+            .setTextSelection({ from: from + open.length, to: from + open.length + selected.length })
+            .run()
+    }
 
     return (
         <>
@@ -44,11 +62,21 @@ export default function TextEditor({text, fieldChangeAction}:TextProps) {
                         onClick={() => editor.chain().focus().toggleUnderline().run()}
                         className={`w-6 h-6 rounded ${editor.isActive('underline') ? 'bg-primary/30' : 'text-black'}`}
                     />
+                    <Sigma
+                        onClick={() => wrapWith("\\(", "\\)")}
+                        className={`w-6 h-6 rounded ${editor.isActive('sigma') ? 'bg-primary/30' : 'text-black'}`}
+                    />
+                    <Braces
+                        onClick={() => wrapWith("{", "}")}
+                        className={`w-6 h-6 rounded ${editor.isActive('braces') ? 'bg-primary/30' : 'text-black'}`}
+                    />
                 </div>
+
+
                 <EditorContent
                     editor={editor}
-                    className="prose text-sm font-medium min-h-25 p-2 overflow-hidden wrap-break-words"
-                    style={{width: '100%'}}
+                    className="prose max-w-none w-full min-w-0 text-sm font-medium p-2"
+                    
                 />
             </div>
         </>
