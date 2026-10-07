@@ -1,5 +1,5 @@
 "use client"
-
+import Image from "next/image"
 
 type PreviewProps = {
     question_preview: string
@@ -14,14 +14,14 @@ export default function QuestionPreview({question_preview, mc_preview}:PreviewPr
             <div className="input-group">
                 <label>Question Preview</label>
                 {question_preview
-                    ? <img src={question_preview} alt={`Question preview`} className="w-full" />
+                    ? <Image src={question_preview} alt="Question preview" width={500} height={300} className="w-full h-auto" />
                     : <p className=" flex justify-center text-sm">No image </p>
                     }
             </div>
             <div className="input-group">
                 <label>MC Preview</label>
                 {mc_preview
-                    ? <img src={mc_preview} alt={`Question preview`} className="w-full" />
+                    ? <Image src={mc_preview} alt={`Question preview`} className="w-full" width={500} height={300} />
                     : <p className=" flex justify-center text-sm">No image </p>
                     }
             </div>

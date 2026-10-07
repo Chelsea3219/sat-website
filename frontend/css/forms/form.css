@@ -31,6 +31,16 @@
     min-height: 50px;
 }
 
+/* Inside a flex row, let flex decide the width */
+.input-group .flex > textarea {
+    width: auto;
+    min-width: 0;
+}
+
+.input-group .field{
+    min-height: 50px;
+    height:auto
+}
 
 .rounded-btn {
     width: 100%;

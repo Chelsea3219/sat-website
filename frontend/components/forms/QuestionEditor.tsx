@@ -66,9 +66,10 @@ export default function QuestionEditor(
                     </div>
 
                     {/* Question Editor */}
-                    <div className="flex gap-4 mt-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-4">
+
                         {/* Question Information ------------------------------------------------------------------------*/}
-                        <div className="flex-4 w-full space-y-4">
+                        <div className="lg:col-span-4 min-w-0 space-y-4 ">
 
                             {/* Section and Topic */}
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -121,10 +122,12 @@ export default function QuestionEditor(
                             {/* Text */}
                             <div className="input-group">
                                 <label>Question Text</label>
-                                <TextEditor
-                                    text={form.text}
-                                    fieldChangeAction={(value) => fieldChangeAction("text", value)}
-                                />
+                                <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
+                                    <TextEditor
+                                        text={form.text}
+                                        fieldChangeAction={(value) => fieldChangeAction("text", value)}
+                                    />
+                                </div>
                             </div>
 
                             {/* Equation and its Latex Preview */}
@@ -184,7 +187,7 @@ export default function QuestionEditor(
                         </div>
 
                         {/* Question Preview ----------------------------------------------------------------------------*/}
-                        <div className="flex-1 sticky top-20 self-start h-full space-y-4">
+                        <div className="lg:col-span-1 min-w-0 sticky top-20 self-start space-y-4 ">
                             <QuestionPreview
                                 question_preview={form.question_preview}
                                 mc_preview={form.mc_preview ?? ""}
