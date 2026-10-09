@@ -20,10 +20,11 @@ type Props = {
     handleSearchAction: () => void
     handleImageAction: (field:File, category:ImageCategory) => void
     diagramUploader: UseFileUploaderReturn
+    onDeleteAction: () => void
 }
 
 export default function QuestionEditor(
-    {form, fieldChangeAction, mcFieldChangeAction, search, searchChangeAction, handleSearchAction, handleImageAction, diagramUploader}: Props
+    {form, fieldChangeAction, mcFieldChangeAction, search, searchChangeAction, handleSearchAction, handleImageAction, diagramUploader, onDeleteAction}: Props
 ){
 
     const handleDiagramFile = async (file: File | null) => {
@@ -191,6 +192,7 @@ export default function QuestionEditor(
                             <QuestionPreview
                                 question_preview={form.question_preview}
                                 mc_preview={form.mc_preview ?? ""}
+                                onDeleteAction={() => onDeleteAction()}
                             />
                         </div>
                     </div>

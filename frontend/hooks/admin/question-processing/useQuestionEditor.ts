@@ -3,7 +3,7 @@
 
 import {useState} from "react";
 import type {IncomingSilverQuestions, IncomingBronzeQuestions, MCProps } from "@/types/question-processing";
-import {uploadQuestionImage} from "@/services/api.document-processing";
+import {deleteQuestion, uploadQuestionImage} from "@/services/api.document-processing";
 import { preprocessForm} from "@/utils/question-processing";
 
 
@@ -74,7 +74,17 @@ export default function useQuestionEditor(
         }
     }
 
+    const handleDeleteQuestion = async (question_id: string) => {
+        try {
+            await deleteQuestion(question_id)
+            return true
+        } catch (error) {
+            console.error("Unable to delete the question.", error)
+            return false
+        }
+    }
+
     const resetForm = () => setForm(emptyForm)
 
-    return {form, fieldChange, mcFieldChange, handleImageUpload, resetForm}
+    return {form, fieldChange, mcFieldChange, handleImageUpload, resetForm, handleDeleteQuestion}
 }

@@ -159,7 +159,6 @@ export default function useEditorNavigation(){
     
     
     // Updates and Saves Questions in the dataset ------------------------------------------------------------------------
-    
     const handleSave = async (saved:IncomingSilverQuestions[]) => {
         //console.log("questions being sent ==>> ", completedQuestions)
 
@@ -173,7 +172,7 @@ export default function useEditorNavigation(){
             const updatedQuestions = questions.filter(q => !savedIds.has(q.question_id))
             setQuestions(updatedQuestions)
 
-            // Stay on the saem question if it still exists 
+            // Stay on the same question if it still exists 
             const sameIdx = updatedQuestions.findIndex(q => q.question_id === currentId)
             setCurrentIndex(sameIdx >- 0 ? sameIdx : Math.max(0, Math.min(currentIndex, updatedQuestions.length - 1)))
 

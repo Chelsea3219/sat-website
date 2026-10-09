@@ -27,6 +27,7 @@ export default function Page () {
     const {
         form, resetForm,
         fieldChange, mcFieldChange, handleImageUpload,
+        handleDeleteQuestion,
     } = useQuestionEditor(currentQuestion, savedKey)
 
     // Save one question into the queue
@@ -52,6 +53,23 @@ export default function Page () {
             setError("Failed to save question")
         } finally {
             setUploading(false)
+        }
+    }
+
+    const handleDeleteQuestionClick = async () => {
+        if (!currentQuestion) return
+        try {
+            const ok = await handleDeleteQuestion(currentQuestion.question_id)
+            if (!ok) {
+                setError("Failed to delete question")
+                return
+            }
+            console.log("Deleted question with ID:", currentQuestion.question_id)
+            diagramUploader.resetUpload()
+            nextIndex()
+        } catch (error) {
+            console.error("Unable to delete question.", error)
+            setError("Failed to delete question")
         }
     }
 
@@ -128,6 +146,7 @@ export default function Page () {
                     handleSearchAction={handleSearch}
                     handleImageAction = {handleImageUpload}
                     diagramUploader={diagramUploader}
+                    onDeleteAction={handleDeleteQuestionClick}
                 />
            )
            }

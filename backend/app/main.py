@@ -16,7 +16,7 @@ from app.domains.admin.routers import marketing
 from app.domains.students.routers import register, student_info
 from app.domains.questions.routers import fetch_questions
 from app.domains.analytics.routers import router as analytics_router, past_analytics
-from app.domains.document_processing.routers import extract_questions, fetch_questions_parameters, upload, add_questions, update_questions
+from app.domains.document_processing.routers import extract_questions, fetch_questions_parameters, upload, add_questions, update_questions, delete_questions
 from app.domains.achievements import router as achievement
 
 # Configuration
@@ -62,6 +62,7 @@ app.include_router(marketing.router)
 app.include_router(register.router)
 app.include_router(student_info.router)
 app.include_router(fetch_questions.router)
+app.include_router(delete_questions.router)
 app.include_router(analytics_router.router)
 app.include_router(past_analytics.router)
 app.include_router(extract_questions.router)
