@@ -100,3 +100,19 @@ export async function addQuestions(question: IncomingSilverQuestions[]){
     const data = await response.json()
     return data
 }
+
+
+export async function deleteQuestion(question_id: string) {
+    const response = await fetch(`/api/document-processing/delete-questions/${question_id}`, {
+        method: 'DELETE'
+    })
+
+    if (!response.ok) {
+        const text = await response.text()
+        console.error("API error:", response.status, text)
+        throw new Error("Failed to delete question")
+    }
+    
+    const data = await response.json()
+    return data 
+}
