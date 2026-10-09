@@ -26,7 +26,5 @@ export function renderLatex(text: string) {
     })
 }
 
-export const setLatex = (text: string) => {
-    if (!text) return ""
-    return `\\(${text}\\)`   
-}
+export const wrapSigma = (s:string) => `\\(${s}\\)`
+export const wrapBraces = (s:string) => `{${s}}`

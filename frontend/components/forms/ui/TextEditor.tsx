@@ -13,6 +13,7 @@ type TextProps = {
 }
 
 export default function TextEditor({text, fieldChangeAction}:TextProps) {
+    const buttonClass = "w-6 h-6 rounded hover:bg-primary/30 transition-all"
     const editor = useEditor({
         extensions: [StarterKit],
         content: text,
@@ -52,23 +53,23 @@ export default function TextEditor({text, fieldChangeAction}:TextProps) {
                 <div className="flex flex-wrap gap-2 mb-2 pb-1 border-b border-primary">
                     <Bold
                         onClick={() => editor.chain().focus().toggleBold().run()}
-                        className={`w-6 h-6 rounded ${editor.isActive('bold') ? 'bg-primary/30' : 'text-black'}`}
+                        className={`${buttonClass} ${editor.isActive('bold') ? 'bg-primary/30' : 'text-black'}`}
                     />
                     <Italic
                         onClick={() => editor.chain().focus().toggleItalic().run()}
-                        className={`w-6 h-6 rounded ${editor.isActive('italic') ? 'bg-primary/30' : 'text-black'}`}
+                        className={`${buttonClass} ${editor.isActive('italic') ? 'bg-primary/30' : 'text-black'}`}
                     />
                     <LucideUnderline
                         onClick={() => editor.chain().focus().toggleUnderline().run()}
-                        className={`w-6 h-6 rounded ${editor.isActive('underline') ? 'bg-primary/30' : 'text-black'}`}
+                        className={`${buttonClass} ${editor.isActive('underline') ? 'bg-primary/30' : 'text-black'}`}
                     />
                     <Sigma
                         onClick={() => wrapWith("\\(", "\\)")}
-                        className={`w-6 h-6 rounded ${editor.isActive('sigma') ? 'bg-primary/30' : 'text-black'}`}
+                        className={`${buttonClass} ${editor.isActive('sigma') ? 'bg-primary/30' : 'text-black'}`}
                     />
                     <Braces
                         onClick={() => wrapWith("{", "}")}
-                        className={`w-6 h-6 rounded ${editor.isActive('braces') ? 'bg-primary/30' : 'text-black'}`}
+                        className={`${buttonClass} ${editor.isActive('braces') ? 'bg-primary/30' : 'text-black'}`}
                     />
                 </div>
 
