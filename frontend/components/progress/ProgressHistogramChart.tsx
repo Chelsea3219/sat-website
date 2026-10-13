@@ -39,7 +39,7 @@ export default function ProgressHistogramChart({ trendData }: Props) {
                         tension: 0.3,       // smooths the line curve; use 0 for straight segments
                         fill: false,        // set true if you want a filled area under the line
                         pointRadius: 2,
-                        borderWidth: 10,
+                        borderWidth: 3,
                     },
                     {
                         label: "Math",
@@ -51,7 +51,7 @@ export default function ProgressHistogramChart({ trendData }: Props) {
                         tension: 0.3,
                         fill: false,
                         pointRadius: 2,
-                        borderWidth: 10,
+                        borderWidth: 3,
                     },
                 ],
             },
@@ -63,8 +63,8 @@ export default function ProgressHistogramChart({ trendData }: Props) {
                         display: true,
                         position: "top",       // renders right below the title, above the chart area
                         labels: {
-                            boxWidth: 12,        // smaller color swatch
-                            font: { size: 12, weight:"bold" }   // smaller label text
+                            boxWidth: 6,        // smaller color swatch
+                            font: { size: 10, weight:"normal" }   // smaller label text
                         }
                     },
                     title: {
@@ -84,10 +84,10 @@ export default function ProgressHistogramChart({ trendData }: Props) {
                     x: {
                         offset: true,
                         ticks: {
-                            color: "#374151",
+                            color: "#6B6B76",
                             labelOffset: 0,
                             font: {
-                                size: 14,
+                                size: 10,
                                 weight: "bold"
                             }
                         }
@@ -96,19 +96,19 @@ export default function ProgressHistogramChart({ trendData }: Props) {
                         min: 0,
                         max: 100,
                         ticks: {
-                            color: "#374151",
+                            color: "#6B6B76",
                             callback: (value) => `${value}%`,
                             font: {
-                                size: 15,
+                                size: 10,
                                 weight: "bold"
                             }
                         }, 
                         title: {
                             display: true, 
-                            text: "MASTERY SCORE (%)", 
+                            text: "Mastery Score (%)", 
                             color: "#1B1F38",
                             font: {
-                                size: 20,
+                                size: 14,
                                 weight: "bold"
                             }
                         }

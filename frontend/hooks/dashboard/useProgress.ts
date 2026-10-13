@@ -9,6 +9,7 @@ import { readingTopics, mathTopics } from "@/utils/topics"
 import { useState, useEffect } from "react"
 import { Achievement } from "@/components/progress/Acheivements"
 import { fetchAchievements } from "@/services/api.student-info"
+import {sampleGoldQuizAnalytics} from "@/utils/samples/sampleGoldQuizAnalytics"
 
 
 export default function useProgress() {

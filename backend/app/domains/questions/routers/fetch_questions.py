@@ -12,7 +12,7 @@ from app.domains.questions.services.difficulty_to_mastery_score import determine
 from app.domains.questions.services.fetch_questions import fetch_subtopic_questions, fetch_section_questions, fetch_guest_quiz_questions
 from app.domains.questions.services.question_selection import practice_question_selection, quiz_question_selection, quiz_assessment_selection
 from app.domains.analytics.services.grading_algorithms import get_effective_mastery_score
-from app.domains.students.services.fetch_student_info import fetch_student_info, fetch_subtopic_mastery, fetch_test_scores, fetch_topic_mastery
+from app.domains.students.services.fetch_student_info import fetch_student_info, fetch_subtopic_mastery, fetch_test_scores, fetch_gold_quiz_analytics
 
 router = APIRouter(prefix="/api/questions", tags=["questions"])
 

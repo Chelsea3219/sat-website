@@ -22,21 +22,28 @@ def fetch_student_information(clerk_id:str, db:Session):
     question_stats = compute_question_stats(clerk_id, db)
 
     # Fetches student's section, topic, and subtopic mastery scores 
-    section_topic_mastery = fetch_topic_mastery(clerk_id, db)
+    section_topic_mastery = fetch_gold_quiz_analytics(clerk_id, db)
     subtopics_mastery = fetch_subtopic_mastery(clerk_id, db)
     
     return student_info, question_stats, test_scores, section_topic_mastery, subtopics_mastery
 
 
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def fetch_subtopic_mastery(clerk_id: str, db:Session):
     with handle_db_errors(db, "fetching student's subtopic mastery scores from the gold schema."):
         subtopic_mastery = db.query(GoldSubtopicMastery).filter(GoldSubtopicMastery.clerk_id == clerk_id).order_by((GoldSubtopicMastery.last_wrong_at).desc()).all()
     return subtopic_mastery
 
-def fetch_topic_mastery(clerk_id: str, db:Session):
+def fetch_gold_quiz_analytics (clerk_id: str, db:Session):
     with handle_db_errors(db, "fetching student's section and topic mastery scores from the gold schema."):
         topic_mastery = db.query(GoldAnalytics).filter(GoldAnalytics.clerk_id == clerk_id).order_by((GoldAnalytics.completed_at).desc()).all()
     return topic_mastery
+
+
+def fetch_silver_quiz_analytics(clerk_id: str, db:Session):
+    with handle_db_errors(db, "fetching student's silver quiz analytics from the silver schema."):
+        silver_quiz_analytics = db.query(SilverAnalytics).filter(SilverAnalytics.clerk_id == clerk_id).order_by((SilverAnalytics.completed_at).desc()).all()
+    return silver_quiz_analytics
 
 def fetch_test_scores(clerk_id: str, db:Session):
     with handle_db_errors(db, "fetching student's test scores."):

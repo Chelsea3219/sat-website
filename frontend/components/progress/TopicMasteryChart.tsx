@@ -14,8 +14,8 @@ type MasteryScoresProps = {
 // Returns a color based on masteryScore
 const getBarColor = (score: number, color:string) => {
     if (score < 30) return '#E24B4A'  // weakness — red
-    if (score <60) return `var(--color-${color})`
-    if (score <80) return '#F5B301'  // yellow
+    if (score <60) return '#F5B301'  // yellow `var(--color-${color})`
+    if (score <80) return `var(--color-${color})`
     return '#1D9E75'  // strength — green
 }
     

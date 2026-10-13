@@ -15,6 +15,8 @@ import "@/css/buttons.css"
 import { Calculator, BookOpen, Compass} from "lucide-react"
 import WeaknessCard from "../progress/WeaknessCard"
 import Achievements from "../progress/Acheivements"
+import { sampleReadingTopicsMastery, sampleMathTopicsMastery} from "@/utils/samples/sampleTopicsMastery"
+
 
 export default function ProgressClient() {
     // TODO make a sleepting loading Owl Animation
@@ -37,6 +39,7 @@ export default function ProgressClient() {
             {/* */}
 
             <div className="flex flex-col gap-4 px-4 pb-4 min-h-[calc(100dvh-6rem)]">
+
                 {/* FIRST ROW : Student's Overall Performance and Consistency */}
                 <div className="flex flex-row items-stretch w-full h-52 gap-4">
                     {/* Owl Animation */}
@@ -173,7 +176,7 @@ export default function ProgressClient() {
                     >
                         {!uploader.trendData || uploader.trendData?.length >=5
                             ? (
-                                <ProgressHistogramChart trendData={(uploader.trendData ?? []).slice(-10)}/>
+                                <ProgressHistogramChart trendData={(uploader.trendData ?? []).slice(-10)}/> 
                             ) : (
                                 <div className="w-full flex flex-col items-center justify-center space-y-2">
                                     <p className="text-2xl font-bold ">Not enough information yet</p>
@@ -196,18 +199,31 @@ export default function ProgressClient() {
 
                     {/* Next Topic  */}
                     <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex flex-col bg-[#F8F7FF] p-2 space-y-4">
-                        <div className="flex items-center gap-x-2 mb-4">
+                        <div className="flex items-center gap-x-1 mb-4">
                             <Compass style={{ strokeWidth: 2 }} className="w-6 h-6 text-primary shrink-0" />
-                            <p className={`text-primary ${cardTitleStyle}`}>Next Topic</p>
+                            <p className={`text-primary ${cardTitleStyle}`}>Next Steps</p>
                         </div>
                         
                         {nextSubtopic?.subtopic ? (
                             <>
                                 <div className="flex flex-col items-center">
                                     <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Focus on</p>
-                                    <p className="text-2xl font-bold text-main leading-tight mt-1">
+                                    <p className="text-2xl font-bold text-main text-center leading-tight">
                                         {toTitleCase(nextSubtopic?.subtopic ?? "")}
                                     </p>
+                                </div>
+
+                                <div>
+                                    {[
+                                        {label:"Incorrect", value:nextSubtopic.questions_answered.num_incorrect}, 
+                                        {label:"Questions", value:nextSubtopic.questions_answered.num_questions}, 
+                                        {label:"Mastery", value:nextSubtopic?.mastery_score.mastery_score ?? ""}
+                                    ].map((item) => (
+                                        <div key={item.label} className="text-sm text-gray-500 flex flex-row justify-between">
+                                            <p>{item.label}</p>
+                                            <p>{item.value}</p>
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <Link
