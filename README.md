@@ -1,6 +1,6 @@
 <div align="center">
 
-# Elevate Learning
+# PrepForward
 
 **An adaptive SAT prep platform that learns where each student is weak and serves the questions that will move their score.**
 
@@ -15,18 +15,17 @@
 ![Clerk](https://img.shields.io/badge/Auth-Clerk-6C47FF?style=flat)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-<!-- Add once deployed: [Live Demo](https://your-domain.com) · [API Docs](https://api.your-domain.com/docs) -->
+[Live Demo](https://prepforwardlearning.vercel.app/) · [API Docs](https://https://prepforwardlearning.vercel.app/)
 
 </div>
 
-<!-- Replace with a screenshot or GIF of the dashboard — this is the first thing recruiters see. -->
-<!-- ![Elevate Learning dashboard](docs/screenshots/dashboard.png) -->
+<img width="1266" height="815" alt="dashboardpage" src="https://github.com/user-attachments/assets/2d4bf453-3579-46f5-bae4-09c96a97e10d" />
 
 ---
 
 ## Overview
 
-Most SAT prep tools hand every student the same question bank in the same order. Elevate Learning tracks mastery at the **subtopic** level (e.g. *Algebra → linear equations in two variables*) and uses that data to decide what each student sees next — harder questions where they're strong, more reps where they're struggling, and enough variety that they never stop seeing the full test.
+Most SAT prep tools hand every student the same question bank in the same order. PrepForward tracks mastery at the **subtopic** level (e.g. *Algebra → linear equations in two variables*) and uses that data to decide what each student sees next — harder questions where they're strong, more reps where they're struggling, and enough variety that they never stop seeing the full test.
 
 It's a full-stack application I designed and built end to end: the adaptive question engine, the scoring model, the analytics pipeline, the student dashboard, and an admin tool that turns PDF question sets into structured, searchable data with OCR.
 
