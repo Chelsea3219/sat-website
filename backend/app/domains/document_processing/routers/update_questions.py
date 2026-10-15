@@ -1,6 +1,8 @@
 # Import Python libraries and files 
+import logging
 from typing import List
-from datetime import datetime
+from rq import Queue, Retry
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -8,15 +10,27 @@ from app.domains.errors.error_handler import handle_db_errors
 from app.domains.document_processing.schemas import CleanQuestions
 
 from app.core.database import get_db
+from app.core.config import settings
+from app.core.logging_config import setup_logging
+
+from app.domains.questions.utils import content_hash
 from app.domains.questions.models import BronzeQuestions, SilverQuestions
 
+from app.worker.explanation.explanation_job import explanation_job
+from app.worker.explanation.queues import explanations_queue
+
+
+setup_logging()
+logger = logging.getLogger("update-questions")
 router = APIRouter(prefix="/api/document-processing", tags=["document-processing"])
 
 
 # UPDATES THE RAWS QUESTIONS IN THE BRONZE LAYER AND LOADS THEM IN THE SILVER LAYER
 # TODO change the function to accept a list of questions so that i can update a list of questions at a time
 @router.post("/update-raw-question")
-async def update_raw_question(questions: List[CleanQuestions], db: Session = Depends(get_db)):
+def update_raw_question(questions: List[CleanQuestions], db: Session = Depends(get_db)):
+    to_enqueue = []
+    now = datetime.now(timezone.utc)
     with handle_db_errors(db, "updating raw questions from bronze.questions table"):
         for question in questions:
             # Checks to see if the question exists in the bronze.raw_questions
@@ -46,12 +60,27 @@ async def update_raw_question(questions: List[CleanQuestions], db: Session = Dep
                 equation=question.equation,
                 diagram=question.diagram,
 
-                multiple_choices=question.multiple_choices,
+                multiple_choices=question.multiple_choices.model_dump(),
                 answer_key=question.answer_key,
 
-                updated_at=datetime.now(),
-                answer_active=False
+                updated_at=now,
+                explanation_status="generating"
             )
             db.add(clean_question)
+            to_enqueue.append( (str(bronze_question.question_id), content_hash(clean_question)))
         db.commit()
-        return 
+
+    # Generates the hints_answer_explanations, updates the explanation_status, and  insert into the silver schema 
+    try:
+        explanations_queue.enqueue_many([
+            Queue.prepare_data(
+                explanation_job, 
+                args=(qid, h),
+                job_id=f"explain-{qid}-{h}", 
+                retry=Retry(max=3, interval=[60, 120, 300]), 
+            )
+            for qid, h in to_enqueue
+        ])
+    finally: 
+        return {"added": len(to_enqueue)}
+
