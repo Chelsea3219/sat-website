@@ -2,9 +2,8 @@
 
 
 import { forwardRef} from "react";
-import katex from 'katex'; 
 import 'katex/dist/katex.min.css'
-import {formatLatex} from "@/utils/latexHelpers"
+import {formatLatex, renderLatex} from "@/utils/latexHelpers"
 
 
 type LaTexInputProps = {
@@ -16,10 +15,7 @@ type LaTexInputProps = {
 
 const LatexInput = forwardRef<HTMLTextAreaElement, LaTexInputProps>(({ value, onChangeAction, onKeyDownAction, className}, ref) => {
 
-    const rendered = katex.renderToString(formatLatex(value) || "\\space", {
-        throwOnError: false, // half typed LaTeX will show up in red and not throw an error
-        displayMode: false, // renders inline-sezed math rather than a large centered block
-    })
+    const rendered = renderLatex(value) || "&nbsp;"
     
     return (
         <div className={`flex gap-4 w-full ${className ?? ""}`}>
