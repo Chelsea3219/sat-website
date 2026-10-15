@@ -5,12 +5,16 @@ import tempfile
 from typing import List
 from fastapi import APIRouter, Form, UploadFile, HTTPException
 
+
+from app.core.logging_config import setup_logging
+
 from app.domains.document_processing.schemas import UploadRawQuestions 
 from app.domains.document_processing.pipelines.extraction.extract_pp import extract_text_pp
 from app.domains.document_processing.pipelines.clean import normalize_questions, mcq_diagram_identifier
 from app.domains.document_processing.pipelines.upload_images import upload_image_to_cloudinary
 
-logger = logging.getLogger(__name__)
+setup_logging()
+logger = logging.getLogger("extract-questions")
 router = APIRouter(prefix="/api/document-processing", tags=["document-processing"])
 
 

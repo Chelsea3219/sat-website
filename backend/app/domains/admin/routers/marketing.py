@@ -3,19 +3,20 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import func
 from html import escape # prevents the browser from intepreting user data or raw text as executable HTML code 
+import logging 
+import resend
 
 from app.core.database import get_db
 from app.core.config import settings
+from app.core.logging_config import setup_logging
+
 from app.domains.errors.error_handler import handle_db_errors
 from app.domains.admin.models import ContactMessages
 from app.domains.admin.schemas import ContactUsForm
 
-import logging
-logger = logging.getLogger(__name__)
-
-import resend
+setup_logging()
+logger = logging.getLogger("marketing")
 resend.api_key = settings.RESEND_API_KEY
-
 router = APIRouter(prefix="/api/landing", tags=["landing"])
 
 @router.post("/contact-us")

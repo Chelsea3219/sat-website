@@ -1,6 +1,6 @@
 # Import Python Libaries and files 
 import json 
-from sqlalchemy import cast 
+from sqlalchemy import cast, select, or_, and_
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import JSONB
 from typing import List
@@ -36,3 +36,11 @@ def fetch_guest_quiz_questions(section:str, db: Session) -> List[IncomingQuestio
     with handle_db_errors(db, "fetching quiz questions for demo"):
         questions = db.query(SilverQuestions).filter(SilverQuestions.question_id.in_(question_ids)).all()
         return questions
+
+
+
+def fetch_unanswered_questions(db: Session, limit: int =5000 ) -> List[IncomingQuestions | None]:
+    with handle_db_errors(db, "fetching unanswered questions from silver questions table "):
+        query = select(SilverQuestions).where(SilverQuestions.explanation_status.in_(["pending", "failed", "generating"])).limit(limit)
+        results = db.scalars(query).all()
+        return [IncomingQuestions.model_validate(r) for r in results]

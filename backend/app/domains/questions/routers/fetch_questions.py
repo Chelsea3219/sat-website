@@ -74,7 +74,7 @@ def fetch_quiz_questions(
 
     # Fetches student's information 
     test_score = fetch_test_scores(clerk_id, db)
-    topic_mastery = fetch_topic_mastery(clerk_id, db)
+    topic_mastery = fetch_gold_quiz_analytics(clerk_id, db)
     subtopics_mastery = fetch_subtopic_mastery(clerk_id, db)
 
     if not test_score or not topic_mastery:
