@@ -46,29 +46,31 @@ class ExplanationContent(BaseModel):
 
 class ExplanationSteps(BaseModel):
     step_number: int
-    type: Literal["concept", "calculation", "reasoning", "evidence", "verification"]
+    type: Literal["concept", "calculation", "reasoning", "evidence", "verification", "desmos"]
     title:str
     content: List[ExplanationContent]
 
 
-class AnswerExplanations(BaseModel):
+class AnswerExplanation(BaseModel):
     description: str
     steps: List[ExplanationSteps]
 
 
-class HintsAnswerExplanations(BaseModel):
-    answer_id: UUID
+class GeneratedAnswerExplanations(BaseModel):
+    answer_key: str = Field(description="Single letter A-D for multiple choice; number or text for free response.")
+    answer_explanation: AnswerExplanation
+
+    hint_1: str = Field(description="Math: the key word/statement in the question. Reading: the key phrase or sentence in the passage. Must not reveal the answer.")
+    hint_2: Optional[str] = Field(None, description="Math only: the relevant formula/strategy and how it connects to hint 1. Omit for reading. Must not reveal the answer.")
+
+
+
+
+class OutgoingAnswerExplanations(GeneratedAnswerExplanations):
     question_id: UUID
 
-    answer_key: str
-    answer_explanation: Optional[str] = None
-
-    hint_1: Optional[str] = None
-    hint_2: Optional[str] = None
-    hint_3: Optional[str] = None
-
-    status: Optional[Literal["pending_review", "approved", "rejected"]] = "pending_review"
+    status: Optional[Literal["pending_review", "approved", "rejected", "needs_review"]] = "pending_review"
     model_name: str
-    created_at: Optional[datetime] = None
+    created_at: datetime 
 
 

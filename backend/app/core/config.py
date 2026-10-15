@@ -20,7 +20,7 @@ class Config:
         # BACKEND
         self.DATABASE_URL: str = os.getenv("DATABASE_URL", "")
 
-        # Frontend
+        # FRONTEND
         self.FRONTEND_URL: str = os.getenv("FRONTEND_URL", "")
         self.ALLOWED_ORIGINS: list = [
             "http://localhost:3000",  # Next.js dev
@@ -31,6 +31,12 @@ class Config:
         self.CLOUDINARY_CLOUD_NAME: str = os.getenv("CLOUDINARY_CLOUD_NAME", "")
         self.CLOUDINARY_API_KEY: str = os.getenv("CLOUDINARY_API_KEY", "")
         self.CLOUDINARY_API_SECRET: str = os.getenv("CLOUDINARY_API_SECRET", "")
+
+        # CLAUDE ANTHROPIC API KEY
+        self.ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+
+        # REDIS API 
+        self.REDIS_URL: str = os.getenv("REDIS_URL", "")
 
         # MEMBERSHIP
         

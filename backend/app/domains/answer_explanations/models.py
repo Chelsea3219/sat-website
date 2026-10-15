@@ -15,12 +15,14 @@ class SilverHintsAnswerExplanations(Base):
     question_id = Column(UUID(as_uuid=True), nullable=False)
 
     answer_key = Column(String, nullable=False)
-    answer_explanation = Column(Text, nullable=True)
+    answer_explanation = Column(JSONB, nullable=True)
 
     hint_1 = Column(Text, nullable=True)
     hint_2 = Column(Text, nullable=True)
-    hint_3 = Column(Text, nullable=True)
 
     status = Column(String, nullable=False, default="pending_review")
     model_name = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), nullable= True)
+
+    
