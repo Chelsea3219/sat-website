@@ -1,14 +1,16 @@
 # Import Python libraries and files 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict
 from typing import Literal, Optional, List, Dict 
 from datetime import date, datetime
 from uuid import UUID
 
-
+from app.domains.document_processing.schemas import MC 
 
 # Incoming Questions from the SilverQuestions table
 class IncomingQuestions(BaseModel):
-    question_id: UUID
+    model_config = ConfigDict(from_attributes=True) # allows creating this from SQLAlchemy model instances (Pydantic v2 name; use orm_mode=True on v1)
+
+    question_id: UUID | str 
     section: str
     topic: str
     subtopic: List[str]
@@ -26,11 +28,9 @@ class IncomingQuestions(BaseModel):
     multiple_choices: Optional[Dict[str, str]] = None
 
     answer_key: str
-    answer_active: bool 
+    explanation_status: Literal["pending", "generating", "done", "failed"]
     updated_at: datetime
 
-    class Config:
-        from_attributes = True  # allows creating this from SQLAlchemy model instances (Pydantic v2 name; use orm_mode=True on v1)
 
 
 class PracticeSession(BaseModel):

@@ -31,6 +31,11 @@ class RawQuestionsIn(BaseModel):
     uploaded_at: datetime 
     reviewed: bool
 
+class MC(BaseModel):
+    A:str
+    B:str
+    C:str 
+    D:str
 
 # Class for new ALREADY-EDITED clean questions from frontend
 class CleanQuestions(BaseModel):
@@ -46,7 +51,7 @@ class CleanQuestions(BaseModel):
     text: str
     equation: str
     diagram: str
-    multiple_choices: Optional[dict]
+    multiple_choices: Optional[MC] = None 
     answer_key: Optional[Union[str, List[str]]]
     source: Optional[str] = None
 
@@ -64,7 +69,7 @@ class AddQuestions(BaseModel):
     text: str
     equation: str
     diagram: str
-    multiple_choices: Optional[dict]
+    multiple_choices:  Optional[MC] = None 
     answer_key: Optional[Union[str, List[str]]] = None
     source: str
 

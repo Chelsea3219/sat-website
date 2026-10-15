@@ -35,7 +35,7 @@ class SilverQuestions(Base):
     question_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     section = Column(String, nullable=False)
     topic = Column(String, nullable=False)
-    subtopic = Column(JSONB, nullable=False)
+    subtopic = Column(JSONB, nullable=False) # returns as list
 
     difficulty = Column(String, nullable=False)
     time_estimate = Column(Integer)
@@ -47,9 +47,9 @@ class SilverQuestions(Base):
     text = Column(Text, nullable=False)
     equation = Column(Text)
     diagram = Column(Text)
+    multiple_choices = Column(JSONB(none_as_null=True)) # returns as dict 
+    
+    answer_key = Column(String)
 
-    multiple_choices = Column(JSONB)
-    answer_key = Column(JSONB, nullable=False)
-
-    updated_at = Column(Date, nullable=False)
-    answer_active = Column(Boolean, nullable=False)
+    updated_at = Column(Date, nullable=False) # returns datetime
+    explanation_status = Column(String, nullable=False)
