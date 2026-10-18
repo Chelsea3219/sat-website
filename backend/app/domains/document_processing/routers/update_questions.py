@@ -17,7 +17,7 @@ from app.domains.questions.utils import content_hash
 from app.domains.questions.models import BronzeQuestions, SilverQuestions
 
 from app.worker.explanation.explanation_job import explanation_job
-from app.worker.explanation.queues import explanations_queue
+from app.worker.explanation.queues import realtime_queue
 
 
 setup_logging()
@@ -60,19 +60,19 @@ def update_raw_question(questions: List[CleanQuestions], db: Session = Depends(g
                 equation=question.equation,
                 diagram=question.diagram,
 
-                multiple_choices=question.multiple_choices.model_dump(),
+                multiple_choices=question.multiple_choices,
                 answer_key=question.answer_key,
 
                 updated_at=now,
                 explanation_status="generating"
             )
-            db.add(clean_question)
+            db.merge(clean_question)
             to_enqueue.append( (str(bronze_question.question_id), content_hash(clean_question)))
         db.commit()
 
     # Generates the hints_answer_explanations, updates the explanation_status, and  insert into the silver schema 
     try:
-        explanations_queue.enqueue_many([
+        realtime_queue.enqueue_many([
             Queue.prepare_data(
                 explanation_job, 
                 args=(qid, h),
@@ -81,6 +81,7 @@ def update_raw_question(questions: List[CleanQuestions], db: Session = Depends(g
             )
             for qid, h in to_enqueue
         ])
-    finally: 
-        return {"added": len(to_enqueue)}
+    except Exception:
+        logger.exception("Failed to enqueue explanation job; sweeper will retry")
+    return {"added": len(to_enqueue)}
 

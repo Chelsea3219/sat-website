@@ -43,7 +43,7 @@ def sweep() -> int:
         questions = fetch_unanswered_questions(db)
         for q in questions:
             qid, h = str(q.question_id), content_hash(q)
-            job_id = f"explain{qid}-{h}"
+            job_id = f"explain-{qid}-{h}"
 
             if job_is_active(job_id):
                 skipped += 1

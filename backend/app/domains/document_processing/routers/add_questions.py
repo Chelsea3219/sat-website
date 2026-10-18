@@ -15,7 +15,7 @@ from app.domains.questions.models import BronzeQuestions, SilverQuestions
 from app.domains.questions.utils import content_hash
 
 from app.worker.explanation.explanation_job import explanation_job
-from app.worker.explanation.queues import explanations_queue
+from app.worker.explanation.queues import realtime_queue
 
 from app.domains.answer_explanations.services.normalization import normalize_answer_key, normalize_choices
 
@@ -75,7 +75,7 @@ def add_questions(questions: List[AddQuestions], db: Session = Depends(get_db)):
                 answer_key=answer_key,
 
                 updated_at=now,
-                explanation_status="pending"
+                explanation_status="generating"
             )
             db.add(clean_question)
             to_enqueue.append( (str(bronze_question.question_id), content_hash(clean_question)))
@@ -84,7 +84,7 @@ def add_questions(questions: List[AddQuestions], db: Session = Depends(get_db)):
 
     # Generates the hints_answer_explanations, updates the explanation_status, and  insert into the silver schema 
     try:
-        explanations_queue.enqueue_many([
+        realtime_queue.enqueue_many([
             Queue.prepare_data(
                 explanation_job, 
                 args=(qid, h),
@@ -93,5 +93,7 @@ def add_questions(questions: List[AddQuestions], db: Session = Depends(get_db)):
             )
             for qid, h in to_enqueue
         ])
-    finally:
-        return {"added": len(to_enqueue)}
+    except Exception:
+        logger.exception("Failed to enqueue explanation job; sweeper will retry")
+    return {"added": len(to_enqueue)}
+    
