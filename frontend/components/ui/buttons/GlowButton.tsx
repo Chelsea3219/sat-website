@@ -8,7 +8,7 @@ type CardProps = {
 export default function GlowButton({ text}: CardProps) {
 
     return (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mb-1">
             <button
                 className="
                     relative px-6 py-1

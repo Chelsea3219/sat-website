@@ -80,6 +80,15 @@ const renderMath = (tex: string, displayMode: boolean) =>
         displayMode,
     })
 
+// Convert simple text-formatting commands to HTML
+function renderTextCommands(s: string) {
+    return escapeHtml(s)
+        .replace(/\\textit\{([^}]*)\}/g, "<em>$1</em>")
+        .replace(/\\emph\{([^}]*)\}/g, "<em>$1</em>")
+        .replace(/\\textbf\{([^}]*)\}/g, "<strong>$1</strong>")
+        .replace(/\\text\{([^}]*)\}/g, "$1")
+}
+
 export function renderLatex(text: string) {
     if (!text) return ""
 
@@ -87,14 +96,21 @@ export function renderLatex(text: string) {
     const segments = splitLatex(formatted)
     const hasDelimitedMath = segments.some(s => s.type === "math")
 
-    // Fallback: no delimiters, but it looks like raw LaTeX (e.g. "x^2"), so render it all as math
     if (!hasDelimitedMath) {
-        const looksLikeLatex = /\\[a-zA-Z]+|[_^{}]/.test(formatted)
-        return looksLikeLatex ? renderMath(formatted, false) : escapeHtml(formatted)
+        // Strip simple text commands; whatever's left decides how to render
+        const stripped = formatted.replace(/\\(textit|emph|textbf|text)\{[^}]*\}/g, "")
+        const looksLikeLatex = /\\[a-zA-Z]+|[_^{}]/.test(stripped)
+        const looksLikeProse = /[a-zA-Z]{2,}\s+[a-zA-Z]{2,}/.test(stripped)
+
+        // Pure math like "x^2" or "\frac{1}{2}" renders as math
+        if (looksLikeLatex && !looksLikeProse) return renderMath(formatted, false)
+
+        // A sentence renders as text, with \textit etc. turned into HTML
+        return renderTextCommands(formatted)
     }
 
     return segments
-        .map(s => s.type === "math" ? renderMath(s.content, s.display) : escapeHtml(s.content))
+        .map(s => s.type === "math" ? renderMath(s.content, s.display) : renderTextCommands(s.content))
         .join("")
 }
 

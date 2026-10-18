@@ -1,6 +1,7 @@
 import { Question} from "@/types/questions";
 import "@/css/tab-window.css"
 import "@/css/forms/form.css"
+import "@/css/input-answer.css"
 import {renderLatex} from "@/utils/latexHelpers";
 
 type AnswerState = "default" | "selected" | "correct" | "incorrect" 
@@ -76,7 +77,7 @@ export default function InputAnswer({ question, answer, fieldChangeAction, isCor
                                     key={letter}
                                     onClick={() => fieldChangeAction(letter)}
                                     className={`
-                                        flex items-start gap-3 px-4 py-2 w-full min-h-13
+                                        flex items-center gap-2 sm:gap-3 px-3 py-1.5 sm:px-4 sm:py-2 w-full h-auto
                                         rounded-2xl border
                                         text-left text-base
                                         cursor-pointer hover:bg-accent/80 hover:border-accent hover:font-semibold
@@ -85,14 +86,14 @@ export default function InputAnswer({ question, answer, fieldChangeAction, isCor
                                 >
                                     <div
                                         className={`
-                                            w-8 h-8 shrink-0 rounded-full flex items-center justify-center border text-sm 
+                                            w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded-full flex items-center justify-center border text-sm 
                                             ${circleStyles[state]}`}
                                     >
                                         {letter}
                                     </div>
-                                    <span className={`flex-1 p-1 leading-relaxed whitespace-normal text-base ${textStyles[state]}`}>
+                                    <span className={`flex-1 min-w-0 p-1 h-auto leading-snug whitespace-normal text-base ${textStyles[state]}`}>
                                         <span
-                                            className="flex-1"
+                                            className="answer-choice flex-1"
                                             dangerouslySetInnerHTML={{ __html: rendered }}
                                         />
                                     </span>

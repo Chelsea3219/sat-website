@@ -9,7 +9,7 @@ import {Sigma, BookOpenText} from "lucide-react"
 
 
 // Handles data and layout
-export default function PracticeSidebar() {
+export default function PracticeSidebar({onNavigate}:{onNavigate?: () => void}) {
 
     // Declare the parameters 
     const readingTopics = items.filter(item => item.title === "Reading");
@@ -26,6 +26,7 @@ export default function PracticeSidebar() {
                     <PracticeSidebarItem
                         key={index}
                         item={item}
+                        onNavigate={onNavigate}
                     />
                 ))}
             </div>
@@ -38,6 +39,7 @@ export default function PracticeSidebar() {
                     <PracticeSidebarItem
                         key={index}
                         item={item}
+                        onNavigate={onNavigate}
                     />
                 ))}
             </div>

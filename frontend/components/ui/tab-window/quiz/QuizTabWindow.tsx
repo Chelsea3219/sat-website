@@ -23,7 +23,7 @@ type TabWindowProps = {
 
 export default function QuizTabWindow({section, activeTab, progress, questionTabProps, quizResults}: TabWindowProps) {
     return (
-        <div className="">
+        <div className="px-4">
             <div className="tabwindow h-full flex flex-col">
 
                 {/* Header */}

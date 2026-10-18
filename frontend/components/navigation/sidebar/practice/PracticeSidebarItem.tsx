@@ -17,9 +17,10 @@ type SidebarItem = {
 type PracticeProps = {
     item: SidebarItem
     defaultOpen?: boolean
+    onNavigate?: () => void 
 }
 
-export default function PracticeSidebarItem({ item, defaultOpen = false }: PracticeProps) {
+export default function PracticeSidebarItem({ item, defaultOpen = false, onNavigate}: PracticeProps) {
 
     const {user} = useUser()
     const isGuest = user?.publicMetadata?.role === "guest"
@@ -54,6 +55,7 @@ export default function PracticeSidebarItem({ item, defaultOpen = false }: Pract
                     <PracticeSidebarItem
                         key={child.title}
                         item={child}
+                        onNavigate={onNavigate}
                     />
                 ))}
             </div>
@@ -78,9 +80,10 @@ export default function PracticeSidebarItem({ item, defaultOpen = false }: Pract
                     <div>
                         {item.children?.map((child) => (
                             <PracticeSidebarItem
-                            key={child.title}
-                            item={child}
-                        />
+                                key={child.title}
+                                item={child}
+                                onNavigate={onNavigate}
+                            />
                         ))}
                     </div>
                 )}
@@ -100,6 +103,7 @@ export default function PracticeSidebarItem({ item, defaultOpen = false }: Pract
             {item.path && !locked? (
                 <Link
                     href={`${fullPath}?tab=${activeTab}`}
+                    onClick={onNavigate}
                     aria-current = {isActive ? "page" : undefined}
                     className={
                         isActive

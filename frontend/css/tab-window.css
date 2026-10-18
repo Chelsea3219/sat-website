@@ -2,7 +2,7 @@
     width: 100%;
     height: auto;
     max-height: calc(100dvh - 4rem - 2rem); /* screen − navbar − page padding */;
-    min-height: 20rem;  
+    min-height: 40rem;  
 
     margin:0;
     display: flex;
@@ -11,7 +11,7 @@
     
     background-color: #ffffff;
     border: 1px solid var(--color-primary);
-    border-radius: 1.3rem;
+    border-radius: 0.7rem;
     overflow: hidden;
 }
 
@@ -27,27 +27,21 @@
     flex-shrink: 0;
     border-bottom: 2px solid var(--color-primary);
     background-color: var(--color-secondary);
-    border-top-left-radius: 1.3rem;
-    border-top-right-radius: 1.3rem;
+    border-top-left-radius: 0.7rem;
+    border-top-right-radius: 0.7rem;
     transition-property: width;
     transition: width 500ms ease-out;;
     transition-timing-function: ease-out;
 }
 
 /* Large desktops (Tailwind's xl and 2xl breakpoints) */
-@media (min-width: 1280px) {
-    .header {
-        height: clamp(60px, 7vh, 88px);
-    }
-    .tabwindow { border-radius: 1.6rem; };
-}
 @media (min-width: 1536px) {
     .header {
         height: clamp(68px, 7.5vh, 100px);
-        border-top-left-radius: 1.6rem;
-        border-top-right-radius: 1.6rem;
+        border-top-left-radius: 0.7rem;
+        border-top-right-radius: 0.7rem;
     }
-    .tabwindow { border-radius: 1.6rem; };
+    .tabwindow { border-radius: 0.7rem; };
 }
 
 .tabs {

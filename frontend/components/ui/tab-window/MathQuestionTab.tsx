@@ -21,7 +21,7 @@ export default function MathQuestionTab({currentQuestion, answer, answerChangeAc
 
     return (
         <>
-            <div className="flex flex-col py-1 px-4 h-full space-y-1">
+            <div className="flex flex-col py-1 px-4 h-full gap-y-1">
                 {!currentQuestion && 
                     <>
                         <HorizontalLoadingAnimation text="Loading Questions"/>
@@ -38,13 +38,13 @@ export default function MathQuestionTab({currentQuestion, answer, answerChangeAc
                 <ReadOnlyContent
                     key={currentQuestion.question_id}
                     content={currentQuestion.text}
-                    className="font-medium text-lg leading-relaxed"
+                    className="font-medium text-lg leading-snug"
                 />
 
                 {/* Equation */}
                 {currentQuestion.equation && (
                     <div
-                        className="flex items-center justify-center text-xl p-1 font-bold"
+                        className="flex items-center justify-center text-xl font-bold"
                         dangerouslySetInnerHTML={{
                             __html: katex.renderToString(formatLatex(currentQuestion.equation), {
                                 throwOnError: false,

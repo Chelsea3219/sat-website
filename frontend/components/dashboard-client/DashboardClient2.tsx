@@ -4,7 +4,6 @@ import HelloBanner from "@/components/dashboard/helloBanner"
 import useDashboard from "@/hooks/dashboard/useDashboard"
 import DashboardCard from "../dashboard/DashboardCard"
 import "@/css/animation.css"
-import Link from "next/link"
 import GlowButton from "../ui/buttons/GlowButton"
 import TopicMasteryChart from "../progress/TopicMasteryChart"
 import { Target, ChartColumnIncreasing, BookOpen, Calculator, Clock, Calendar, ArrowBigRight} from "lucide-react"
@@ -19,60 +18,70 @@ export default function DashboardClient2() {
 
     const cardTitleStyle = "text-lg items-start font-bold uppercase tracking-wide"
 
+    const firstRowItems = [
+        {
+            title:"Current",
+            Icon:ChartColumnIncreasing,
+            value: uploader.currentScore, 
+            change: uploader.scoreChange,
+            iconClass: "bg-primary/30 text-primary"
+        }, 
+        {
+            title:"Target",
+            Icon:Target,
+            value: uploader.targetScore, 
+            iconClass: "bg-orange-500/30 text-orange-500"
+        }
+    ]
+
     return (
-        <div className="flex flex-col gap-4 px-4 pb-4 min-h-[calc(100dvh-8rem)]">
+        <div className="flex flex-col gap-4 px-8 md:px-4 pb-6 md:pb-2 min-h-[calc(100dvh-8rem)]">
 
             {/* FIRST ROW : helloBanner and Current & Target Score */}
-            <div className="flex flex-row w-full gap-4 items-stretch">
-                <HelloBanner
-                    fullName={uploader.fullName ?? ""}
-                    weeklyGoal={uploader.weeklyGoal ?? 0}
-                    timeSpent={Number(uploader.weeklyTimeSpent )?? 0}
-                    isLoading={uploader.isLoading}
-                />
+            <div className="flex flex-row w-full h-full gap-4 items-stretch">
 
-                <div className="flex flex-col space-y-4 min-w-56 flex-1">
-                    <DashboardCard 
-                        color={"secondaryOne"} bgColor={"whiteblue"}
-                        className="w-full flex flex-row items-center space-x-2" 
+                <div className="flex-3/5 md:flex-2/3 items-stretch">
+                    <HelloBanner
+                        fullName={uploader.fullName ?? ""}
+                        weeklyGoal={uploader.weeklyGoal ?? 0}
+                        timeSpent={Number(uploader.weeklyTimeSpent )?? 0}
                         isLoading={uploader.isLoading}
-                    >
-                        <ChartColumnIncreasing
-                            style={{strokeWidth:2}}
-                            className="w-10 h-10 p-1 rounded-lg bg-primary/30 text-primary"
-                        />
-                        <div>
-                            <p className="text-sm font-semibold text-primary uppercase tracking-wide">Current Score</p>
-                            <div className="flex flex-row justify-between items-center">
-                                <p className="text-2xl font-bold">{uploader.currentScore}</p>
-                                {uploader.scoreChange == null ? null : uploader.scoreChange > 0 ? (
-                                    <span className="text-lg font-bold text-green-500">+{uploader.scoreChange}</span>
-                                ) : uploader.scoreChange < 0 ? (
-                                    <span className="text-lg font-bold text-red-500">−{Math.abs(uploader.scoreChange)}</span>
-                                ) : (
-                                    <p></p>
-                                )}
+                    />
+                </div>
+
+                <div className="flex flex-col space-y-4">
+
+                    {firstRowItems.map((items => (
+                        <DashboardCard
+                            key = {items.title}
+                            color={"secondaryOne"} bgColor={"whiteblue"}
+                            className="w-full flex flex-row items-center space-x-2" 
+                            isLoading={uploader.isLoading}
+                        >
+                            <items.Icon
+                                style={{strokeWidth:2}}
+                                className={`hidden md:block w-10 h-10 p-1 rounded-lg ${items.iconClass}`}
+                            />
+                            <div>
+                                <div className="flex flex-row gap-x-1">
+                                    <p className="text-sm font-semibold text-primary uppercase tracking-wide">{items.title}</p>
+                                    <p className="hidden md:block text-sm font-semibold text-primary uppercase tracking-wide">Score</p>
+                                </div>
+                                <div className="flex flex-row justify-between items-center">
+                                    <p className="text-2xl font-bold">{items.value}</p>
+                                    {items.change != null && items.change !== 0 && (
+                                        <span className={`text-lg font-bold ${items.change > 0 ? "text-green-500" : "text-red-500"}`}>
+                                            {items.change > 0 ? "+" : "−"}{Math.abs(items.change)}
+                                        </span>
+                                    )}
+                                </div>
+                                
                             </div>
-                        </div>
-                    </DashboardCard>
-                    <DashboardCard 
-                        color={"secondaryOne"} bgColor={"whiteblue"}
-                        className="w-full flex flex-row items-center space-x-2" 
-                        isLoading={uploader.isLoading}
-                    >
-                        <Target
-                            style={{strokeWidth:2}}
-                            className="w-10 h-10 p-1 rounded-lg bg-orange-500/30 text-orange-500"
-                        />
-                        <div>
-                            <p className="text-sm font-semibold text-primary uppercase tracking-wide">Target Score</p>
-                            <div className="flex flex-row justify-between items-center">
-                                <p className="text-2xl font-bold">{uploader.targetScore}</p>
-                            </div>
-                        </div>
-                    </DashboardCard>
+                        </DashboardCard>
+                    )))}
                 </div>
             </div>
+
 
             {/* SECOND ROW : Weaknesses, Back to Practice, Daily and Weekly Progress */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full min-h-20">
@@ -88,7 +97,7 @@ export default function DashboardClient2() {
 
                 {/* Continue where you left off */}
                 <DashboardCard 
-                    color="secondary"
+                    color="secondaryOne"
                     bgColor="whiteblueOne"
                     className="w-full flex flex-col"
                     isLoading={uploader.isLoading}
@@ -97,9 +106,9 @@ export default function DashboardClient2() {
                         <ArrowBigRight style={{strokeWidth:2}} className="w-6 h-6 text-primary"/>
                         <p className="uppercase text-lg text-primary font-bold">Back To</p>
                     </div>
-                    <GlowButton text={uploader.currentSubtopicAnalytics?.subtopic ?? ""}/>
-                    <p className="border-2 border-b border-primary/50 mt-3 mb-1 "></p>
-                    <div className="flex flex-col flex-1 items-center justify-evenly">
+                    <GlowButton text={uploader.currentSubtopicAnalytics?.subtopic ?? ""} />
+                    <p className="hidden md:block border-2 border-b border-primary/50 mt-3 mb-1 "></p>
+                    <div className="hidden md:flex flex-col flex-1 items-center justify-evenly">
                         {[
                             {label: "Correct", value: Math.abs((uploader.currentSubtopicAnalytics?.questions_answered.num_questions ?? 0) - (uploader.currentSubtopicAnalytics?.questions_answered.num_incorrect ?? 0))},
                             {label: "Incorrect", value:uploader.currentSubtopicAnalytics?.questions_answered.num_incorrect ?? 0},
@@ -115,42 +124,44 @@ export default function DashboardClient2() {
                 </DashboardCard>
 
                 {/* Daily and Weekly Goals */}
-                <DashboardCard 
-                    color="secondary"
-                    bgColor="whiteblueOne"
-                    className="w-full flex flex-col"
-                    isLoading={uploader.isLoading}
-                >
-                    <div className="flex flex-row space-x-4 items-center mb-1">
-                        <Calendar style={{strokeWidth:2}} className="w-6 h-6 text-primary"/>
-                        <p className="uppercase text-lg text-primary font-bold">Today Stats</p>
-                    </div>
-                    {[
-                        {label: "Num of Questions", value: uploader.dailyWeeklyStats?.num_questions ?? 0},
-                        {label: "Time Spent", value: uploader.dailyWeeklyStats?.time_spent},
-                    ].map(({label, value}) => (
-                        <div key={label} className="flex-1 flex flex-row justify-between items-center ml-10">
-                            <p className="text-left text-sm text-main/90">{label}</p>
-                            <p className="text-primary font-bold text-lg">{value}</p>
+                <div className="hidden md:flex">
+                    <DashboardCard 
+                        color="secondary"
+                        bgColor="whiteblueOne"
+                        className="w-full flex flex-col "
+                        isLoading={uploader.isLoading}
+                    >
+                        <div className="flex flex-row space-x-4 items-center mb-1">
+                            <Calendar style={{strokeWidth:2}} className=" w-6 h-6 text-primary"/>
+                            <p className="uppercase text-lg text-primary font-bold">Today Stats</p>
                         </div>
-                    ))}
+                        {[
+                            {label: "Num of Questions", value: uploader.dailyWeeklyStats?.num_questions ?? 0},
+                            {label: "Time Spent", value: uploader.dailyWeeklyStats?.time_spent},
+                        ].map(({label, value}) => (
+                            <div key={label} className="flex-1 flex flex-row justify-between items-center ml-10">
+                                <p className="text-left text-sm text-main/90">{label}</p>
+                                <p className="text-primary font-bold text-lg">{value}</p>
+                            </div>
+                        ))}
 
-                    <p className="border-b-3 border-primaryTwo/50 my-3 "></p>
+                        <p className="border-b-3 border-primaryTwo/50 my-3 "></p>
 
-                    <div className="flex flex-row space-x-4 items-center mb-1">
-                        <Target style={{strokeWidth:2}} className="w-6 h-6 text-primary"/>
-                        <p className="uppercase text-lg text-primary font-bold">Weekly Goal</p>
-                    </div>
-                    {[
-                        {label: "Num of Questions", value: uploader.dailyWeeklyStats?.weekly_num_questions ?? 0},
-                        {label: "Time Spent", value: uploader.dailyWeeklyStats?.weekly_time_spent},
-                    ].map(({label, value}) => (
-                        <div key={label} className="flex-1 flex flex-row justify-between items-center ml-10">
-                            <p className="text-left text-sm text-main/90">{label}</p>
-                            <p className="text-primary font-bold text-lg">{value}</p>
+                        <div className="flex flex-row space-x-4 items-center mb-1">
+                            <Target style={{strokeWidth:2}} className="w-6 h-6 text-primary"/>
+                            <p className="uppercase text-lg text-primary font-bold">Weekly Goal</p>
                         </div>
-                    ))}
-                </DashboardCard>
+                        {[
+                            {label: "Num of Questions", value: uploader.dailyWeeklyStats?.weekly_num_questions ?? 0},
+                            {label: "Time Spent", value: uploader.dailyWeeklyStats?.weekly_time_spent},
+                        ].map(({label, value}) => (
+                            <div key={label} className="flex-1 flex flex-row justify-between items-center ml-10">
+                                <p className="text-left text-sm text-main/90">{label}</p>
+                                <p className="text-primary font-bold text-lg">{value}</p>
+                            </div>
+                        ))}
+                    </DashboardCard>
+                </div>
             </div>
 
 
@@ -191,7 +202,7 @@ export default function DashboardClient2() {
                 </div>
 
                 {/* Past Quiz History — no fixed width */}
-                <div className="flex">
+                <div className="hidden md:flex">
                     <DashboardCard
                         color="accent"
                         bgColor="accent"

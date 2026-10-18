@@ -1,0 +1,6 @@
+.answer-choice .katex,
+.answer-choice .katex .base {
+    white-space: normal;
+    display: inline;
+    font-family: inherit;
+}

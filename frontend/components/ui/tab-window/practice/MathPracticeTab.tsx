@@ -6,7 +6,7 @@ import { formatLatex } from "@/utils/latexHelpers";
 import InputAnswer from "@/components/ui/tab-window/helpers/InputAnswer";
 import Image from "next/image";
 import HorizontalLoadingAnimation from "@/components/ui/loading-animation/HorizontalLoadingAnimation";
-
+import {Timer} from 'lucide-react'
 
 
 export default function MathPracticeTab({
@@ -26,14 +26,14 @@ export default function MathPracticeTab({
 
     const buttonStyle = `
         flex-1
-        py-3 rounded-full text-2xl font-semibold shadow-lg
+        py-2 sm:py-3 rounded-full sm:text-2xl font-semibold shadow-lg
         hover:bg-accent hover:border-accent hover:text-white transition-all duration-300
         disabled:opacity-50 disabled:cursor-not-allowed                    
     `
 
     return (
         <>
-            <div className="flex flex-col py-1 px-4 space-y-1">
+            <div className="flex flex-col py-1 px-4 gap-y-1">
                 {!currentQuestion && 
                     <>
                         <HorizontalLoadingAnimation text="Loading Questions"/>
@@ -50,13 +50,13 @@ export default function MathPracticeTab({
                 <ReadOnlyContent
                     key={currentQuestion.question_id}
                     content={currentQuestion.text}
-                    className="font-medium text-lg leading-relaxed"
+                    className="font-medium text-lg leading-snug"
                 />
 
                 {/* Equation */}
                 {currentQuestion.equation && (
                     <div
-                        className="flex items-center justify-center text-xl p-1 font-bold"
+                        className="flex items-center justify-center text-xl font-bold"
                         dangerouslySetInnerHTML={{
                             __html: katex.renderToString(formatLatex(currentQuestion.equation), {
                                 throwOnError: false,
@@ -67,11 +67,12 @@ export default function MathPracticeTab({
                 )}
 
                 {/* Multiple Choice and Diagram */}
+                {/* TODO for mobile screens make a toggle window to switch between multiple choices and graphs  */}
                 <div
                     className={
                         currentQuestion.question_type === "free response" && currentQuestion.diagram
                             ? "flex flex-col w-full"
-                            : "flex items-start w-full"
+                            : "flex md:items-start w-full"
                     }
                 >
                     {currentQuestion.diagram ? (
@@ -164,8 +165,9 @@ export default function MathPracticeTab({
                         </button>
 
                         {/* Stopwatch */}
-                        <div className="flex-1 text-xl font-semibold text-slate-900 text-center px-4 py-3 border-2 border-primary rounded-full">
-                            Time: {formatTime(timeElapsed)}
+                        <div className="flex-1 flex items-center justify-center sm:text-xl tabler-nums font-semibold text-slate-900 gap-1.5 px-3 py-2 sm:px-4 sm:py-3 border border-primary rounded-full">
+                            <Timer className="w-4 h-4 sm:w-6 sm:h-6"/>
+                            {formatTime(timeElapsed)}
                         </div>
 
                         <button
@@ -173,7 +175,8 @@ export default function MathPracticeTab({
                             onClick ={nextQuestion}
                             disabled={!isCorrect}
                             >
-                            Next Question
+                            Next<span className="hidden md:inline"> Question</span>
+
                         </button>
                     </div>
                 </div>

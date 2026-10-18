@@ -104,7 +104,7 @@ export default function LandingNavbar() {
 
                         <div className="flex flex-col items-end gap-y-3 w-24">
                             <SignInButton>
-                                <button className={`${buttonClass} border-2`}>
+                                <button className={`${buttonClass} border`}>
                                     Login
                                 </button>
                             </SignInButton>

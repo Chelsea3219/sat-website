@@ -16,6 +16,7 @@ import { Calculator, BookOpen, Compass} from "lucide-react"
 import WeaknessCard from "../progress/WeaknessCard"
 import Achievements from "../progress/Acheivements"
 import { sampleReadingTopicsMastery, sampleMathTopicsMastery} from "@/utils/samples/sampleTopicsMastery"
+import NextSubtopic from "../progress/NextSubtopic"
 
 
 export default function ProgressClient() {
@@ -38,25 +39,27 @@ export default function ProgressClient() {
         <>
             {/* */}
 
-            <div className="flex flex-col gap-4 px-4 pb-4 min-h-[calc(100dvh-6rem)]">
+            <div className="flex flex-col gap-4 px-6 md:px-4 pb-4 min-h-[calc(100dvh-6rem)]">
 
                 {/* FIRST ROW : Student's Overall Performance and Consistency */}
-                <div className="flex flex-row items-stretch w-full h-52 gap-4">
+                <div className="flex flex-row  items-stretch w-full h-52 gap-4">
                     {/* Owl Animation */}
-                    <DashboardCard 
-                            color={"secondaryOne"} bgColor={"white"}
-                            className="flex items-center justify-center w-full" 
-                            isLoading={uploader.isLoading}
-                            style={{
-                                backgroundColor: "#faf8ff",
-                                backgroundImage: "radial-gradient(#d9d0ff 1.2px, transparent 1.2px)",
-                                backgroundSize: "18px 18px",
-                            }}
-                        >
-                            <div className="h-full max-h-72 aspect-square overflow-hidden rounded-xl " style={{ position: "relative", width: "100%", overflow: "hidden", borderRadius: 12 }}>
-                                <Lottie animationData={owlAnimation} className="w-full h-full scale-135" loop />
-                            </div>
-                    </DashboardCard>
+                    <div className="hidden md:block">
+                        <DashboardCard 
+                                color={"secondaryOne"} bgColor={"white"}
+                                className="flex items-center justify-center w-full" 
+                                isLoading={uploader.isLoading}
+                                style={{
+                                    backgroundColor: "#faf8ff",
+                                    backgroundImage: "radial-gradient(#d9d0ff 1.2px, transparent 1.2px)",
+                                    backgroundSize: "18px 18px",
+                                }}
+                            >
+                                <div className="h-full max-h-72 aspect-square overflow-hidden rounded-xl " style={{ position: "relative", width: "100%", overflow: "hidden", borderRadius: 12 }}>
+                                    <Lottie animationData={owlAnimation} className="w-full h-full scale-135" loop />
+                                </div>
+                        </DashboardCard>
+                    </div>
 
                     {/* Current Score AND Overall Perfomance */}
                     <ProgressCard color="primary" isLoading={uploader.isLoading} cardClassName="" className="flex-1 basis-0" style={{width: 500}}>
@@ -75,7 +78,7 @@ export default function ProgressClient() {
                         <ProgressCard color="orange-500" isLoading={uploader.isLoading} className="flex-1 basis-0 flex flex-col justify-center">
                             <div className="flex justify-center flex-col space-y-1 w-full px-2">
                                 {[
-                                    {label: "Total Questions", value: uploader.numQuestions ?? 0 }, 
+                                    {label: "Questions", value: uploader.numQuestions ?? 0 }, 
                                     {label: "Accuracy Rate %", value: uploader.accuracyRate ?? 0}
                                 ].map(({label, value}) => (
                                     <div
@@ -110,14 +113,23 @@ export default function ProgressClient() {
                     </div>
 
                     {/* Calendar Tracker */}
-                    <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex-1 basis-0">
-                        <LoginCalendarTracker loggedDays={uploader.loggedDatesOnly}/>
-                    </ProgressCard>
+                    <div className="hidden sm:block">
+                        <ProgressCard color="primary" isLoading={uploader.isLoading} className=" flex-1 basis-0">
+                            <LoginCalendarTracker loggedDays={uploader.loggedDatesOnly}/>
+                        </ProgressCard>
+                    </div>
 
                 </div>
 
+                {/* Next Subtopic */}
+                <div className="block sm:hidden">
+                    <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex flex-col bg-[#F8F7FF] p-2 pb-2">
+                        <NextSubtopic nextSubtopic={nextSubtopic} cardTitleStyle={cardTitleStyle}/>
+                    </ProgressCard>
+                </div>
+
                 {/* SECOND ROW : Reading and Math Mastery Scores by topic */}
-                <div className="grid grid-cols-[1fr_2fr] gap-4 w-full flex-[0.8_1_0%] min-h-0">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 w-full flex-[0.8_1_0%] min-h-0">
                     {/* Achievements */}
                     <ProgressCard 
                             color="accent" 
@@ -128,7 +140,7 @@ export default function ProgressClient() {
                     </ProgressCard>
 
                     {/* Reading and Math Mastery Scores by topic */}
-                    <div className="flex flex-row space-x-4">
+                    <div className="flex flex-col md:flex-row gap-4">
                         {/* Reading */}
                         <ProgressCard 
                             color="secondary" 
@@ -166,7 +178,7 @@ export default function ProgressClient() {
                 </div>
 
                 {/* THIRD ROW : Performance Trend and Weaknesses */}
-                <div className="grid grid-cols-[2.8fr_1fr_0.8fr] gap-4 w-full flex-[1.4_1_0%] min-h-0">
+                <div className="grid grid-cols-1 sm:grid-cols-[2.8fr_1fr_0.8fr] gap-4 w-full flex-[1.4_1_0%] min-h-0">
 
                     {/* Performance Trend */}
                     <ProgressCard 
@@ -178,12 +190,12 @@ export default function ProgressClient() {
                             ? (
                                 <ProgressHistogramChart trendData={(uploader.trendData ?? []).slice(-10)}/> 
                             ) : (
-                                <div className="w-full flex flex-col items-center justify-center space-y-2">
+                                <div className="w-full flex flex-col items-center justify-center space-y-2 pb-2">
                                     <p className="text-2xl font-bold ">Not enough information yet</p>
                                     <p className="">Practice more questions to see your progress over time.</p>
                                     <Link
                                         href="/dashboard/quiz"
-                                        className=" buttonOne">
+                                        className=" buttonOne ">
                                             Take a Quiz!
                                     </Link>
                                 </div>
@@ -198,48 +210,11 @@ export default function ProgressClient() {
 
 
                     {/* Next Topic  */}
-                    <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex flex-col bg-[#F8F7FF] p-2 space-y-4">
-                        <div className="flex items-center gap-x-1 mb-4">
-                            <Compass style={{ strokeWidth: 2 }} className="w-6 h-6 text-primary shrink-0" />
-                            <p className={`text-primary ${cardTitleStyle}`}>Next Steps</p>
-                        </div>
-                        
-                        {nextSubtopic?.subtopic ? (
-                            <>
-                                <div className="flex flex-col items-center">
-                                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Focus on</p>
-                                    <p className="text-2xl font-bold text-main text-center leading-tight">
-                                        {toTitleCase(nextSubtopic?.subtopic ?? "")}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    {[
-                                        {label:"Incorrect", value:nextSubtopic.questions_answered.num_incorrect}, 
-                                        {label:"Questions", value:nextSubtopic.questions_answered.num_questions}, 
-                                        {label:"Mastery", value:nextSubtopic?.mastery_score.mastery_score ?? ""}
-                                    ].map((item) => (
-                                        <div key={item.label} className="text-sm text-gray-500 flex flex-row justify-between">
-                                            <p>{item.label}</p>
-                                            <p>{item.value}</p>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <Link
-                                    href={`/dashboard/practice/${nextSubtopic?.section}/${nextSubtopic?.topic}/${nextSubtopic?.subtopic}`}
-                                    className="mt-4 w-full rounded-xl bg-primary py-2.5 text-center text-sm font-bold uppercase tracking-wide text-white hover:bg-primary/90 transition"
-                                >
-                                    Practice Now
-                                </Link>
-                            </>
-                        ) : (
-                            <>
-                                <p className="text-center text-gray-500">No upcoming topics</p>
-                                <p className="text-center text-gray-500">Take a quiz right now!</p>
-                            </>
-                        )}
-                    </ProgressCard>
+                    <div className="hidden sm:block">
+                        <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex flex-col bg-[#F8F7FF] p-2 space-y-4">
+                            <NextSubtopic nextSubtopic={nextSubtopic} cardTitleStyle={cardTitleStyle}/>
+                        </ProgressCard>
+                    </div>
                 </div>
             </div>
 

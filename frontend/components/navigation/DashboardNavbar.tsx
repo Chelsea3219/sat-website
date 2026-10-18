@@ -7,35 +7,37 @@ import Image from "next/image"
 import Link from 'next/link';
 import {usePathname} from "next/navigation";
 import PracticeSidebar from "./sidebar/practice/PracticeSidebar";
+import DashboardMenu from "./DashboardMenu";
 
 export default function DashboardNavbar() {
     const [open, setOpen] = useState(false);
     const [openSidebar, setOpenSidebar] = useState(false);
 
-    const pathname = usePathname();
-    const isPractice = pathname.startsWith("/dashboard/practice");
+    const pathName = usePathname();
+    const isPractice = pathName.startsWith("/dashboard/practice");
 
     const buttonClass = `
-        px-2 py-1 rounded-full text-xs sm:text-sm md:text-base font-semibold 
+        px-2 py-1 rounded-full text-sm md:text-base font-semibold 
         bg-white text-primary
-        hover:scale-115 hover:bg-accent hover:text-white transition-all
+        hover:scale-110 hover:bg-red-50 hover:text-red-500 transition-all
     `
 
-    const isActive = (path:string) => pathname === path
+    const isActive = (href: string) =>
+        href === "/dashboard" ? pathName === "/dashboard" : pathName.startsWith(href);
     const linkClass = (path: string) => 
         `text-white text-xs sm:text-sm md:text-base font-semibold ${isActive(path)
-            ? 'scale-120 font-bold border-b-2 border-white px-1' // 'text-main rounded-full bg-secondary p-2' 
+            ? 'scale-105 font-bold border-b-2 border-white px-1' // 'text-main rounded-full bg-secondary p-2' 
             : 'hover:text-accent hover:scale-115 transition-all'
         }`
     
     return(
         <nav className=" fixed left-0 top-0 z-50 bg-primary w-full">
             <div className="max-w-7xl mx-auto px-2 md:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16 sm:gap-x-8 md:gap-x-12 lg:gap-x-16">
+                <div className="flex justify-between items-center h-16 sm:gap-x-10 md:gap-x-12 lg:gap-x-16">
 
                     {/* Logo and Website Title */}
                     <div className="flex flex-row gap-x-1 items-center">
-                        <Image src="/dashboard/dashboard_logo1.svg" alt="PrepForward" width={32} height={32} className="w-10 h-10 hidden md:block"/>
+                        <Image src="/dashboard/dashboard_logo1.svg" alt="PrepForward" width={32} height={32} className="hidden md:block w-10 h-10"/>
                         {isPractice && (
                             <button className="md:hidden p-1 text-white font-bold hover:text-accent hover:scale-115 text-xl cursor-pointer"
                                     onClick={() => {
@@ -46,9 +48,9 @@ export default function DashboardNavbar() {
                                 {/* Checks to see if the mobileMenu is open */}
                                 {openSidebar ?
                                     (
-                                        <PanelTopClose className="w-4 h-4"/>
+                                        <PanelTopClose className="w-6 h-6"/>
                                     ) : (
-                                        <PanelTopOpen className="w-4 h-4"/>
+                                        <PanelTopOpen className="w-6 h-6"/>
                                 )}
                             </button>
                         )}
@@ -81,55 +83,16 @@ export default function DashboardNavbar() {
 
             {/* Mobile Navbar */}
             {open &&
-                <div className="md:hidden top-full left-0 w-full bg-secondary shadow-md animate-in slide-in-from-top duration-300">
-                    <div className="flex flex-col items-end p-4 space-y-3 text-xs font-semibold ">
-                        <Link href="/dashboard"
-                            onClick={() => setOpen(false)}
-                            className="block text-main hover:text-accent origin-right hover:scale-110 transition-all"
-                        >
-                            Home
-                        </Link>
-
-                        <Link href="/dashboard/practice/"
-                            onClick={() => setOpen(false)}
-                            className="block text-main hover:text-accent origin-right hover:scale-110 transition-all"
-                        >
-                            Practice
-                        </Link>
-
-                        <Link href="#progress"
-                            onClick={() => setOpen(false)}
-                            className="block text-main hover:text-accent origin-right hover:scale-110 transition-all"
-                        >
-                            Progress
-                        </Link>
-
-                        <Link href="/dashboard/quiz/"
-                            onClick={() => setOpen(false)}
-                            className="block text-main hover:text-accent origin-right hover:scale-110 transition-all"
-                        >
-                            Quiz
-                        </Link>
-
-                        <Link href="#profile"
-                            onClick={() => setOpen(false)}
-                            className="block text-main hover:text-accent origin-right hover:scale-110 transition-all"
-                        >
-                            Profile
-                        </Link>
-
-                        <div className="w-24 flex items-end ">
-                            <SignOutButton className="rounded-btn bg-primary text-white text-lg h-8 font-semibold"/>
-                        </div>
-                    </div>
+                <div className="md:hidden top-full left-0 w-full bg-primary shadow-md animate-in slide-in-from-top-2 duration-300 fade-in px-4 pb-4">
+                    <DashboardMenu onNavigate={()=> setOpen(false)}/>
                 </div>
             }
 
             {/* Mobile Sidebar */}
             {openSidebar &&
-                <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg animate-in slide-in-from-top transition-all duration-300">
-                    <div className="flex justify-center py-4">
-                        <PracticeSidebar/>
+                <div className="md:hidden absolute top-full left-0 w-full bg-primary animate-in slide-in-from-top transition-all duration-300">
+                    <div className="flex justify-center pb-4 px-4 ">
+                        <PracticeSidebar onNavigate={()=> setOpenSidebar(false)}/>
                     </div>
                 </div>
             }

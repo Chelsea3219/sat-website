@@ -73,19 +73,20 @@ export default function PracticeTabWindow({
 
                 {/* Mastery and Progress */}
                 <div className="flex items-center w-60 shrink-0 self-center">
-                    {!practiceResults
-                        ? (
-                            <div className="flex items-center space-x-2 w-full min-w-0">
-                                <ProgressBar completed={progress.numCompleted} numQuestions={progress.numQuestions ?? 0} showProgress={false}/>
-                                {/* TODO 
-                                    {progress.trend === "up" && <ArrowUp className="opacity-50"/>}
-                                    {progress.trend === "down" && <ArrowDown className="opacity-50"/>}
-                                s */}
-                                <p className="text-primary font-semibold">{Math.round(progress.masteryScore ?? 0) ?? "-"}%</p>
+                    
+                    {activeTab === "Questions" && <p></p>}
+                    {activeTab === "Questions" && !practiceResults && (
+                        <div className="hidden md:flex items-center space-x-2 w-full min-w-0">
+                            <ProgressBar completed={progress.numCompleted} numQuestions={progress.numQuestions ?? 0} showProgress={false}/>
+                            {/* TODO 
+                                decide on what the progress bar should measured or watch over
+                                {progress.trend === "up" && <ArrowUp className="opacity-50"/>}
+                                {progress.trend === "down" && <ArrowDown className="opacity-50"/>}
+                            s */}
+                            <p className=" text-primary font-semibold">{Math.round(progress.masteryScore ?? 0)}%</p>
                                 
                             </div>
-                        ): <div> </div>
-                    }
+                    )}
                 </div>
             </div>
 
