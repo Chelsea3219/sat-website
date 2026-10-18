@@ -15,7 +15,7 @@ export default function TestimonialsSection() {
     
     return (
         <div className="flex flex-col items-center justify-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl text-center font-semibold text-[#5B55E8] mb-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl text-center font-semibold text-[#5B55E8] mb-4">
                 See What Others Are Saying
             </h1>
             <Testimonials testimonials={studentTestimonials} />

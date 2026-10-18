@@ -12,10 +12,8 @@ export default async function SignUpPage() {
     }
 
     return (
-        <div className="flex justify-center items-center">
-            <div className="mt-10">
-                <SignUp />
-            </div>
+        <div className="flex min-h-dvh items-center justify-center px-4">
+            <SignUp />
         </div>
     )
 }

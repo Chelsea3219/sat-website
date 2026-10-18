@@ -47,7 +47,7 @@ export default function WavyBackground() {
                 />
             </svg>
 
-            <div className="absolute top-48 left-0 right-0 bottom-18 bg-[#8a7de8]"/>
+            <div className="absolute top-48 left-0 right-0 bottom-28 md:bottom-18 bg-[#8a7de8]"/>
 
         </div>
     )

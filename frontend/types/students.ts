@@ -3,7 +3,7 @@ export type UserRegistration = {
     clerk_id: string
     first_name: string
     last_name: string
-    email: string
+    email: string | null
 
     school: string
     state: string
@@ -16,7 +16,7 @@ export type UserRegistration = {
     dream_score: number
     test_date: string
 
-    subscription: "free" | "starter" | "advanced"
+    subscription: "free" | "starter" | "advanced" | "" 
     referral: string
     learning_targets: {
         daily_goal: number

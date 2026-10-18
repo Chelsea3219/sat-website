@@ -16,10 +16,13 @@ export default function LandingNavbar() {
 
     // Dynamic class generator 
     const linkClass = (path: string) => 
-        `font-semibold transition-all cursor ${isActive(path)
+        `font-semibold transition-all cursor-pointer ${isActive(path)
             ? 'text-accent scale-120 font-bold border-b-3 border-accent px-1' // 'text-main rounded-full bg-secondary p-2' 
             : 'text-main hover:text-accent hover:scale-110'
         }`
+
+        
+    const buttonClass = "rounded-full text-md font-semibold min-w-20 px-2 border-2 border-primary text-primary hover:bg-accent hover:text-white hover:border-accent transition-all "
     
     return(
         <nav className=" fixed left-0 top-0 z-50 bg-white w-full">
@@ -43,15 +46,15 @@ export default function LandingNavbar() {
                     {/* Login and Register */}
                     <div className="hidden md:flex flex-row md:text-sm gap-x-2 items-center">
                         <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
-                            <button className="rounded-btn text-md h-7 border-2 border-primary text-primary">
+                            <button className={buttonClass}>
                                 Login
                             </button>
                         </SignInButton>
-                        <SignUpButton mode="redirect">
-                            <button className="rounded-btn text-md h-7 border-2 border-primary bg-primary text-white">
-                                Register
-                            </button>
-                        </SignUpButton>
+                        <Link 
+                            href = "/pricing"
+                            className={`${buttonClass} bg-primary text-white text-center`}>
+                            Register 
+                        </Link>
                     </div>
 
 
@@ -69,47 +72,48 @@ export default function LandingNavbar() {
 
             {/* Mobile Navbar */}
             {open &&
-                <div className="md:hidden top-full left-0 w-full border-t-2 border-primary bg-white shadow-md animate-in slide-in-from-top duration-300">
+                <div className="md:hidden top-full left-0 w-full border-t-2 border-gray-100 bg-white shadow-md animate-in slide-in-from-top duration-300">
                     <div className="flex flex-col items-end p-4 space-y-3 text-xs font-semibold ">
                         <Link href="/"
                             onClick={() => setOpen(false)}
-                            className="block text-slate-900 hover:text-accent origin-right hover:scale-110 transition-all"
+                            className={`${linkClass("/")} block origin-right `}
                         >
                             Home
                         </Link>
 
                         <Link href="/about"
                             onClick={() => setOpen(false)}
-                            className="block text-slate-900 hover:text-accent origin-right hover:scale-110 transition-all"
+                            className={`${linkClass("/about")} block origin-right `}                        
                         >
                             About
                         </Link>
 
                         <Link href="/pricing"
                             onClick={() => setOpen(false)}
-                            className="block text-slate-900 hover:text-accent origin-right hover:scale-110 transition-all"
+                            className={`${linkClass("/pricing")} block origin-right `}                        
                         >
                             Pricing
                         </Link>
 
                         <Link href="/contact-us"
                             onClick={() => setOpen(false)}
-                            className="block text-slate-900 hover:text-accent origin-right hover:scale-110 transition-all"
+                            className={`${linkClass("/contact-us")} block origin-right `}                        
                         >
                             Contact Us
                         </Link>
 
                         <div className="flex flex-col items-end gap-y-3 w-24">
                             <SignInButton>
-                                <button className="rounded-btn text-sm h-8 border-3 border-primary text-primary">
+                                <button className={`${buttonClass} border-2`}>
                                     Login
                                 </button>
                             </SignInButton>
-                            <SignUpButton>
-                                <button className="rounded-btn text-sm h-8 border-2 border-primary bg-primary text-white">
-                                    Register
-                                </button>
-                            </SignUpButton>
+
+                            <Link 
+                                href = "/pricing"
+                                className={`${buttonClass} bg-primary text-white`}>
+                                Register 
+                            </Link>
                         </div>
                     </div>
                 </div>

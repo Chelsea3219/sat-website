@@ -16,7 +16,7 @@ export default function ContactForm() {
     return (
         <div>
             <section className="relative w-full">
-                <div className="max-w-5xl mx-auto w-full px-4 flex flex-row space-x-2 items-center justify-center">
+                <div className="max-w-5xl mx-auto w-full px-10 md:px-4 flex flex-row space-x-2 items-center justify-center">
 
                     {/* Contact Us Form */}
                     <div className="flex-1 space-y-2 w-full">
@@ -43,7 +43,7 @@ export default function ContactForm() {
                             />
                         </div>
 
-                        <div className="flex flex-row space-x-2">
+                        <div className="flex flex-row space-x-4 ">
                             <div className="input-group">
                                 <label>Role</label>
                                 <select
@@ -82,13 +82,18 @@ export default function ContactForm() {
                             />
                         </div>
 
-                        <button 
-                            onClick={uploadFormClick}
-                            className="rounded-btn bg-primary text-white mt-4">Send Message</button>
+                        <div className="flex justify-center pt-4 w-full">
+                            <button 
+                                onClick={uploadFormClick}
+                                className=" rounded-full font-semibold text-center p-2 w-72 md:w-96 bg-primary text-white hover:bg-primary/70"
+                            >
+                                Send Message
+                            </button>
+                        </div>
                     </div>
 
                     {/* Picture */}
-                    <div className="flex-1 flex flex-col items-center justify-center">
+                    <div className="flex-1 hidden md:flex flex-col items-center justify-center">
                         <Image
                             src="/marketing/contact-us.svg"
                             alt="Registration Visual"

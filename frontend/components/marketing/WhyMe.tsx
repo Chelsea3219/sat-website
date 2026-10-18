@@ -1,4 +1,4 @@
-import {CircleArrowLeft} from "lucide-react"
+import {CircleArrowRight} from "lucide-react"
 import Link from "next/link"
 
 export default function WhyMe() {
@@ -23,9 +23,9 @@ export default function WhyMe() {
         <>
             <section className="relative w-screen left-1/2 right-1/2 mx-[-50vw] bg-[#F5F5FC] pt-16 pb-16 text-center mt-20">
                 <div className="max-w-6xl mx-auto relative">
-                    <div className="flex flex-row items-center">
+                    <div className="flex flex-row items-center px-4 md:px-2 ">
 
-                        <div className="flex-1">
+                        <div className="hidden md:flex flex-1">
                             Picture of me here
                         </div>
 
@@ -49,7 +49,7 @@ export default function WhyMe() {
                             <Link
                                 href="/about"
                                 className={buttonClass}>
-                                <CircleArrowLeft strokeWidth="2" size={40} />
+                                <CircleArrowRight strokeWidth="2" size={40} />
                                 <p className="text-xl font-semibold">
                                     Learn More
                                 </p>

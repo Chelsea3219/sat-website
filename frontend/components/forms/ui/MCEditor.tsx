@@ -22,9 +22,9 @@ export default function MCEditor({mc, onChangeAction}: MCEditorProps) {
         
         <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
 
-           <div className="border-b border-primary pb-2 mb-2 ">
-                <SnippetButtons />
-           </div>
+            <div className="border-b border-primary pb-2 mb-2 ">
+                    <SnippetButtons />
+            </div>
 
             {/* Multiple Choice */}
             <div className="flex flex-col space-y-4 w-full">

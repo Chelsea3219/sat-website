@@ -13,7 +13,7 @@ export default function Page() {
 
     return(
         <>
-            <div className=" px-10">
+            <div className="py-10 space-y-10">
                 <Hero/>
                 <Problem/>
                 <Solution/>

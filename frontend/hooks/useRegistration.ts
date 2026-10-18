@@ -23,7 +23,7 @@ export default function useRegistration() {
         },
         dream_score: 0,
         test_date: "",
-        subscription: "free",
+        subscription: "",
         referral: "", 
         learning_targets: {
             daily_goal: 0,
@@ -59,7 +59,7 @@ export default function useRegistration() {
             if (targetFields.has(name)) {
                 return {
                     ...prev, 
-                    original_score: {...prev.original_score, [name]:Number(value)}
+                    learning_targets: {...prev.learning_targets, [name]:Number(value)}
                 }
             }
             return {...prev, [name]:value }
@@ -68,7 +68,7 @@ export default function useRegistration() {
 
     const validateForm = () => {
         const missing: string[] = []
-        const missingFields = ["first_name", "last_name", "grade_level", "original_score", "dream_score", "test_date", "subscription"]
+        const missingFields = ["first_name", "last_name", "grade_level", "original_score", "dream_score", "test_date"]
         missingFields.forEach(i => {
             if (!form[i as keyof UserRegistration]) missing.push(i)
         })
@@ -108,7 +108,7 @@ export default function useRegistration() {
         const payload: UserRegistration = {
             ...form,
             clerk_id: user.id,
-            email: user.emailAddresses[0].emailAddress
+            email: String(user.primaryEmailAddress)
         }
         console.log("payload", payload)
 
@@ -116,11 +116,8 @@ export default function useRegistration() {
             const response = await registerUser(payload)
             console.log("registration response", response)
 
-            if (form.subscription === "free") {
-                router.push("/dashboard")
-            } else {
-                router.push("/dashboard/billing")
-            }
+            router.push("/dashboard")
+
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.error("error: ", err.message)

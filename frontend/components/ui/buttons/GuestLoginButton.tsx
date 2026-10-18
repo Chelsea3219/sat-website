@@ -1,47 +1,12 @@
 "use client"
 
-import { useState } from "react"
-import { useSignIn, useAuth } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
+import useDemoButton from "@/hooks/useDemoButton"
+
+
 
 export default function GuestLoginButton() {
-    const { signIn } = useSignIn()
-    const { isSignedIn } = useAuth()
-    const router = useRouter()
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
 
-    const handleClick = async () => {
-        // Already signed in (as guest or yourself) → just go to the dashboard
-        if (isSignedIn) return router.push("/dashboard")
-        if (!signIn) return
-
-        setLoading(true)
-        setError("")
-        try {
-            const res = await fetch("/api/guest-login", { method: "POST" })
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.error)
-
-            const { error } = await signIn.ticket({ ticket: data.token })
-            if (error) throw new Error("Sign-in failed")
-
-            if (signIn.status === "complete") {
-                await signIn.finalize({
-                    navigate: async ({ decorateUrl }) => {
-                        const url = decorateUrl("/dashboard")
-                        if (url.startsWith("http")) window.location.href = url
-                        else router.push(url)
-                    },
-                })
-            }
-        } catch (err) {
-            console.error(err)
-            setError("Couldn't start the demo. Please try again.")
-        } finally {
-            setLoading(false)
-        }
-    }
+    const {error, loading, handleClick } = useDemoButton()
 
     return (
         <div>
@@ -63,9 +28,9 @@ export default function GuestLoginButton() {
                     xmlns="http://www.w3.org/2000/svg"
                     >
                     <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M14 5l7 7m0 0l-7 7m7-7H3"
                     ></path>
                     </svg>

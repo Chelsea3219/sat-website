@@ -11,10 +11,8 @@ export default async function SignInPage() {
     }
 
     return (
-       <div className="flex justify-center items-center">
-            <div className="mt-10">
-                <SignIn/>
-            </div>
+        <div className="flex min-h-dvh items-center justify-center px-4">
+            <SignIn />
         </div>
     );
 }

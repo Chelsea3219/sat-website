@@ -17,8 +17,7 @@ export default function MarketingLayout({children,}: { children: React.ReactNode
             
 
             {/* Footer */}
-            <Footer/>
-                               
+            <Footer/>       
         </div>
     );
 }

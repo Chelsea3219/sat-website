@@ -22,6 +22,7 @@
 
   --color-accent: #f59e0b;
   --color-main: #0f172a;
+  --color-muted: #6C757D;
   --color-coolwhite:#FAFAFE;
   --color-whiteblue: #f9f9fe;
   --color-whiteblueOne: #f5f6fd
@@ -53,7 +54,6 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 20px 20px 20px 20px;
   border-radius: 50px;
   cursor: pointer;
   font-weight:600;

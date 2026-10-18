@@ -53,7 +53,7 @@ export default function RegisterUser() {
 
                     {/* Header */}
                     <div className="flex flex-col items-center justify-center mb-4">
-                        <h1 className="flex flex-row space-x-1">
+                        <h1 className="hidden md:flex flex-row space-x-1">
                             <Image
                                 src="/marketing/landingpage_logo.svg"
                                 alt="PrepForward"
@@ -67,7 +67,7 @@ export default function RegisterUser() {
                     </div>
 
                     {/* form */}
-                    <div className="space-y-2 w-full mb-4">
+                    <div className="space-y-2 w-full mb-8">
                         {/* Identification */}
                         <div className="flex flex-col sm:flex-row gap-4">
                             <div className="input-group flex-1">
@@ -193,20 +193,6 @@ export default function RegisterUser() {
                                     onChange={uploader.fieldChange}
                                 />
                             </div>
-                        </div>
-
-                        {/* Subscription*/}
-                        <div className="input-group">
-                            <label>Subscription</label>
-                            <select
-                                name="subscription"
-                                onChange={uploader.fieldChange}
-                            >
-                                <option value="">Select Subscription</option>
-                                <option value="free">Free</option>
-                                <option value="starter">Starter</option>
-                                <option value="advanced">Advanced</option>
-                            </select>
                         </div>
 
                         {/* Daily AND Weekly Learning Goals */}
