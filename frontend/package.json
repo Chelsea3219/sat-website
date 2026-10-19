@@ -30,6 +30,7 @@
     "react-dom": "19.2.4",
     "react-router-dom": "^7.15.0",
     "react-select-us-states": "^0.1.2",
+    "stripe": "^23.0.0",
     "styled-components": "^6.4.1"
   },
   "devDependencies": {
