@@ -28,6 +28,7 @@ export default function useQuestionAdder(
         question_type: "",
         question_preview: "",
         mc_preview: "",
+        reading_question:"",
         text: "",
         equation: "",
         diagram: "",
@@ -38,7 +39,7 @@ export default function useQuestionAdder(
         source: ""
     }
     const [form, setForm] = useState<IncomingSilverQuestions>(emptyForm)
-    const [completedForm, setCompletedForm] = useState<IncomingSilverQuestions[]>([])
+    const [completedQuestions, setCompletedQuestions] = useState<IncomingSilverQuestions[]>([])
     const [error, setError] = useState("")
     const [saving, setSaving] = useState(false)
 
@@ -80,21 +81,39 @@ export default function useQuestionAdder(
             setSaving(false)
             return
         }
-
         // Auto-set the timeEstimate to the question
         const updatedForm = {
             ...form,
+            question_id: crypto.randomUUID(), // temporary question id
             time_estimate:timeEstimate(form.difficulty ?? "")
         }
 
         // Add the completedQuestion to the array
-        const updatedArray = [...completedForm, updatedForm]
+        const updatedArray = [...completedQuestions, updatedForm]
         console.log("saved questions ==>> ", updatedArray)
-        setCompletedForm(updatedArray)
+        setCompletedQuestions(updatedArray)
         setSaving(false)
         previewUploader.resetUpload()
         diagramUploader.resetUpload()
-        setForm(emptyForm)
+        setForm(prev => {
+            return {
+                ...prev, 
+                question_id: "",
+                difficulty: "",
+                time_estimate: 0,
+                question_type: "",
+                question_preview: "",
+                mc_preview: "",
+                reading_question:"",
+                text: "",
+                equation: "",
+                diagram: "",
+                multiple_choices: {
+                    A: "", B: "", C: "", D:""
+                },
+                answer_key: "",
+            }
+        })
     }
 
 
@@ -132,11 +151,12 @@ export default function useQuestionAdder(
 
 
      // Saves the question in the bronze.raw_questions and silver.clean_questions
-    const handleSave = async(completedForm: IncomingSilverQuestions[]) => {
+    const handleSave = async(completedQuestions: IncomingSilverQuestions[]) => {
 
         try{
-            //console.log("response sent to the backend:", completedForm)
-            await addQuestions(completedForm)
+            //console.log("response sent to the backend:", completedQuestions)
+            await addQuestions(completedQuestions)
+            setCompletedQuestions([])
         } catch (error) {
             console.error("Unable to update and insert question.", error)
             setError("Failed to update and insert question.")
@@ -148,10 +168,11 @@ export default function useQuestionAdder(
     // Resets the form
     const resetForm = () => {
         setForm(emptyForm)
+        setCompletedQuestions([])
     }
 
     return {
-        form, completedForm,
+        form, completedQuestions,
         error, setError,
         fieldChange, mcFieldChange, validateForm, handleImageUpload, 
         saving, saveQuestion, handleSave, resetForm

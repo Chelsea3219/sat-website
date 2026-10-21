@@ -6,18 +6,18 @@ import type {IncomingSilverQuestions, IncomingBronzeQuestions, QuestionSearchPar
 import {fetchRawQuestions, updateRawQuestions} from "@/services/api.document-processing";
 import { validateEditorForm } from "@/utils/question-processing";
 import timeEstimate from "@/utils/question-processing"
+import { wrapSigma } from "@/utils/latexHelpers";
+
 
 
 // Responsible for fetching questions, navigating and saving them to the database
 export default function useEditorNavigation(){
 
     // Initialize the parameters ---------------------------------------------------------------------------------------
-    const emptySearch: SearchProps = { searchName: "", searchValue:""}
-    const [search, setSearch] = useState<SearchProps>(emptySearch)
+    const [search, setSearch] = useState<SearchProps>({ searchName: "", searchValue:""})
 
     const [questions, setQuestions] = useState<IncomingBronzeQuestions[]>([])
-    const [numQuestions, setNumQuestions] = useState(0)
-
+    const numQuestions = questions.length 
     const [completedQuestions, setCompletedQuestions] = useState<IncomingSilverQuestions[]>([])
     const resetCompleted = () => setCompletedQuestions([])
     const [saving, setSaving] = useState(false)
@@ -39,7 +39,6 @@ export default function useEditorNavigation(){
                 const data = await fetchRawQuestions(searchParams)
                 if (!ignore) {
                     setQuestions(data)
-                    setNumQuestions(data.length)
                 }
 
             } catch (error) {
@@ -65,7 +64,7 @@ export default function useEditorNavigation(){
 
     // Fetches the questions from the bronze.raw_questions --------------------------------------------------------------
     const handleSearch = async() => {
-        if (!search.searchName && !search.searchValue) {
+        if (!search.searchName || !search.searchValue.trim()) {
             setError("Please select a filter and enter a search value.")
             return
         }
@@ -74,11 +73,12 @@ export default function useEditorNavigation(){
         setLoading(true)
 
         try {
-            const section = search.searchName === "section" ? search.searchValue: undefined
-            const topic = search.searchName === "topic" ? search.searchValue: undefined
-            const subtopic = search.searchName === "subtopic" ? search.searchValue: undefined
-
-            const searchParams : QuestionSearchParameters = {section: section, topic: topic, subtopic: subtopic}
+            // Identify the search parameters
+            const searchParams: QuestionSearchParameters = {
+                section: search.searchName === "section" ? search.searchValue.trim(): undefined, 
+                topic: search.searchName === "topic" ? search.searchValue.trim(): undefined,
+                subtopic: search.searchName === "subtopic" ? search.searchValue.trim(): undefined
+            }
             const data = await fetchRawQuestions(searchParams)
             //console.log("backend data by filter: ", data)
 
@@ -86,42 +86,50 @@ export default function useEditorNavigation(){
                 setError("Unexpected response from server.")
                 return
             }
+
             setQuestions(data)
-            setNumQuestions(data.length)
+            setCurrentIndex(0)
+            setCompletedQuestions([])
+            setSearch({searchName: "", searchValue:""})
         } catch (error) {
             console.error("Unable to fetch questions.", error)
             setError("Failed to fetch questions.")
         } finally {
             setLoading(false)
         }
-        // Resets the search bar
-        setSearch(emptySearch)
     }
 
 
     // Next and previous navigation ------------------------------------------------------------------------------------
-    const completedIds = new Set(completedQuestions.map(q => q.question_id))
-    const nextIndex = () => {
-        setCurrentIndex(prev => {
-            let idx = prev
-            while (idx < questions.length - 1 && completedIds.has(questions[idx + 1]?.question_id)) {
-                idx++
+    const completedIds = new Set(completedQuestions.map(q => q.question_id)) // tracks the localluy staged questions in completedQuestions
+    const nextIndex = () => { // Advance to the next questions that hasnt been completed 
+        console.log("currentIndex", currentIndex)
+        setCurrentIndex((prev) => {
+            let next = prev + 1;
+            while (next < questions.length) {
+                const id = questions[next].question_id
+                if (!completedIds.has(id)) return next;
+                next++
             }
-            return Math.min(idx + 1, questions.length - 1)
-        })
+            return prev
+        }
+    )
     }
     const previousIndex = () => {
+        console.log("currentIndex", currentIndex)
         setCurrentIndex(prev => {
-            let idx = prev
-            while (idx > 0 && completedIds.has(questions[idx - 1]?.question_id)) {
-                idx--
+            let next = prev - 1
+            while (next >= 0) {
+                const id = questions[next].question_id
+                if (!completedIds.has(id)) return next
+                next--
             }
-            return Math.max(idx - 1, 0)
+            return prev 
         })
     }
 
 
-    // Save the completed questions into a List -------------------------------------------------------------------------
+    // Save the completed questions in a List -------------------------------------------------------------------------
     const saveQuestion = async(form: IncomingSilverQuestions) => {
         setSaving(true)
 
@@ -130,25 +138,29 @@ export default function useEditorNavigation(){
             const missing = validateEditorForm(form)
             if (missing.length > 0) {
                 setError(`Missing: ${missing.join(", ")}`)
-                setSaving(false)
-                return
+                return false
             }
             if (!form.question_preview) {
                 setError("Missing: question preview")
-                setSaving(false)
-                return
+                return false 
             }
+
+            // Add delimiters to equation
+            const equation = form.equation?.trim() ? wrapSigma(form.equation) : form.equation;
+
             // Auto-set the timeEstimate to the question
-            const time = timeEstimate(form.difficulty ?? "")
             const updatedForm = {
                 ...form,
-                time_estimate:time,
+                equation,
+                time_estimate: timeEstimate(form.difficulty ?? ""),
                 multiple_choices: form.question_type === "free response" ? null : form.multiple_choices
             }
-            setCompletedQuestions( prev => {
+
+            setCompletedQuestions( prev => { // Prevents duplicate staged entries for the same question 
                 const withoutDupe = prev.filter(q => q.question_id !==updatedForm.question_id)
-                return [...withoutDupe, updatedForm]
+                return [...withoutDupe, updatedForm] // If you edited a staged question,, the newer version replaces the old one
             })
+
             setError("")
             return true
         } finally {
@@ -159,32 +171,37 @@ export default function useEditorNavigation(){
     
     
     // Updates and Saves Questions in the dataset ------------------------------------------------------------------------
+    const [isSavingBatch, setIsSavingBatch] = useState(false)
     const handleSave = async (saved:IncomingSilverQuestions[]) => {
         //console.log("questions being sent ==>> ", completedQuestions)
 
-        if (saved.length === 0) return 
+        if (saved.length === 0 || isSavingBatch) return 
+        
+        setIsSavingBatch(true)
+        setError("")
+
         try {
             await updateRawQuestions(saved)
 
-            // Update local array so that you don't navigate to completed questions
-            const currentId = questions[currentIndex]?.question_id
+            // Update local array so that you don't navigate to completed questions by removing saved questions from the queue 
             const savedIds = new Set(saved.map(q => q.question_id))
-            const updatedQuestions = questions.filter(q => !savedIds.has(q.question_id))
-            setQuestions(updatedQuestions)
-
-            // Stay on the same question if it still exists 
-            const sameIdx = updatedQuestions.findIndex(q => q.question_id === currentId)
-            setCurrentIndex(sameIdx >- 0 ? sameIdx : Math.max(0, Math.min(currentIndex, updatedQuestions.length - 1)))
+            const remainingQuestions = questions.filter(q => !savedIds.has(q.question_id))
+            setQuestions(remainingQuestions)
 
             // Clamp index in case we just removed the last question
-            // Maybe delete setCurrentIndex(prev => Math.max(0, Math.min(prev, updatedQuestions.length - 1)))
             setProcessedCount(prev => prev + saved.length)
-            setCompletedQuestions([])
-            setError("")
+
+            // Stay on the same question if it still exists 
+            const currentId = questions[currentIndex]?.question_id
+            const newIndex = remainingQuestions.findIndex( q => q.question_id === currentId)
+            setCurrentIndex(newIndex >= 0 ? newIndex : Math.max(0, Math.min(currentIndex, remainingQuestions.length-1)));
+            setCompletedQuestions([]) // Clear staged questions after a successful upload
         } catch (error) {
             console.error("Unable to update and insert question.", error)
             setError("Failed to update and insert question.")
-            throw error
+            throw error 
+        } finally {
+            setIsSavingBatch(false)
         }
     }
 
@@ -194,6 +211,7 @@ export default function useEditorNavigation(){
         questions, numQuestions,
         error,setError, loading,
         currentIndex, nextIndex, previousIndex, processedCount,
-        completedQuestions, saving, saveQuestion, handleSave
+        completedQuestions, saving, saveQuestion, handleSave, 
+        resetCompleted
     }
 }
