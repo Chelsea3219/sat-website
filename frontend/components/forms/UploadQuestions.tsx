@@ -36,9 +36,8 @@ export default function UploadQuestions() {
             <ErrorMessage error={error} onDismiss={()=> setError("")}/>
 
 
-            <div className="">
-
-                <div className="space-y-8">
+            <div className='px-2 md:px-4 lg:px-6'>
+                <div className="space-y-8 w-full">
                     {/* Upload the PDF */}
                     <div className="block mb-6 text-md font-medium uppercase tracking-wide text-main">
                         <label>Upload file</label>
@@ -161,8 +160,8 @@ export default function UploadQuestions() {
                     )}
 
                 </div>
-
             </div>
+
         </>
     )
 }
