@@ -1,6 +1,6 @@
 import { IncomingGradedAnswerSheet } from "@/types/mastery-score"
 import { estimateSATSectionScore2 } from "@/utils/scoreAlgorithms"
-import { SegmentedProgressBar } from "../../SegmentedProgressBar"
+import { SegmentedProgressBar } from "@/components/ui/SegmentedProgressBar"
 import { MoveRight} from "lucide-react"
 import { colorChange } from "@/utils/renderColor"
 

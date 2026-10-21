@@ -1,9 +1,9 @@
 import {PracticeQuestionTabProps} from "@/types/questions"
-import ReadOnlyContent from "@/components/ui/tab-window/helpers/ReadOnlyEditor"
+import ReadOnlyContent from "@/components/tab-window/helpers/ReadOnlyEditor"
 import katex from 'katex'; 
 import 'katex/dist/katex.min.css'
 import { formatLatex } from "@/utils/latexHelpers";
-import InputAnswer from "@/components/ui/tab-window/helpers/InputAnswer";
+import InputAnswer from "@/components/tab-window/helpers/InputAnswer";
 import Image from "next/image";
 import HorizontalLoadingAnimation from "@/components/ui/loading-animation/HorizontalLoadingAnimation";
 import {Timer} from 'lucide-react'
