@@ -10,6 +10,7 @@ export type Question = {
 
     question_type: string
 
+    reading_question: string | null 
     text:string
     equation: string
     diagram: string

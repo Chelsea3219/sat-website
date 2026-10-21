@@ -5,6 +5,8 @@ import {useState} from "react";
 import type {IncomingSilverQuestions, IncomingBronzeQuestions, MCProps } from "@/types/question-processing";
 import {deleteQuestion, uploadQuestionImage} from "@/services/api.document-processing";
 import { preprocessForm} from "@/utils/question-processing";
+import { wrapSigma } from "@/utils/latexHelpers";
+
 
 
 export default function useQuestionEditor(
@@ -23,6 +25,7 @@ export default function useQuestionEditor(
         question_type: "",
         question_preview: "",
         mc_preview: "",
+        reading_question:"",
         text: "",
         equation: "",
         diagram: "",

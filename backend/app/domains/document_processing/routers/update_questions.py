@@ -60,7 +60,7 @@ def update_raw_question(questions: List[CleanQuestions], db: Session = Depends(g
                 equation=question.equation,
                 diagram=question.diagram,
 
-                multiple_choices=question.multiple_choices,
+                multiple_choices=( question.multiple_choices.model_dump(mode="json") if question.question_type=='multiple choice' else None),
                 answer_key=question.answer_key,
 
                 updated_at=now,

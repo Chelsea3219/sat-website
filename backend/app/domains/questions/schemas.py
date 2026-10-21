@@ -13,7 +13,7 @@ class IncomingQuestions(BaseModel):
     question_id: UUID | str 
     section: str
     topic: str
-    subtopic: List[str]
+    subtopic: Optional[List[str]] = None 
 
     difficulty: str
     time_estimate: int
