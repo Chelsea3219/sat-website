@@ -1,22 +1,24 @@
 "use client"
 
 
-import { forwardRef} from "react";
+import { forwardRef, useState} from "react";
 import 'katex/dist/katex.min.css'
-import {formatLatex, renderLatex} from "@/utils/latexHelpers"
+import {wrapSigma, renderLatex} from "@/utils/latexHelpers"
 
 
 type LaTexInputProps = {
     value: string
+    isEquation?: boolean 
     onChangeAction: (value: string) => void
     onKeyDownAction?: (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement>) => void  // ← widen the type
     className?: string
 }
 
-const LatexInput = forwardRef<HTMLTextAreaElement, LaTexInputProps>(({ value, onChangeAction, onKeyDownAction, className}, ref) => {
+const LatexInput = forwardRef<HTMLTextAreaElement, LaTexInputProps>(({ value, isEquation = false, onChangeAction, onKeyDownAction, className}, ref) => {
+        
+    const source = isEquation && value.trim() ? wrapSigma(value) : value
+    const rendered = renderLatex(source) || "&nbsp;"
 
-    const rendered = renderLatex(value) || "&nbsp;"
-    
     return (
         <div className={`flex gap-4 w-full ${className ?? ""}`}>
 
