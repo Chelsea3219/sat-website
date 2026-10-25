@@ -38,13 +38,31 @@ class Config:
         # REDIS API 
         self.REDIS_URL: str = os.getenv("REDIS_URL", "")
 
-        # MEMBERSHIP
-        
+        # SUBSCRIPTION 
+        self.STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
+        self.STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY", "")
+        self.STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+
+        # PRODUCTS
+        self.STRIPE_PRICE_MONTHLY: str = os.getenv("STRIPE_PRICE_MONTHLY", "")
+        self.STRIPE_PRICE_THREE_MONTHS: str = os.getenv("STRIPE_PRICE_THREE_MONTHS", "")
+        self.STRIPE_PRICE_SIX_MONTHS: str = os.getenv("STRIPE_PRICE_SIX_MONTHS", "")
+        self.STRIPE_SINGLE_SESSION: str = os.getenv("STRIPE_SINGLE_SESSION", "")
+        self.STRIPE_THREE_SESSIONS: str = os.getenv("STRIPE_THREE_SESSIONS", "")
+        self.STRIPE_FIVE_SESSIONS: str = os.getenv("STRIPE_FIVE_SESSIONS", "")
+
         # EMAIL CORRESPONDENCES
         self.RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
 
-        # GUEST CLERK_ID
+        # CLERK 
         self.GUEST_CLERK_ID: str = os.getenv("GUEST_CLERK_ID", "")
+        self.CLERK_SECRET_KEY: str = os.getenv("CLERK_SECRET_KEY", "")
+        self.CLERK_JWT_KEY: str = os.getenv("CLERK_JWT_KEY", "")
+        self.CLERK_ISSUER: str = os.getenv("CLERK_ISSUER", "")
+        self.CLERK_JWKS_URL: str = os.getenv("CLERK_JWKS_URL", "")
+        self.CLERK_WEBHOOK: str = os.getenv("CLERK_WEBHOOK", "")
+        self.CLERK_AUTHORIZED_PARTIES: list[str] = os.getenv("CLERK_AUTHORIZED_PARTIES", [])
+
 
 # Single instance to import everywhere
 settings = Config()
