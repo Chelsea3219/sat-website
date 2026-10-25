@@ -1,6 +1,6 @@
 
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.exception_handlers import http_exception_handler
 from fastapi import Request, status
 from fastapi.exception_handlers import request_validation_exception_handler
@@ -37,4 +37,16 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={"detail": "Customized error message", "errors": exc.errors()},
+    )
+
+# Clerk Handler
+def http_exception_handler(request: Request, exc: HTTPException):
+    errors = {401: "unauthorized", 403: "forbidden"}
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": errors.get(exc.status_code, "error"),
+            "reason": exc.detail
+        },
+        headers=exc.headers or {},
     )
