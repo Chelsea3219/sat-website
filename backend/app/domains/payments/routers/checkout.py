@@ -1,0 +1,113 @@
+import logging
+import stripe
+from typing import Annotated
+from datetime import datetime, timedelta, timezone
+from fastapi import APIRouter, Request, HTTPException, Depends
+from sqlalchemy.orm import Session
+from pydantic import BaseModel
+
+from clerk_backend_api import Clerk
+from clerk_backend_api.security.types import RequestState
+from app.domains.students.services.get_clerk_id import get_clerk
+
+from app.core.config import settings
+from app.core.database import get_db
+from app.core.auth import require_auth
+
+from app.domains.errors.error_handler import handle_db_errors
+from app.domains.payments.models import Payments
+from app.domains.students.models import SilverUsers, BronzeUsers
+from app.domains.database.upsert import upsert
+from app.domains.payments.services.products import PRODUCTS
+from app.domains.students.services.fetch_student_info import fetch_student_info
+
+
+
+logger = logging.getLogger("stripe-webhook")
+router = APIRouter(prefix="/api/stripe", tags=["stripe"])
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+frontend_URL = settings.FRONTEND_URL.rstrip('/')
+PLAN_DAYS = {"monthly": 31, "three_months": 92, "six_months": 183}
+
+
+class CheckoutRequest(BaseModel):
+    product: str
+
+@router.post("/checkout")
+async def create_checkout_session(
+    payload:CheckoutRequest, 
+    clerk: Annotated[Clerk, Depends(get_clerk)], 
+    state: Annotated[RequestState, Depends(require_auth)], 
+    db= Depends(get_db)
+):  
+    clerk_id = state.payload["sub"]
+
+    user = clerk.users.get(user_id=clerk_id)
+    primary_email_id = user.primary_email_address_id
+    email = next(
+        (
+            address.email_address
+            for address in user.email_addresses
+            if address.id == primary_email_id
+        ),
+        None,
+    )
+
+    config = PRODUCTS.get(payload.product)
+    if not config:
+        raise HTTPException(status_code=400, detail="Invalid product purchase.")
+    price_id = config["price_id"]
+    if not price_id:
+        raise HTTPException(status_code=500, detail="Stripe price is not configured.")
+
+    try:
+        # Search for the stripe customer id. If it does not exist, create one
+        student_info = fetch_student_info(clerk_id, db)
+        if student_info and student_info.stripe_id:
+            customer_id = student_info.stripe_id
+        else:
+            customer =  stripe.Customer.create(metadata={"email": email, "clerk_id": clerk_id})
+            customer_id = customer.id
+            fields = {
+                "email": email, "clerk_id": clerk_id, "stripe_id": customer_id, 
+            }
+            with handle_db_errors(db, "sync student's information in the bronze and silver tables"):
+                upsert(db, BronzeUsers, "clerk_id", fields.get("clerk_id"), **fields)
+                upsert(db, SilverUsers, "clerk_id", fields.get("clerk_id"), **fields)
+            db.commit()
+
+        session_parameters = {
+            "mode": config["mode"], 
+            "customer": customer_id, 
+            "line_items": [{ "price": price_id, "quantity": 1 }], # Defined the priceId and the quality being purchased
+            "client_reference_id": clerk_id,   # Adds the clerk id as a reference for the checkout session
+            "metadata": { # Stores your plan key and Clerk ID for later processing
+                "clerk_id": clerk_id,
+                "price_id":price_id, 
+                "product_name":payload.product,
+            },
+            "success_url": (
+                f"{frontend_URL}/register"
+                f"?checkout=success&purchase={payload.product}"
+            ),
+            "cancel_url": f"{frontend_URL}/pricing",
+        }
+        #logger.info("Checkout success_url: %s", session_parameters.get("success_url"))
+        
+        session = stripe.checkout.Session.create(**session_parameters)
+        return {"url": session.url }
+    except stripe.StripeError:
+        logger.exception("Stripe checkout creation failed")
+        raise HTTPException(
+            status_code=502,
+            detail="Unable to create checkout session.",
+        )
+
+    except Exception:
+        db.rollback()
+        logger.exception("Checkout creation failed")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to create checkout session.",
+        )
