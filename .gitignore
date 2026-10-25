@@ -34,3 +34,4 @@ build/
 # --- Logs ---
 *.log
 backend/app.log
+backend/.env.stripe
