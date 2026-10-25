@@ -1,48 +1,27 @@
 // User Registration Information
-export type UserRegistration = {
-    clerk_id: string
+
+export type CommonFields = {
     first_name: string
     last_name: string
-    email: string | null
 
     school: string
     state: string
     grade_level: string
-    original_score: {
-        original_score: number
-        reading_score: number
-        math_score: number
-    }
-    dream_score: number
-    test_date: string
 
-    subscription: "free" | "starter" | "advanced" | "" 
-    referral: string
-    learning_targets: {
-        daily_goal: number
-        weekly_goal: number
-    }
-}
-
-export type StudentInfo = {
-    clerk_id: string
-    first_name: string
-    last_name: string
-    email: string
-
-    school: string
-    state: string
-    grade_level: string
     original_score: OriginalScore
     dream_score: number
     test_date: string
-
-    subscription: "free" | "starter" | "advanced"
-    referral: string
     learning_targets: {
         daily_goal: number
         weekly_goal: number
     }
+
+    referral: string
+
+}
+export type UserRegistration = CommonFields
+
+export type StudentInfo = CommonFields & {
     updated_at: string 
 }
 
