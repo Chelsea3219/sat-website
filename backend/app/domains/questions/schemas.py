@@ -13,15 +13,16 @@ class IncomingQuestions(BaseModel):
     question_id: UUID | str 
     section: str
     topic: str
-    subtopic: List[str]
+    subtopic: Optional[List[str]] = None 
 
-    difficulty: str
+    difficulty: Literal["easy", "medium", "hard"]
     time_estimate: int
 
     question_preview: Optional[str] = None
     question_type: str
     mc_preview: Optional[str] = None  
 
+    reading_question: Optional[str] = None
     text: str
     equation: Optional[str] = None  
     diagram: Optional[str] = None  

@@ -9,6 +9,7 @@ class BronzeUsers(Base):
     __table_args__ = {"schema":"bronze"}
 
     clerk_id = Column(String, nullable=False, primary_key=True)
+    stripe_id = Column(String, nullable=False)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, nullable=False)
@@ -23,7 +24,6 @@ class BronzeUsers(Base):
     learning_targets = Column(JSONB, nullable=True)
 
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    subscription = Column(String, nullable=False)
     referral = Column(String, nullable=True)
     role = Column(String, nullable=False)
     
@@ -33,6 +33,7 @@ class SilverUsers(Base):
     __table_args__ = {"schema":"silver"}
 
     clerk_id = Column(String, ForeignKey("bronze.bronze_users.clerk_id"), nullable=False, primary_key=True)
+    stripe_id = Column(String, nullable=False)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
 
@@ -47,7 +48,6 @@ class SilverUsers(Base):
     learning_targets = Column(JSONB, nullable=True)
 
     updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    subscription = Column(String, nullable=False)
 
 
 class TestScores(Base):

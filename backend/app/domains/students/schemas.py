@@ -19,17 +19,14 @@ class LearningTargets(BaseModel):
 
 # student base for bronze and silver users
 class StudentBase(BaseModel):
-    clerk_id: str
     first_name: str 
     last_name: str
-    email: EmailStr
     school: str
     state: str
     grade_level: str
     original_score: OriginalScore
-    dream_score: int
+    dream_score: str | int 
     test_date: Optional[date] = None
-    subscription: str
     learning_targets: LearningTargets
 
 

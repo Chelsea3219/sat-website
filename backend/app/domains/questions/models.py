@@ -19,6 +19,7 @@ class BronzeQuestions(Base):
     question_preview = Column(String, nullable=False)
     question_type = Column(String, nullable=False)
     mc_preview = Column(String, nullable=True)
+    reading_question = Column(Text, nullable=True)
     text = Column(String, nullable=False)
 
     uploaded_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
@@ -45,6 +46,7 @@ class SilverQuestions(Base):
     mc_preview = Column(Text, nullable=True)
 
     text = Column(Text, nullable=False)
+    reading_question = Column(Text, nullable=True)
     equation = Column(Text)
     diagram = Column(Text)
     multiple_choices = Column(JSONB(none_as_null=True)) # returns as dict 
