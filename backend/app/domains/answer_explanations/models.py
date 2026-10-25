@@ -15,7 +15,8 @@ class SilverHintsAnswerExplanations(Base):
     question_id = Column(UUID(as_uuid=True), nullable=False)
 
     answer_key = Column(String, nullable=False)
-    answer_explanation = Column(JSONB, nullable=True)
+    question_explanation = Column(String, nullable=True)
+    ai_answer_explanation = Column(JSONB, nullable=True)
 
     hint_1 = Column(Text, nullable=True)
     hint_2 = Column(Text, nullable=True)
