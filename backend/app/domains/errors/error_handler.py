@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError, OperationalError
 from app.core.logging_config import setup_logging
 
 setup_logging()
-logger = logging.getLogger("error")
+logger = logging.getLogger("db_error")
 
 
 def _safe_rollback(db: Session) -> None:
