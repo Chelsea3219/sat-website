@@ -2,11 +2,30 @@ import Image from "next/image"
 import '@/css/forms/form.css'
 import useRegistration from "@/hooks/useRegistration";
 import ErrorMessage from "@/components/ui/ErrorMessage";
+import { Check } from "lucide-react";
+import { Fragment } from "react";
 
-
+const registerSteps = [
+    {
+        label: "Purchase", 
+        shortLabel: "Purchase", 
+        sucess:true
+    }, 
+    {
+        label: "Complete Profile", 
+        shortLabel: "Profile", 
+        sucess:false
+    }, 
+    {
+        label: "Practice Questions", 
+        shortLabel: "Practice",
+        sucess:false
+    }
+]
 export default function RegisterUser() {
 
     const uploader = useRegistration()
+    if (!uploader) return 
 
     const states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
         "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
@@ -17,25 +36,37 @@ export default function RegisterUser() {
     const handleSaveClick = async () => {
         await uploader.handleSave()
     }
+    
 
     return (
         <>
             <div className="flex p-4">
 
                 {/* Left-side Image */}
-                <div className="hidden sm:block flex-1 flex-col justify-center items-center">
-                    <Image
-                        src="/registration_image.png"
-                        alt="Registration Visual"
-                        width={1500} height={1500}
-                        className="w-full h-auto"
-                    />
-                    <a
-                        href="https://storyset.com/education"
-                        className="flex justify-center text-xs text-gray-400"
-                    >
-                        Education illustrations by Storyset
-                    </a>
+                <div className="hidden md:flex flex-1 flex-col justify-center items-center">
+                    <h1 className="flex flex-row justify-center items-center space-x-1">
+                        <Image
+                            src="/marketing/landingpage_logo.svg"
+                            alt="PrepForward"
+                            width={32} height={32}
+                            className="w-6 h-6 sm:w-12 sm:h-12"
+                        />
+                        <span className="text-3xl sm:text-4xl md:text-5xl font-semibold text-main tracking-wide ">PrepForward</span>
+                    </h1>
+                    <div className="px-12 mt-8">
+                        <Image
+                            src="/registration_image.png"
+                            alt="Registration Visual"
+                            width={900} height={900}
+                            className="w-full h-auto"
+                        />
+                        <a
+                            href="https://storyset.com/education"
+                            className="flex justify-center text-xs text-gray-400"
+                        >
+                            Education illustrations by Storyset
+                        </a>
+                    </div>
 
                     {/* Error message */}
                     {uploader.error &&
@@ -49,27 +80,55 @@ export default function RegisterUser() {
                 </div>
 
                 {/* Registration Field */}
-                <div className="flex-1 p-4 ">
+                <div className="flex-1 p-8">
 
                     {/* Header */}
-                    <div className="flex flex-col items-center justify-center mb-4">
-                        <h1 className="hidden md:flex flex-row space-x-1">
-                            <Image
-                                src="/marketing/landingpage_logo.svg"
-                                alt="PrepForward"
-                                width={32} height={32}
-                                className="w-6 h-6 sm:w-8 sm:h-8"
-                            />
-                            <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-primary">PrepForward</span>
-                        </h1>
+                    <div className="mb-6 space-y-3">
+                        {/* Progress steps */}
+                        <ol aria-label="Registration progress" className="flex items-center gap-2">
+                            {registerSteps.map((step, index) => (
+                                <Fragment key={index}>
+                                    {/* Divider before every step except the first */}
+                                    {index > 0 && (
+                                        <li
+                                            aria-hidden="true"
+                                            className="h-0.5 w-full flex-1 rounded-full bg-primary"
+                                        />
+                                    )}
+                                    <li
+                                        className="flex shrink-0 items-center gap-2 text-main"
+                                        aria-current="step"
+                                    >                                         
+                                        {step.sucess 
+                                            ? (
+                                                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                                                    <Check
+                                                        strokeWidth={3}
+                                                        className="h-4 w-4"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span> 
+                                            ): <p className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-white text-sm font-semibold text-primary">{index+1}</p>
+                                        }
+                                        <span className={`text-xs font-semibold sm:text-sm md:text-base ${step.sucess ? `text-primary`: ``}`}>
+                                            <p className="hidden md:inline">{step.label}</p>
+                                            <p className="md:hidden">{step.shortLabel}</p>
+                                        </span>
+                                </li>
+                                </Fragment>
+                            ))}
 
-                        <h2 className="text-sm sm:text-base md:text-lg font-semibold">Complete your profile</h2>
+                        </ol>
+
+                        <p className="text-base text-center text-gray-500">
+                            Finish your profile below so we can build your study plan around your test date and goals.
+                        </p>
                     </div>
 
                     {/* form */}
-                    <div className="space-y-2 w-full mb-8">
+                    <div className="space-y-4 w-full mb-8">
                         {/* Identification */}
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-6">
                             <div className="input-group flex-1">
                                 <label>First Name</label>
                                 <input
@@ -100,7 +159,7 @@ export default function RegisterUser() {
                         </div>
 
                         {/* Classification */}
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-6">
                             <div className="input-group flex-1">
                                 <label>State</label>
                                 <select
@@ -134,7 +193,7 @@ export default function RegisterUser() {
                         </div>
 
                         {/* Original and Dream Score*/}
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-6">
                             <div className="input-group flex-1">
                                 <label>Original Score</label>
                                 <input
@@ -172,7 +231,7 @@ export default function RegisterUser() {
                         </div>
 
                         {/* Dream Score and Test Date */}
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-6">
                             <div className="input-group flex-1">
                                 <label>Dream Score</label>
                                 <input
@@ -196,7 +255,7 @@ export default function RegisterUser() {
                         </div>
 
                         {/* Daily AND Weekly Learning Goals */}
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex flex-col sm:flex-row gap-6">
                             <div className="input-group">
                                 <label>Daily Learning Target </label>
                                 <input

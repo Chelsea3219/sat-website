@@ -5,15 +5,15 @@ import {useEffect, useState} from "react";
 import {useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
 import {registerUser} from "@/services/api.register";
+import {PlanProps, isPlan} from "@/utils/marketing/pricing"
+import { useSearchParams } from "next/navigation";
+
 
 export default function useRegistration() {
 
     const emptyForm: UserRegistration = {
-        clerk_id: "",
         first_name: "",
-        last_name: "",
-        email: "",
-        school: "",
+        last_name: "",        school: "",
         state: "",
         grade_level: "",
         original_score: {
@@ -23,12 +23,12 @@ export default function useRegistration() {
         },
         dream_score: 0,
         test_date: "",
-        subscription: "",
-        referral: "", 
         learning_targets: {
             daily_goal: 0,
             weekly_goal: 0
-        }
+        }, 
+
+        referral:""
     }
 
     const [form, setForm] = useState<UserRegistration>(emptyForm)
@@ -39,8 +39,11 @@ export default function useRegistration() {
 
     // Protect the page from unauthenticated access
     useEffect(() => {
-        if (isLoaded && !user) router.push("/")
+        if (isLoaded  && !user) router.replace("/sign-in")
     }, [isLoaded, user, router]);
+
+    // TODO think of another way to check for success or to allow access when there is an incomplete profile
+    
 
     // Update the form field
     const scoreFields = new Set(["original_score", "reading_score", "math_score"])
@@ -51,7 +54,7 @@ export default function useRegistration() {
         setForm(prev => {
             if (scoreFields.has(name)) {
                 return {
-                    ...prev, 
+                    ...prev,
                     original_score: {...prev.original_score, [name]:Number(value)}
                 }
             }
@@ -104,16 +107,8 @@ export default function useRegistration() {
             return
         }
 
-        // Merge in clerk_id/email right here, at submission — no need to have stored them earlier
-        const payload: UserRegistration = {
-            ...form,
-            clerk_id: user.id,
-            email: String(user.primaryEmailAddress)
-        }
-        console.log("payload", payload)
-
         try {
-            const response = await registerUser(payload)
+            const response = await registerUser({...form})
             console.log("registration response", response)
 
             router.push("/dashboard")
