@@ -1,6 +1,6 @@
 import hashlib, json 
 
-CONTENT_FIELDS = ["text", "multiple_choices", "equation", "diagram"]
+CONTENT_FIELDS = ["text", "multiple_choices", "equation", "diagram", "reading_question", "question_explanation"]
 
 
 
