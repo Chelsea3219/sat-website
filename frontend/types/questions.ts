@@ -21,7 +21,6 @@ export type Question = {
 
 // Format of student answer for each quiz question
 export type AnswerSheet = {
-    clerk_id: string
     session_id: string 
     question_id: string
     section: string
@@ -36,7 +35,6 @@ export type AnswerSheet = {
 
 // Format of student answer for each quiz question
 export type PracticeAnswerSheet = {
-    clerk_id: string
     session_id: string
     question_id: string
     question_type: string 
@@ -54,7 +52,6 @@ export type PracticeAnswerSheet = {
 export type QuestionAttempts = {
     id: string
     session_id: string
-    clerk_id: string
     question_id: string
     type: string
     difficulty: string 

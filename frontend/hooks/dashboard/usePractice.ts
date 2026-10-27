@@ -7,13 +7,13 @@ import {checkIfCorrect} from "@/utils/CheckIfCorrect"
 
 
 type PracticeQuestionTabProps = {
-    clerkId?: string | null | undefined
+    isLoaded: boolean
     sessionId?: string | null
     subtopic: string 
 }
 
 
-export default function usePractice({clerkId, sessionId, subtopic}: PracticeQuestionTabProps) {
+export default function usePractice({isLoaded, sessionId, subtopic}: PracticeQuestionTabProps) {
 
     // Initializes the parameters -----------------------------------------------------------------------------
     const [prevSubtopic, setPrevSubtopic] = useState(subtopic)
@@ -48,26 +48,25 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
     // Reset the ref-based counter in an effect (refs must not be touched during render)
     const unsentAnswers = useRef<PracticeAnswerSheet[]>([])
     useEffect(() => {
-        if (!clerkId || !sessionId || !subtopic) return
+        if (isLoaded || !sessionId || !subtopic) return
 
         return () => {
             const toGrade = unsentAnswers.current
             unsentAnswers.current = []
             if (toGrade.length > 0) {
-                gradePracticeQuestions(toGrade, subtopic, clerkId, sessionId)
+                gradePracticeQuestions(toGrade, subtopic, sessionId)
                     .catch(err => console.error("Error flushing practice answers:", err))
             }
         }
-    }, [clerkId, subtopic, sessionId])
+    }, [isLoaded, subtopic, sessionId])
 
 
     // Fetches a new batch of practice questions for the specific clerk_id and subtopic -----------------------------
     const loadQuestions = async( sheetSoFar: PracticeAnswerSheet[]) => {
         setIsLoading(true)
-        if (!clerkId || !subtopic) return
-        const safeClerkId : string = clerkId
+        if (isLoaded || !subtopic) return
         try {
-            const response = await fetchPracticeQuestions(safeClerkId, subtopic, sheetSoFar)
+            const response = await fetchPracticeQuestions(subtopic, sheetSoFar)
             //console.log("practice questions ==>> ", response)
             setPracticeQuestions(response.selected_questions)
             setInSessionScore(response.in_session_score)
@@ -81,14 +80,13 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
 
     // Initial fetch on mount / when the subtopic changes ----------------------------------------------------------
     useEffect(() => {
-        if (!clerkId || !subtopic) return
+        if (!isLoaded || !subtopic) return
 
         let cancelled = false
 
         const fetchInitialBatch = async () => {
-            const safeClerkId: string = clerkId
             try {
-                const response = await fetchPracticeQuestions(safeClerkId, subtopic, [])
+                const response = await fetchPracticeQuestions( subtopic, [])
                 if (!cancelled) {
                     setPracticeQuestions(response.selected_questions)
                     setInSessionScore(response.in_session_score)
@@ -106,7 +104,7 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
         return () => {
             cancelled = true
         }
-    }, [clerkId, subtopic])
+    }, [isLoaded, subtopic])
     
     // Starts the stopwatch timer when the current question changes -----------------------------------------------
     useEffect(() => {
@@ -135,7 +133,7 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
         //console.log("numCompleted", numCompleted)
 
         // Guard against an empty answer 
-        if (!clerkId || !sessionId || isCorrect !== true) return 
+        if (isLoaded || !sessionId || isCorrect !== true) return 
 
         const isLastInBatch = currentIndex === practiceQuestions.length - 1
 
@@ -151,7 +149,7 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
             unsentAnswers.current = []
             try {
                 //console.log("answerSheet just sent to the backend: ", answerSheet)
-                const response = await gradePracticeQuestions(toGrade, subtopic, clerkId!, sessionId!)
+                const response = await gradePracticeQuestions(toGrade, subtopic, sessionId!)
                 setSessionResults(response)
                 //console.log(" current mastery score ", response.in_session_score)
 
@@ -173,7 +171,7 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
     // Checks the answer, updates the current question index, and resets the timer ---------------------------------
     const checkAnswer = async () => {
         // Guard 
-        if (!currentQuestion || !clerkId || !sessionId || isCorrect !== null || answer.trim() === "") return
+        if (!currentQuestion || isLoaded || !sessionId || isCorrect !== null || answer.trim() === "") return
 
         // Adds the selected answer to the answerAttempts
         const updatedAttempts = [...answerAttempts, answer]
@@ -186,7 +184,6 @@ export default function usePractice({clerkId, sessionId, subtopic}: PracticeQues
 
         // Formats and add the answer to the student's answer history
         const currentAnswer : PracticeAnswerSheet = {
-            clerk_id: clerkId ?? "",
             session_id: sessionId ?? "",
             question_id: currentQuestion.question_id,
             question_type: currentQuestion.question_type, 

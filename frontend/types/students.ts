@@ -1,8 +1,8 @@
 // User Registration Information
 
-export type CommonFields = {
-    first_name: string
-    last_name: string
+export type StudentInfo  = {
+    first_name?: string
+    last_name?: string
 
     school: string
     state: string
@@ -17,13 +17,10 @@ export type CommonFields = {
     }
 
     referral: string
+    updated_at?: string 
 
 }
-export type UserRegistration = CommonFields
 
-export type StudentInfo = CommonFields & {
-    updated_at: string 
-}
 
 export type OriginalScore = {
     original_score: number

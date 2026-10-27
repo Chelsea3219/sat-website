@@ -5,13 +5,13 @@ import { fetchQuizQuestions, gradeQuizQuestions } from "@/services/api.questions
 import {checkIfCorrect} from "@/utils/CheckIfCorrect"
 
 type QuizQuestionTabProps = {
-    clerkId?: string 
+    isLoaded: boolean
     sessionId?: string | null
     section: string 
 }
 
 
-export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQuestionTabProps){
+export default function useQuizQuestionTab({isLoaded, sessionId, section}:QuizQuestionTabProps){
 
     // Initializes the parameters -----------------------------------------------------------------------------
     const [quizQuestions, setQuizQuestions] = useState<Question[]>([])
@@ -24,12 +24,12 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
 
     // Fetches the quiz questions for the specific clerk_id and section ---------------------------------------
     useEffect(() => {
-        if (!clerkId || !section) return
+        if (!isLoaded || !section) return
 
         const load = async() => {
             try {
-                const response = await fetchQuizQuestions(clerkId, section)
-                console.log("quiz questions => ", response)
+                const response = await fetchQuizQuestions( section)
+                //console.log("quiz questions => ", response)
                 setQuizQuestions(response)
             } catch (error) {
                 console.error("Error fetching quiz questions:", error)
@@ -37,7 +37,7 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
         }
 
         load()
-    }, [clerkId, section])
+    }, [isLoaded, section])
     
 
     // Starts the stopwatch timer when the current question changes -----------------------------------------------
@@ -56,7 +56,7 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
 
     // Checks the answer, updates the current question index, and resets the timer ---------------------------------
     const checkAnswer = async () => {
-        if (!clerkId || !sessionId) return 
+        if (!sessionId) return 
 
         // Checks to see if the asnwer is correct
         const isCorrect = checkIfCorrect(answer, quizQuestions[currentIndex])
@@ -64,7 +64,6 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
 
         // Adds the answer to the student's answer history
         const currentAnswer : AnswerSheet = {
-            clerk_id: clerkId ?? "",
             session_id: sessionId ?? "",
             question_id: quizQuestions[currentIndex].question_id,
             subtopic: quizQuestions[currentIndex].subtopic,
@@ -89,7 +88,7 @@ export default function useQuizQuestionTab({clerkId, sessionId, section}:QuizQue
         const isLastQuestion = currentIndex == quizQuestions.length - 1
         if (isLastQuestion) {
             try{
-                const response = await gradeQuizQuestions(answerSheet, section, clerkId, sessionId)
+                const response = await gradeQuizQuestions(answerSheet, section, sessionId)
                 setQuizResults(response)
                 console.log("results after grading => ", response)
                 

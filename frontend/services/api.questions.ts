@@ -1,8 +1,8 @@
 import { AnswerSheet, PracticeAnswerSheet} from "@/types/questions"
 
-// Fetch quiz questions for a specific clerk_id and section
-export async function fetchQuizQuestions(clerk_id: string, section: string) {
-    const res = await fetch(`/api/questions/quiz/fetch-questions/${clerk_id}/${section}`, {
+// Fetch quiz questions for a specific section
+export async function fetchQuizQuestions( section: string) {
+    const res = await fetch(`/api/questions/quiz/fetch-questions/${section}`, {
         method: 'GET'
     })
 
@@ -17,9 +17,9 @@ export async function fetchQuizQuestions(clerk_id: string, section: string) {
 }
 
 
-// Fetch quiz questions for a specific clerk_id and section
-export async function fetchPracticeQuestions(clerk_id: string, subtopic: string, sessionAnswers: PracticeAnswerSheet[]) {
-    const res = await fetch(`/api/questions/practice/fetch-questions/${clerk_id}/${subtopic}`, {
+// Fetch quiz questions for a specific section
+export async function fetchPracticeQuestions(subtopic: string, sessionAnswers: PracticeAnswerSheet[]) {
+    const res = await fetch(`/api/questions/practice/fetch-questions/${subtopic}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(sessionAnswers)
@@ -39,13 +39,13 @@ export async function fetchPracticeQuestions(clerk_id: string, subtopic: string,
 // Grade answersheet
 export async function gradeQuizQuestions(
     answerSheet:AnswerSheet[], 
-    section: string, clerkId: string, sessionId:string
+    section: string, sessionId:string
 ) {
 
     const response = await fetch(`/api/questions/quiz/grade-questions`, {
         method: 'POST', 
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({answerSheet, section, clerkId, sessionId})
+        body: JSON.stringify({answerSheet, section, sessionId})
     })
 
     if (!response.ok) {
@@ -62,14 +62,14 @@ export async function gradeQuizQuestions(
 // Grade answersheet
 export async function gradePracticeQuestions(
     answerSheet:PracticeAnswerSheet[], 
-    subtopic: string, clerkId: string, sessionId:string
+    subtopic: string, sessionId:string
 ) {
-    if (!subtopic || !clerkId || !sessionId) return 
+    if (!subtopic || !sessionId) return 
 
     const response = await fetch(`/api/questions/practice/grade-questions`, {
         method: 'POST', 
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({answerSheet, subtopic, clerkId, sessionId})
+        body: JSON.stringify({answerSheet, subtopic, sessionId})
     })
 
     if (!response.ok) {

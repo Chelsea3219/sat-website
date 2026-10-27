@@ -1,19 +1,18 @@
 "use client"
 
-import type {UserRegistration} from "../types/students"
+import type {StudentInfo} from "../types/students"
 import {useEffect, useState} from "react";
 import {useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
 import {registerUser} from "@/services/api.register";
-import {PlanProps, isPlan} from "@/utils/marketing/pricing"
-import { useSearchParams } from "next/navigation";
+import {useUserInformationContext} from "@/contexts/StudentInformationContext"
+
 
 
 export default function useRegistration() {
 
-    const emptyForm: UserRegistration = {
-        first_name: "",
-        last_name: "",        school: "",
+    const emptyForm: StudentInfo = {
+        school: "",
         state: "",
         grade_level: "",
         original_score: {
@@ -31,19 +30,20 @@ export default function useRegistration() {
         referral:""
     }
 
-    const [form, setForm] = useState<UserRegistration>(emptyForm)
+    const {isProfileIncomplete, isLoaded, isSignedIn, isFetched, refresh} = useUserInformationContext()
+
+    const [form, setForm] = useState<StudentInfo>(emptyForm)
     const [error, setError] = useState("")
     const router = useRouter()
 
-    const { user, isLoaded } = useUser()
-
     // Protect the page from unauthenticated access
     useEffect(() => {
-        if (isLoaded  && !user) router.replace("/sign-in")
-    }, [isLoaded, user, router]);
+        if (isLoaded  && !isSignedIn) {router.replace("/sign-in"); return}
+        if (isFetched && !isProfileIncomplete) router.replace("/dashboard")
+    }, [isLoaded, isFetched, router, isProfileIncomplete, isSignedIn]);
 
     // TODO think of another way to check for success or to allow access when there is an incomplete profile
-    
+
 
     // Update the form field
     const scoreFields = new Set(["original_score", "reading_score", "math_score"])
@@ -71,15 +71,15 @@ export default function useRegistration() {
 
     const validateForm = () => {
         const missing: string[] = []
-        const missingFields = ["first_name", "last_name", "grade_level", "original_score", "dream_score", "test_date"]
+        const missingFields = ["grade_level", "dream_score", "test_date"]
         missingFields.forEach(i => {
-            if (!form[i as keyof UserRegistration]) missing.push(i)
+            if (!form[i as keyof StudentInfo]) missing.push(i)
         })
         return missing
     }
 
     const handleSave = async () => {
-        if (!user) {
+        if (!isSignedIn) {
             setError("You must be signed in to register.")
             return
         }
@@ -108,10 +108,10 @@ export default function useRegistration() {
         }
 
         try {
-            const response = await registerUser({...form})
-            console.log("registration response", response)
-
-            router.push("/dashboard")
+            await registerUser({...form})
+            //console.log("registration response", response)
+            await refresh()
+            router.replace("/dashboard")
 
         } catch (err: unknown) {
             if (err instanceof Error) {

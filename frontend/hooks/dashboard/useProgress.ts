@@ -12,21 +12,23 @@ import { fetchAchievements } from "@/services/api.student-info"
 import {sampleGoldQuizAnalytics} from "@/utils/samples/sampleGoldQuizAnalytics"
 
 
-export default function useProgress() {
+export default function useProgress( ) {
 
     // Fetches the student's information, test scores, and analytics
-    const {studentInfo, questionStats, quizAnalytics, subtopicMastery} = useUserInformationContext()
-    const clerkId = studentInfo?.clerk_id
+    const {studentInfo, questionStats, quizAnalytics, subtopicMastery, isLoaded} = useUserInformationContext()
 
     const [apiResponse, setAPIResponse] = useState<PastQuizAnalytics>()
     const [achievements, setAchievements] = useState<Achievement[]>([])
 
     useEffect(() => {
-        if (!clerkId) return 
+        if (!isLoaded) return 
+        console.log("isLoaded", isLoaded)
         const load = async() => {
             try {
-                const response2 = await fetchPastQuizAnalytics(clerkId)
-                const response3 = await fetchAchievements(clerkId)
+                const[response2, response3] = await Promise.all([
+                    fetchPastQuizAnalytics(), 
+                    fetchAchievements()
+                ])
                 setAPIResponse(response2)
                 setAchievements(response3)
             } catch (error) {
@@ -34,7 +36,7 @@ export default function useProgress() {
             } 
         }
         load()
-    }, [clerkId])
+    }, [isLoaded])
 
     // Loading 
     const isLoading = !studentInfo || !questionStats || !apiResponse || !achievements

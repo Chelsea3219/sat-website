@@ -7,6 +7,8 @@ import { formatMinutes} from "@/utils/renderFormattedText"
 import { topicBreakdown } from "@/utils/analytics"
 import { readingTopics, mathTopics } from "@/utils/topics"
 
+
+
 type DailyWeeklyStats = {
     num_questions: number | string
     time_spent: number | string 
@@ -14,19 +16,22 @@ type DailyWeeklyStats = {
     weekly_time_spent: number 
 }
 
+
+
 export default function useDashboard(){
-    const {studentInfo, questionStats, quizAnalytics, subtopicMastery} = useUserInformationContext()
-    const clerkId = studentInfo?.clerk_id
+    const {isLoaded, studentInfo, questionStats, quizAnalytics, subtopicMastery} = useUserInformationContext()
+
 
     // Retrieves the daily and weekly stats
     const [apiResponse, setAPIResponse] = useState<DailyWeeklyStats | undefined>()
     const [apiResponse2, setAPIResponse2] = useState<PastQuizAnalytics>()
+
     useEffect(() => {
-        if (!clerkId) return 
+        if (!isLoaded) return 
         const load = async() => {
             try {
-                const response1 = await fetchDailyWeeklysStats(clerkId)
-                const response2 = await fetchPastQuizAnalytics(clerkId)
+                const response1 = await fetchDailyWeeklysStats()
+                const response2 = await fetchPastQuizAnalytics()
                 setAPIResponse(response1)
                 setAPIResponse2(response2)
             } catch (error) {
@@ -35,7 +40,7 @@ export default function useDashboard(){
             } 
         }
         load()
-    }, [clerkId])
+    }, [isLoaded])
     
     // Guard
     if (!studentInfo || !questionStats || !quizAnalytics || !subtopicMastery || !apiResponse) {
@@ -58,7 +63,13 @@ export default function useDashboard(){
     const currentQuizAnalytics = sortedQuizAnalytics[0]
     const [readingScore, mathScore] = [currentQuizAnalytics.reading_mastery.mastery_score, currentQuizAnalytics.math_mastery.mastery_score]
     const [readingSATScore, mathSATScore] = [readingScore, mathScore].map(estimateSATSectionScore2)
-    const currentScore = readingSATScore + mathSATScore
+
+    let currentScore: number | null = 0
+    if (quizAnalytics.length === 0 || questionStats.num_questions === 0) {
+        currentScore = studentInfo.original_score.original_score
+    } else {
+        currentScore = readingSATScore + mathSATScore
+    }
 
     let scoreChange: number | null = 0
     const prevQuizAnalytics = sortedQuizAnalytics[1]
@@ -73,7 +84,6 @@ export default function useDashboard(){
 
     const fullName = studentInfo?.first_name + " " + studentInfo?.last_name
     const targetScore = studentInfo.dream_score
-    console.log(currentScore)
 
     const readingTopicBreakdown = topicBreakdown(currentQuizAnalytics?.reading_topics_mastery, readingTopics)
     const mathTopicBreakdown = topicBreakdown(currentQuizAnalytics?.math_topics_mastery, mathTopics)

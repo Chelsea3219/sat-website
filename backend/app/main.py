@@ -5,19 +5,22 @@ install(show_locals=True)
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.exceptions import RequestValidationError
 
 # APIs
-from app.domains.errors.router import general_http_exception_handler, validation_exception_handler
+from app.domains.errors.router import general_http_exception_handler, validation_exception_handler, http_exception_handler
 from app.domains.admin.routers import marketing
-from app.domains.students.routers import register, student_info
+from app.domains.students.routers import register, student_info, clerk_webhook
 from app.domains.questions.routers import fetch_questions
 from app.domains.analytics.routers import router as analytics_router, past_analytics
 from app.domains.document_processing.routers import extract_questions, fetch_questions_parameters, upload, add_questions, update_questions, delete_questions
 from app.domains.achievements import router as achievement
+from app.domains.payments.routers import stripe_webhook, checkout
+from app.domains.answer_explanations.router import fetch_answer_explanations
+
 
 # Configuration
 from app.core.config import settings
@@ -55,12 +58,13 @@ def health():
 # ERROR HANDLING -------------------------------------------------------------------------------------------------------
 app.add_exception_handler(StarletteHTTPException, general_http_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
-
+app.add_exception_handler(HTTPException, http_exception_handler)
 
 # API ROUTES -----------------------------------------------------------------------------------------------------------
 app.include_router(marketing.router)
 app.include_router(register.router)
 app.include_router(student_info.router)
+app.include_router(clerk_webhook.router)
 app.include_router(fetch_questions.router)
 app.include_router(delete_questions.router)
 app.include_router(analytics_router.router)
@@ -71,7 +75,20 @@ app.include_router(fetch_questions_parameters.router)
 app.include_router(add_questions.router)
 app.include_router(update_questions.router)
 app.include_router(achievement.router)
+app.include_router(stripe_webhook.router)
+app.include_router(checkout.router)
+app.include_router(fetch_answer_explanations.router)
 
+
+@app.get("/debug/routes", include_in_schema=False)
+def debug_routes():
+    return [
+        {
+            "path": route.path,
+            "methods": sorted(route.methods or []),
+        }
+        for route in app.routes
+    ]
 
 # MIDDLEWARE -----------------------------------------------------------------------------------------------------------
 # Add middleware to enable certain origin / certain URLS to interact with our backend

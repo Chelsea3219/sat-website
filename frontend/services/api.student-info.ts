@@ -1,7 +1,7 @@
 
 
-export async function fetchStudentInformation(clerk_id: string ) {
-    const res = await fetch(`/api/students/fetch-student-info/${clerk_id}`, {
+export async function fetchStudentInformation() {
+    const res = await fetch(`/api/students/fetch-student-info`, {
         method: 'GET'
     })
 
@@ -16,8 +16,8 @@ export async function fetchStudentInformation(clerk_id: string ) {
 }
 
 
-export async function fetchDailyWeeklysStats(clerk_id: string ) {
-    const res = await fetch(`/api/students/fetch-daily-stats/${clerk_id}`, {
+export async function fetchDailyWeeklysStats() {
+    const res = await fetch(`/api/students/fetch-daily-stats`, {
         method: 'GET'
     })
 
@@ -31,9 +31,9 @@ export async function fetchDailyWeeklysStats(clerk_id: string ) {
     return data 
 }
 
-export async function fetchPastQuizAnalytics(clerk_id: string ) {
+export async function fetchPastQuizAnalytics( ) {
     // Returns the past 10 quizzes and the number of quizzes
-    const res = await fetch(`/api/analytics/past-quiz-analytics/${clerk_id}/`, {
+    const res = await fetch(`/api/analytics/past-quiz-analytics`, {
         method: 'GET'
     })
 
@@ -48,9 +48,9 @@ export async function fetchPastQuizAnalytics(clerk_id: string ) {
 }
 
 
-export async function fetchCurrentSubtopicMastery(clerk_id: string, subtopic: string) {
+export async function fetchCurrentSubtopicMastery(subtopic: string) {
     // Returns the current analytics for the selected subtopic
-    const res = await fetch(`/api/analytics/past-subtopic-analytics/${clerk_id}/${subtopic}`, {
+    const res = await fetch(`/api/analytics/past-subtopic-analytics/${subtopic}`, {
         method: 'GET'
     })
 
@@ -65,9 +65,9 @@ export async function fetchCurrentSubtopicMastery(clerk_id: string, subtopic: st
 }
 
 
-export async function fetchAchievements(clerk_id: string ) {
+export async function fetchAchievements() {
     // Returns the past 10 quizzes and the number of quizzes
-    const res = await fetch(`/api/achievements/${clerk_id}/`, {
+    const res = await fetch(`/api/achievements`, {
         method: 'GET'
     })
 
