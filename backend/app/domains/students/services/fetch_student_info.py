@@ -54,9 +54,6 @@ def fetch_student_info(clerk_id:str, db:Session):
     with handle_db_errors(db, "fetching student's information"):
         # Fetch student's information (eg first and last name, school)
         student_info = db.query(SilverUsers).filter(SilverUsers.clerk_id == clerk_id).first()
-        # Checks to see if student exists
-        if not student_info:
-            raise HTTPException(status_code=404, detail="Student not found")
     return student_info
 
 
