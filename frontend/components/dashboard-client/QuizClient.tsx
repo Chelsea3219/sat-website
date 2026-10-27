@@ -15,15 +15,14 @@ type TabWindowProps = {
 export default function QuizClient({section, activeTab}: TabWindowProps) {
     
     // Fetch student's information from useStudentInformationContext hook 
-    const {studentInfo, quizAnalytics, testScores, sessionId} = useUserInformationContext()
-    const clerkId = studentInfo?.clerk_id
+    const {studentInfo, quizAnalytics, testScores, sessionId, isLoaded} = useUserInformationContext()
     
     // Fetch questions from useQuizQuestionTab hook
     const { 
         quizQuestions, currentIndex, timeElapsed, currentQuestion, 
         answer, checkAnswer, handleAnswerChange, 
         quizResults,
-    } = useQuizQuestionTab({clerkId,sessionId, section})
+    } = useQuizQuestionTab({sessionId, section, isLoaded})
 
     // Declare the variables
     const questionTabProps : QuizQuestionTabProps = {
