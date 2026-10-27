@@ -47,14 +47,14 @@ export default function LandingNavbar() {
                     <div className="hidden md:flex flex-row md:text-sm gap-x-2 items-center">
                         <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
                             <button className={buttonClass}>
-                                Login
+                                Sign In
                             </button>
                         </SignInButton>
-                        <Link 
-                            href = "/pricing"
-                            className={`${buttonClass} bg-primary text-white text-center`}>
-                            Register 
-                        </Link>
+                        <SignUpButton>
+                            <button className={`${buttonClass} bg-primary text-white`}>
+                                Sign Up
+                            </button>
+                        </SignUpButton>
                     </div>
 
 
@@ -105,15 +105,15 @@ export default function LandingNavbar() {
                         <div className="flex flex-col items-end gap-y-3 w-24">
                             <SignInButton>
                                 <button className={`${buttonClass} border`}>
-                                    Login
+                                    Sign In
                                 </button>
                             </SignInButton>
 
-                            <Link 
-                                href = "/pricing"
-                                className={`${buttonClass} bg-primary text-white`}>
-                                Register 
-                            </Link>
+                            <SignUpButton>
+                                <button className={`${buttonClass} bg-primary text-white`}>
+                                    Sign Up
+                                </button>
+                            </SignUpButton>
                         </div>
                     </div>
                 </div>
