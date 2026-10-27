@@ -8,7 +8,7 @@ class Payments(Base):
     __tablename__ = "payments"
     __table_args__ = {"schema":"silver"}
 
-    session_id = Column(String,  primary_key=True, index=True)
+    record_id = Column(String,  primary_key=True, index=True)
     subscription_id = Column(String, index=True)
     clerk_id = Column(String)
     stripe_id = Column(String, index=True)
@@ -26,6 +26,7 @@ class UserAccess(Base):
     __table_args__ = {"schema":"silver"}
 
     clerk_id = Column(String, primary_key=True)
-    current_plan = Column(String, primary_key=True)
-    status = Column(String, primary_key=True)
-    current_plan_end = Column(DateTime(timezone=True), nullable=False)
+    record_id = Column(String)
+    current_plan = Column(String)
+    status = Column(String)
+    current_plan_end = Column(DateTime(timezone=True), nullable=True)

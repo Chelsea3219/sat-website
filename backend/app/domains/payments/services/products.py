@@ -37,3 +37,6 @@ PRODUCTS = {
     }, 
 
 }
+
+
+SUBSCRIPTIONS = ["monthly", "three_sessions", "six_sessions"]

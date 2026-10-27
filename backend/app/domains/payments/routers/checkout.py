@@ -1,7 +1,7 @@
 import logging
 import stripe
 from typing import Annotated
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, UTC
 from fastapi import APIRouter, Request, HTTPException, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -13,6 +13,7 @@ from app.domains.students.services.get_clerk_id import get_clerk
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.auth import require_auth
+from app.core.logging_config import setup_logging
 
 from app.domains.errors.error_handler import handle_db_errors
 from app.domains.payments.models import Payments
@@ -23,6 +24,7 @@ from app.domains.students.services.fetch_student_info import fetch_student_info
 
 
 
+setup_logging()
 logger = logging.getLogger("stripe-webhook")
 router = APIRouter(prefix="/api/stripe", tags=["stripe"])
 
@@ -73,26 +75,33 @@ async def create_checkout_session(
                 "email": email, "clerk_id": clerk_id, "stripe_id": customer_id, 
             }
             with handle_db_errors(db, "sync student's information in the bronze and silver tables"):
-                upsert(db, BronzeUsers, "clerk_id", fields.get("clerk_id"), **fields)
-                upsert(db, SilverUsers, "clerk_id", fields.get("clerk_id"), **fields)
+                upsert(db, BronzeUsers, "clerk_id", fields.get("clerk_id"), stripe_id=customer_id)
+                upsert(db, SilverUsers, "clerk_id", fields.get("clerk_id"), stripe_id=customer_id)
             db.commit()
+            logger.info("Checkout session created: user=%s plan=%s stripe_id=%s", clerk_id, payload.product, customer_id)
+
+
+        metadata = {
+            "clerk_id": clerk_id, 
+            "product_name": payload.product, 
+            "price_id": price_id
+        }
 
         session_parameters = {
             "mode": config["mode"], 
             "customer": customer_id, 
             "line_items": [{ "price": price_id, "quantity": 1 }], # Defined the priceId and the quality being purchased
             "client_reference_id": clerk_id,   # Adds the clerk id as a reference for the checkout session
-            "metadata": { # Stores your plan key and Clerk ID for later processing
-                "clerk_id": clerk_id,
-                "price_id":price_id, 
-                "product_name":payload.product,
-            },
+            "metadata": metadata,  # Stores your plan key and Clerk ID for later processing
             "success_url": (
                 f"{frontend_URL}/register"
                 f"?checkout=success&purchase={payload.product}"
             ),
             "cancel_url": f"{frontend_URL}/pricing",
         }
+        if config["mode"] == "subscription":
+            session_parameters["subscription_data"] = {"metadata": metadata}
+        
         #logger.info("Checkout success_url: %s", session_parameters.get("success_url"))
         
         session = stripe.checkout.Session.create(**session_parameters)
