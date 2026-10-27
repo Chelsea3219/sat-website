@@ -17,7 +17,6 @@ class QuestionStats(BaseModel):
 
 
 class IncomingAnswerSheet(BaseModel):
-    clerk_id: str 
     session_id: str
     question_id: UUID
     question_type: str

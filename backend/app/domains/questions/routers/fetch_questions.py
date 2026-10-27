@@ -1,11 +1,15 @@
 # Import Python libraries and files 
 import pprint
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from datetime import datetime
 
 from app.core.database import get_db
+from app.core.auth import get_authenticated_clerk_id
+
 from app.core.config import settings
+from app.core.logging_config import setup_logging
 from app.domains.questions.schemas import IncomingQuestions, PracticeSession
 from app.domains.analytics.schemas import IncomingPracticeSheet
 from app.domains.questions.services.difficulty_to_mastery_score import determine_proficiency
@@ -14,15 +18,19 @@ from app.domains.questions.services.question_selection import practice_question_
 from app.domains.analytics.services.grading_algorithms import get_effective_mastery_score
 from app.domains.students.services.fetch_student_info import fetch_student_info, fetch_subtopic_mastery, fetch_test_scores, fetch_gold_quiz_analytics
 
+
+
+setup_logging() 
+logger = logging.getLogger("questions")
 router = APIRouter(prefix="/api/questions", tags=["questions"])
 
 
 # FETCHES QUESTIONS BASED ON SUBTOPIC FROM DATABASE
-@router.post("/practice/fetch-questions/{clerk_id}/{subtopic}")
+@router.post("/practice/fetch-questions/{subtopic}")
 def fetch_practice_questions(
-    clerk_id: str, 
     subtopic: str, 
     session_answers: List[IncomingPracticeSheet] = [], # sent from frontend, tracks the session progress so far
+    clerk_id: str = Depends(get_authenticated_clerk_id),
     db=Depends(get_db)
 ) -> PracticeSession:
 
@@ -54,10 +62,10 @@ def fetch_practice_questions(
     return results 
 
 
-@router.get("/quiz/fetch-questions/{clerk_id}/{section}")
+@router.get("/quiz/fetch-questions/{section}")
 def fetch_quiz_questions(
-    clerk_id: str, 
     section: str, 
+    clerk_id: str = Depends(get_authenticated_clerk_id),
     db=Depends(get_db)
 ) : # -> List[IncomingQuestions]
 

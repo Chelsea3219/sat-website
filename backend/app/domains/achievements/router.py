@@ -5,16 +5,22 @@ from typing import List
 from datetime import datetime
 
 from app.core.database import get_db
+from app.core.auth import get_authenticated_clerk_id
 from app.domains.achievements.schemas import Achievement
 from app.domains.achievements.services import compute_achievements
 from app.domains.questions.schemas import IncomingQuestions, PracticeSession
 from app.domains.students.services.fetch_student_info import fetch_student_info, fetch_silver_quiz_analytics, fetch_question_attempts, fetch_past_subtopic_mastery
 
+
+
 router = APIRouter(prefix="/api", tags=["achievements"])
 
 
-@router.get("/achievements/{clerk_id}")
-def get_achievements(clerk_id: str, db=Depends(get_db)) -> List[Achievement]:
+@router.get("/achievements")
+def get_achievements(
+    clerk_id: str = Depends(get_authenticated_clerk_id), 
+    db=Depends(get_db)
+) -> List[Achievement]:
     question_attempts = fetch_question_attempts(clerk_id, db)
 
     past_subtopic_mastery = fetch_past_subtopic_mastery(clerk_id, db)

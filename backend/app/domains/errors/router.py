@@ -20,7 +20,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 
 async def general_http_exception_handler(request: Request, exc: StarletteHTTPException):
     if request.url.path.startswith("/api"):
-        return await http_exception_handler(request, exc)
+        return http_exception_handler(request, exc)
 
     message = exc.detail if exc.detail else "An error occurred. Please check your request and try again."
     return JSONResponse(

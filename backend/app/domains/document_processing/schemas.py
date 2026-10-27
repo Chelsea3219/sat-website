@@ -13,6 +13,7 @@ class UploadRawQuestions(BaseModel):
     question_preview: str
     question_type: str
     mc_preview: Optional[str] = None
+    reading_question: Optional[str] = None
     text: str
     source: str
 
@@ -26,6 +27,7 @@ class RawQuestionsIn(BaseModel):
     question_preview: str
     question_type: str
     mc_preview: Optional[str] = None
+    reading_question: Optional[str] = None
     text: str
     source: str
     uploaded_at: datetime 
@@ -48,6 +50,7 @@ class CleanQuestions(BaseModel):
     question_preview:str
     question_type: str
     mc_preview: str
+    reading_question: Optional[str] = None
     text: str
     equation: str
     diagram: str
@@ -66,6 +69,7 @@ class AddQuestions(BaseModel):
     question_preview: str
     question_type: str
     mc_preview: str
+    reading_question: Optional[str] = None
     text: str
     equation: str
     diagram: str

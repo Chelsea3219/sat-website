@@ -65,6 +65,6 @@ def compute_daily_stats(clerk_id: str, db:Session) -> dict:
             "weekly_num_questions": weekly_results.weekly_num_questions or 0,
             "weekly_time_spent": weekly_results.weekly_time_spent or 0
         }
-        print("stats", stats)
+        # print("stats", stats)
 
         return stats
