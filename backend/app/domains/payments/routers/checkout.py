@@ -1,17 +1,15 @@
 import logging
 import stripe
 from typing import Annotated
-from datetime import datetime, timedelta, timezone, UTC
 from fastapi import APIRouter, Request, HTTPException, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from clerk_backend_api import Clerk
 from clerk_backend_api.security.types import RequestState
 
 from app.core.config import settings
 from app.core.database import get_db
-from app.core.auth import require_auth, get_authenticated_clerk_id
+from app.core.auth import require_auth
 from app.core.logging_config import setup_logging
 
 from app.domains.errors.error_handler import handle_db_errors
