@@ -19,15 +19,15 @@ class LearningTargets(BaseModel):
 
 # student base for bronze and silver users
 class StudentBase(BaseModel):
-    first_name: str 
-    last_name: str
-    school: str
-    state: str
-    grade_level: str
-    original_score: OriginalScore
-    dream_score: str | int 
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    school: str | None
+    state: str | None
+    grade_level: str | None
+    original_score: OriginalScore | None
+    dream_score: str | int | None 
     test_date: Optional[date] = None
-    learning_targets: LearningTargets
+    learning_targets: LearningTargets | None
 
 
 class RegisterStudents(StudentBase):
@@ -49,7 +49,7 @@ class IncomingTestScores(BaseModel):
 
 
 class IncomingStudentInformation(BaseModel):
-    student_info: IncomingStudentInfo
+    student_info: IncomingStudentInfo | None
     question_stats: QuestionStats
     test_scores: List[IncomingTestScores]
     # past_analytics: Optional[List[IncomingSilverAnalytics]] = None

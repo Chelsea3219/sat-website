@@ -9,23 +9,23 @@ class BronzeUsers(Base):
     __table_args__ = {"schema":"bronze"}
 
     clerk_id = Column(String, nullable=False, primary_key=True)
-    stripe_id = Column(String, nullable=False)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    stripe_id = Column(String, nullable=True, unique=True)
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
+    email = Column(String, nullable=True)
 
-    grade_level = Column(String, nullable=False)
-    school = Column(String, nullable=False)
-    state = Column(String, nullable=False)
+    grade_level = Column(String, nullable=True)
+    school = Column(String, nullable=True)
+    state = Column(String, nullable=True)
 
-    original_score = Column(JSONB, nullable=False)
-    dream_score = Column(Integer, nullable=False)
+    original_score = Column(JSONB, nullable=True)
+    dream_score = Column(Integer, nullable=True)
     test_date = Column(Date, nullable=True)
     learning_targets = Column(JSONB, nullable=True)
 
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     referral = Column(String, nullable=True)
-    role = Column(String, nullable=False)
+    role = Column(String, nullable=True)
     
 
 class SilverUsers(Base):
@@ -33,17 +33,18 @@ class SilverUsers(Base):
     __table_args__ = {"schema":"silver"}
 
     clerk_id = Column(String, ForeignKey("bronze.bronze_users.clerk_id"), nullable=False, primary_key=True)
-    stripe_id = Column(String, nullable=False)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
+    stripe_id = Column(String, nullable=True, unique=True)
+    role = Column(String)
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
 
-    grade_level = Column(String, nullable=False)
-    school = Column(String, nullable=False)
-    state = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    grade_level = Column(String, nullable=True)
+    school = Column(String, nullable=True)
+    state = Column(String, nullable=True)
+    email = Column(String, nullable=True)
 
-    original_score = Column(JSONB, nullable=False)
-    dream_score = Column(Integer, nullable=False)
+    original_score = Column(JSONB, nullable=True)
+    dream_score = Column(Integer, nullable=True)
     test_date = Column(Date, nullable=True)
     learning_targets = Column(JSONB, nullable=True)
 
