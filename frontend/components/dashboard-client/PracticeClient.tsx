@@ -17,8 +17,7 @@ type PageProps = {
 export default function PracticeClient({section, topic, subtopic, activeTab}:PageProps) {
 
     // Fetch student's information from useStudentInformationContext hook 
-    const {studentInfo, sessionId, subtopicMastery} = useUserInformationContext()
-    const clerkId = studentInfo?.clerk_id
+    const { sessionId, subtopicMastery, isLoaded} = useUserInformationContext()
 
     // Fetches the parameters for PracticeTabWindow
     const {
@@ -26,7 +25,7 @@ export default function PracticeClient({section, topic, subtopic, activeTab}:Pag
         answer, handleAnswerChange, checkAnswer, answerAttempts, isCorrect, 
         timeElapsed, handleHint, nextQuestion, 
         sessionResults,
-    } = usePractice({clerkId, sessionId, subtopic})
+    } = usePractice({isLoaded, sessionId, subtopic})
 
     
     // Delare the parameters
