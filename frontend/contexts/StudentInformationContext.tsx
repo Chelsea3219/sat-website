@@ -4,12 +4,14 @@ import { createContext, useContext, ReactNode } from "react"
 import useStudentInformation from "@/hooks/useStudentInformation";
 import { useAuth } from "@clerk/nextjs"
 
+
+
 function useUserInformation() {
-    const {userId, isLoaded, sessionId} = useAuth();
+    const {isLoaded, sessionId, isSignedIn} = useAuth();
 
-    const studentInformation = useStudentInformation(userId)
+    const studentInformation = useStudentInformation(isLoaded, isSignedIn)
 
-    return {...studentInformation, isLoaded, sessionId}
+    return {...studentInformation, isLoaded, sessionId, isSignedIn}
 }
 
 type UserInformationContextType = ReturnType<typeof useUserInformation>
