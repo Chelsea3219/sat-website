@@ -8,37 +8,28 @@ from app.domains.errors.error_handler import handle_db_errors
 
 
 def upsert(
-        db: Session, 
-        model: Type, 
-        lookup_field: str, 
-        lookup_value: str, 
-        **fields
+        db: Session,
+        model: Type,
+        lookup_field: str,
+        lookup_value: str,
+        create_only: dict | None = None,
+        **fields,
 ):
     """
-    Insert a new record or update an exisiting record. 
-    Roll backs and converts database error through handle_db_errors().
+    Find a row by lookup_field.
+    - Missing: insert it with fields + create_only + the lookup value.
+    - Present: update only `fields`; create_only values are never overwritten.
+    Don't pass lookup_field inside fields or create_only.
     """
+    column = getattr(model, lookup_field)
+    record = db.query(model).filter(column == lookup_value).first()
 
-    with handle_db_errors(db, context=f"upsert {model.__name__}"):
+    if record is None:
+        record = model(**(create_only or {}), **fields, **{lookup_field: lookup_value})
+        db.add(record)
+    else:
+        for key, value in fields.items():
+            setattr(record, key, value)
 
-        # Find the record by its unieque loookup field 
-        column = getattr(model,lookup_field)
-        record = db.query(model).filter(column == lookup_value).first()
-
-        # if it does not exists, it creates a new one and add to db
-        if record is None:
-            record_fields = {
-                **fields, 
-                lookup_field: lookup_value
-            }
-            record = model(**record_fields)
-
-            db.add(record)
-        else:
-            for key, value in fields.items():
-                setattr(record, key, value)
-        db.flush() # Sends SQL to the database; catches many DB errors 
-        db.commit()
-        db.refresh(record)
-
-        return record 
+    db.flush()
+    return record
