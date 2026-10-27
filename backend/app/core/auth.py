@@ -33,7 +33,12 @@ def require_auth(
     )
 
     if not state.is_signed_in:
-        logger.info("User is not signed in and not authorized.")
+        logger.info(
+            "Clerk auth failed: reason=%s message%s has auth_header=%s",
+            state.reason.name if state.reason else None, 
+            getattr(state, "message", None),
+            "authorization" in request.headers
+        )
         raise HTTPException(
             status_code=401, 
             detail=state.reason.name if state.reason else "unauthorized", 
@@ -43,6 +48,22 @@ def require_auth(
     # returns an object containing suthentication information (is_signed_in, is_authenticated, status, reason, payload, token, to_auth)
     # print("state -->>", state)
     return state
+
+
+
+def get_authenticated_clerk_id(
+    state: Annotated[RequestState, Depends(require_auth)]
+) -> str:
+    if not state.payload or not state.payload.get("sub"):
+        logger.error(
+            "Authenticated request has no usable Clerk subject."
+        )
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid authentication token"
+        )
+
+    return state.payload["sub"]
 
 
 
