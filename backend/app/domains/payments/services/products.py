@@ -30,7 +30,7 @@ PRODUCTS = {
         "mode": "payment", 
         "price": 180
     }, 
-    "five_sessions":{
+    "six_sessions":{
         "price_id": settings.STRIPE_FIVE_SESSIONS,
         "mode": "payment", 
         "price": 275 
@@ -39,4 +39,4 @@ PRODUCTS = {
 }
 
 
-SUBSCRIPTIONS = ["monthly", "three_sessions", "six_sessions"]
+SUBSCRIPTIONS = [name for name, p in PRODUCTS.items() if p["mode"] == "subscription"]

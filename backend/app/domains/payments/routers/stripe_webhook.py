@@ -8,10 +8,12 @@ from app.core.database import get_db
 from app.core.logging_config import setup_logging
 from app.domains.errors.error_handler import handle_db_errors
 from app.domains.payments.models import Payments, UserAccess
+from app.domains.students.models import SilverUsers
 from app.domains.database.upsert import upsert
 from app.domains.payments.services.logger_scripts import is_checkout_complete
 from app.domains.payments.services.helpers import get_metadata, get_subscription_id
 from app.domains.payments.services.set_access_status import set_access_status
+from app.domains.payments.services.products import PRODUCTS
 
 
 setup_logging()
@@ -19,6 +21,7 @@ logger = logging.getLogger("stripe-webhook")
 router = APIRouter(prefix="/api/stripe", tags=["stripe"])
 HANDLED_EVENTS = ["checkout.session.completed", "invoice.paid", "invoice.payment_failed", "customer.subscription.deleted"]
 PLAN_DAYS = {"monthly": 31, "three_months": 92, "six_months": 183}
+SESSION_COUNTS = {"one_session": 1, "three_sessions": 3, "five_sessions": 5}
 
 
 
@@ -42,16 +45,22 @@ async def stripe_webhook(request: Request, db=Depends(get_db)):
 
     metadata = get_metadata(event_type, obj)
     product_name = metadata.get("product_name")
-    clerk_id = obj.get("reference_id") or metadata.get("clerk_id")
-
+    clerk_id = metadata.get("clerk_id") or obj.get("client_reference_id")
 
     # Error Handling -----------------------------------------------------------------------------------------------------------------------
     if event_type not in HANDLED_EVENTS:
         return {"received": True, "ignored": True}
+    
+    if not clerk_id and obj.get("customer"):
+        user = db.query(SilverUsers).filter(SilverUsers.stripe_id == obj["customer"]).first()
+        clerk_id = user.clerk_id if user else None
+
     if not clerk_id:
-        logger.error("Missing clerk id")
-        raise HTTPException(status_code=400, detail="Missing clerk_id")
-    if product_name not in PLAN_DAYS:
+        logger.error("Missing clerk_id: event=%s id=%s customer=%s metadata=%s",
+                    event_type, event["id"], obj.get("customer"), metadata)
+        return {"received": True, "skipped": "unknown customer"}
+
+    if product_name not in PRODUCTS.keys():
         raise HTTPException(status_code=400, detail="Invalid product name")
 
 
@@ -110,6 +119,11 @@ async def stripe_webhook(request: Request, db=Depends(get_db)):
                     record_id=record_id,
                 )
 
+            # update the number of remaining sessions
+            if product_name in SESSION_COUNTS:
+                access = db.query(UserAccess).filter(UserAccess.clerk_id == clerk_id).with_for_update().first()
+                access.sessions_remaining = (access.sessions_remaining or 0) + SESSION_COUNTS[product_name]
+    
             db.flush()
             #logger.info("Access granted: user=%s plan=%s record=%s", clerk_id, product_name, obj["id"])
 

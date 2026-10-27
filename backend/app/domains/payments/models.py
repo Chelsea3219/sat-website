@@ -1,5 +1,5 @@
 from app.core.database import Base
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Column, DateTime, String, Integer
 from sqlalchemy.dialects.postgresql import UUID
 
 
@@ -29,4 +29,5 @@ class UserAccess(Base):
     record_id = Column(String)
     current_plan = Column(String)
     status = Column(String)
+    sessions_remaining = Column(Integer)
     current_plan_end = Column(DateTime(timezone=True), nullable=True)

@@ -8,11 +8,10 @@ from pydantic import BaseModel
 
 from clerk_backend_api import Clerk
 from clerk_backend_api.security.types import RequestState
-from app.domains.students.services.get_clerk_id import get_clerk
 
 from app.core.config import settings
 from app.core.database import get_db
-from app.core.auth import require_auth
+from app.core.auth import require_auth, get_authenticated_clerk_id
 from app.core.logging_config import setup_logging
 
 from app.domains.errors.error_handler import handle_db_errors
@@ -38,23 +37,12 @@ class CheckoutRequest(BaseModel):
 
 @router.post("/checkout")
 async def create_checkout_session(
-    payload:CheckoutRequest, 
-    clerk: Annotated[Clerk, Depends(get_clerk)], 
+    payload:CheckoutRequest,
     state: Annotated[RequestState, Depends(require_auth)], 
     db= Depends(get_db)
 ):  
     clerk_id = state.payload["sub"]
-
-    user = clerk.users.get(user_id=clerk_id)
-    primary_email_id = user.primary_email_address_id
-    email = next(
-        (
-            address.email_address
-            for address in user.email_addresses
-            if address.id == primary_email_id
-        ),
-        None,
-    )
+    email = state.payload.get("email")
 
     config = PRODUCTS.get(payload.product)
     if not config:
