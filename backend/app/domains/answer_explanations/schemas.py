@@ -58,7 +58,7 @@ class AnswerExplanation(BaseModel):
 
 class GeneratedAnswerExplanations(BaseModel):
     answer_key: str = Field(description="Single letter A-D for multiple choice; number or text for free response.")
-    answer_explanation: AnswerExplanation
+    ai_answer_explanation: AnswerExplanation
 
     hint_1: str = Field(description="Math: the key word/statement in the question. Reading: the key phrase or sentence in the passage. Must not reveal the answer.")
     hint_2: Optional[str] = Field(None, description="Math only: the relevant formula/strategy and how it connects to hint 1. Omit for reading. Must not reveal the answer.")
@@ -69,7 +69,7 @@ class GeneratedAnswerExplanations(BaseModel):
 class OutgoingAnswerExplanations(GeneratedAnswerExplanations):
     question_id: UUID
 
-    status: Optional[Literal["pending_review", "approved", "rejected", "needs_review"]] = "pending_review"
+    status: Optional[Literal["generating", "pending_review", "approved", "rejected", "needs_review"]] = "pending_review"
     model_name: str
     created_at: datetime 
 

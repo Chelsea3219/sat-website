@@ -1,6 +1,7 @@
 import logging 
 from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
+import anthropic 
 
 from app.core.database import SessionLocal
 from app.core.logging_config import setup_logging
@@ -30,10 +31,16 @@ def explanation_job(question_id: str, expected_hash: str):
             return 
         _set_status(db, question_id, "generating")
 
+        # Generate the AI answer explanations and saves to db
         explanation = generate_answer_explanation(question)
         save_answer_explanation(db, explanation)
+        
         if explanation.status == "needs_review":
             logger.warning("Answer mismatch for question %s; flagged for review", question_id)
+    except anthropic.BadRequestError as e:
+        if "credit balance" in str(e):
+            logger.critical("Anthropic credits exhausted; stopping run")
+            raise SystemExit(1)
     except IntegrityError:
         db.rollback()
         logger.exception("Bad data for question %s; not retrying", question_id)
