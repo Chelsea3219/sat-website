@@ -65,7 +65,8 @@ def sweep() -> int:
             queued += 1
 
         logger.info("Sweeper: queued %d, already active %d, checked %d",
-                    queued, skipped, len(questions))
+            queued, skipped, len(questions)
+        )
         return queued
     finally:
         db.close()

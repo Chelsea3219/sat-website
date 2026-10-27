@@ -1,14 +1,21 @@
 # Import Python Libaries and files 
 import json 
+import logging 
 from sqlalchemy import cast, select, or_, and_
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import JSONB
 from typing import List
+from pydantic import ValidationError
+
+from app.core.logging_config import setup_logging
+setup_logging()
+logger = logging.getLogger("fetch_questions")
 
 from app.domains.questions.schemas import IncomingQuestions
 from app.domains.questions.models import SilverQuestions
 from app.domains.errors.error_handler import handle_db_errors
 from app.domains.questions.services.question_ids import math_quiz_ids, reading_quiz_ids
+
 
 # Fetches questions based on section
 def fetch_section_questions(section:str, db:Session) -> List[IncomingQuestions]:
@@ -43,4 +50,11 @@ def fetch_unanswered_questions(db: Session, limit: int =5000 ) -> List[IncomingQ
     with handle_db_errors(db, "fetching unanswered questions from silver questions table "):
         query = select(SilverQuestions).where(SilverQuestions.explanation_status.in_(["pending", "failed", "generating"])).limit(limit)
         results = db.scalars(query).all()
-        return [IncomingQuestions.model_validate(r) for r in results]
+
+        questions = []
+        for r in results:
+            try:
+                questions.append(IncomingQuestions.model_validate(r))
+            except ValidationError as e:
+                logger.warning("Skipping invalid question %s: %s", r.get("id"), e)
+        return questions 

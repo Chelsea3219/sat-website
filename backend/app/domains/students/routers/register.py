@@ -3,11 +3,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from typing import Annotated
-
 from clerk_backend_api.security.types import RequestState
 
 from app.core.database import get_db
 from app.core.auth import require_auth
+from app.core.logging_config import setup_logging
 
 from app.domains.database.upsert import upsert
 from app.domains.errors.error_handler import handle_db_errors
@@ -19,6 +19,7 @@ from app.domains.questions.services.topic import reading_topics, math_topics
 from app.domains.payments.services import require_paid_plan
 
 import logging
+setup_logging() 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api", tags=["students"])
@@ -34,9 +35,6 @@ async def register_students(
     clerk_id = state.payload["sub"]
     now = datetime.now(UTC)
     common_fields = {
-        "first_name" : payload.first_name,
-        "last_name" : payload.last_name,
-
         "school" : payload.school,
         "state" : payload.state,
         "grade_level" : payload.grade_level,
@@ -45,25 +43,25 @@ async def register_students(
         "dream_score" : payload.dream_score,
         "test_date" : payload.test_date,
         "learning_targets" : payload.learning_targets.model_dump(),
+        "referral": payload.referral
     }
 
     # Update bronze and silver users
     with handle_db_errors(db, "syncing the bronze and silver user tables with profile details"):
-        bronze_record = upsert(
+        upsert(
             db=db, 
             model=BronzeUsers, 
             lookup_field="clerk_id", 
             lookup_value=clerk_id, 
-            **(common_fields | {"created_at":now, "referrel":payload.referral})
+            **(common_fields | {"referral": payload.referral})
         )
-        silver_record = upsert(
+        upsert(
             db=db, 
             model=SilverUsers, 
             lookup_field="clerk_id", 
             lookup_value=clerk_id, 
             **(common_fields | {"updated_at":now})
         )
-        print(bronze_record, silver_record)
         db.commit()
 
 
