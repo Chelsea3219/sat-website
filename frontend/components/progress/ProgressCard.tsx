@@ -16,15 +16,15 @@ export default function ProgressCard({ children, cardClassName, className, color
     return (
         <div 
             className={`
-                w-full rounded-lg p-1 min-h-0 flex flex-1 flex-row ${cardClassName}
-                ${isLoading ? "border-2 animate-shine-progress": ""}
-                
+                w-full h-full min-w-0 min-h-0 rounded-lg p-1 flex flex-1 flex-row border-2
+                ${isLoading ? "animate-shine-progress" : ""}
+                ${cardClassName ?? ""}
             `}
-            style={{ 
-                borderColor: `var(--color-${color})` , 
-                backgroundColor: `color-mix(in srgb, var(--color-${color}) 40%, white)`, 
-                "--shine-color": `var(--color-${color})` , 
-                ...style
+            style={{
+                borderColor: `var(--color-${color})`,
+                backgroundColor: `color-mix(in srgb, var(--color-${color}) 40%, white)`,
+                "--shine-color": `var(--color-${color})`,
+                ...style,
             } as React.CSSProperties}
         >
             {!isLoading ?(
