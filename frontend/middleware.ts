@@ -2,7 +2,7 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import {NextResponse} from "next/server";
 
-const GUEST_BLOCKED_PATHS = ["/admin", "/dashboard/billing", "/register", "/dashboard/profile"];
+const GUEST_BLOCKED_PATHS = ["/admin", "/dashboard/profile", "/api/checkout"];
 
 export default clerkMiddleware(async (auth, req) => {
     const { sessionClaims } = await auth();
@@ -15,7 +15,16 @@ export default clerkMiddleware(async (auth, req) => {
     if (sessionClaims?.metadata?.role === "guest" && isBlocked) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
+
+    {/*
+        console.log("Middleware:", {
+        path: req.nextUrl.pathname,
+        role: sessionClaims?.metadata?.role,
+    });
+    */}
+
 });
+
 
 export const config = {
     matcher: [

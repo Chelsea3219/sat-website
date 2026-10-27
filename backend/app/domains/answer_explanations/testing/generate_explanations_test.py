@@ -6,8 +6,8 @@ from app.core.database import SessionLocal
 from app.core.config import settings
 from app.domains.questions.services.fetch_questions import fetch_unanswered_questions
 
-from app.worker.explanation_job import explanation_job
-from app.worker.queues import backfill_queue
+from app.worker.explanation.explanation_job import explanation_job
+from app.worker.explanation.queues import backfill_queue
 from app.domains.questions.utils import content_hash
 
 def main():
