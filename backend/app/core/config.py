@@ -63,6 +63,9 @@ class Config:
         self.CLERK_WEBHOOK: str = os.getenv("CLERK_WEBHOOK", "")
         self.CLERK_AUTHORIZED_PARTIES: list[str] = os.getenv("CLERK_AUTHORIZED_PARTIES", [])
 
+        # NGROK 
+        self.NGROK_AUTHTOKEN: str = os.getenv("NGROK_AUTHTOKEN", "")
+
 
 # Single instance to import everywhere
 settings = Config()
