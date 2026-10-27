@@ -29,9 +29,9 @@ export default function FileUploader({onFile, previewURL, resetUpload, handleCha
                     />
                 </div>
                 {previewURL && (
-                    <div className="flex flex-row justify-center items-center gap-4">
-                        <Image src={previewURL} alt="Diagram / Preview" width={200} height={200} className="max-w-sm border rounded-lg"/>
-                        <X className="flex justify-center w-25 h-25 text-red-500 hover:bg-red-50 rounded-lg" onClick={resetUpload}/>
+                    <div className="flex flex-col justify-center items-center gap-4">
+                        <Image src={previewURL} alt="Diagram / Preview" width={400} height={400} className="max-w-sm border rounded-lg"/>
+                        <X className="flex justify-center w-10 h-10 text-red-500 hover:bg-red-50 rounded-lg" onClick={resetUpload}/>
                     </div>
                 )}
             </div>

@@ -114,5 +114,6 @@ export function renderLatex(text: string) {
         .join("")
 }
 
-export const wrapSigma = (s: string) => `\\(${s}\\)`
+export const wrapSigma = (s: string) => /^\s*\\\(/.test(s) ? s : `\\(${s}\\)`
+export const unwrapSigma = (s: string) => s.replace(/^\s*\\\(([\s\S]*)\\\)\s*$/, "$1")
 export const wrapBraces = (s: string) => `{${s}}`

@@ -2,7 +2,7 @@
 
 import {useUserInformationContext} from "@/contexts/StudentInformationContext"
 import usePractice from "@/hooks/dashboard/usePractice"
-import PracticeTabWindow from "../ui/tab-window/practice/PracticeTabWindow"
+import PracticeTabWindow from "../tab-window/practice/PracticeTabWindow"
 import { PracticeQuestionTabProps } from "@/types/questions"
 import { SessionProgress } from "@/types/students"
 

@@ -23,8 +23,8 @@ class RawQuestionsIn(BaseModel):
     question_id: uuid.UUID
     section: str
     topic: str
-    subtopic: str
-    question_preview: str
+    subtopic: Optional[str] = None 
+    question_preview: Optional[str] = None
     question_type: str
     mc_preview: Optional[str] = None
     reading_question: Optional[str] = None
@@ -44,10 +44,10 @@ class CleanQuestions(BaseModel):
     question_id: uuid.UUID
     section: str
     topic: str
-    subtopic: List[str]
+    subtopic: Optional[List[str]]=None
     difficulty: str
     time_estimate: int
-    question_preview:str
+    question_preview:Optional[str]=None
     question_type: str
     mc_preview: str
     reading_question: Optional[str] = None

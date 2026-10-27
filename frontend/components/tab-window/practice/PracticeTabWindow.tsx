@@ -7,9 +7,9 @@ import { SessionProgress, SubtopicMastery} from "@/types/students";
 import { PracticeGradedResponse } from "@/types/mastery-score";
 import ReadingQuestionTab from "../ReadingQuestionTab";
 import MathPracticeTab from "./MathPracticeTab";
-import { ProgressBar } from "../../ProgressBar";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 //import {ArrowUp, ArrowDown} from "lucide-react"
-import HorizontalLoadingAnimation2 from "../../loading-animation/HorizontalLoadingAnimation";
+import LoadingHorizontalAnimation2 from "@/components/ui/loading-animation/HorizontalLoadingAnimation";
 import PracticeResults from "./PracticeResults";
 
 
@@ -94,7 +94,7 @@ export default function PracticeTabWindow({
             <div role="tabpanel" className="p-4 flex-auto min-h-0 flex flex-col">
                 {isLoading ? (
                     <div className="flex items-center justify-center">
-                        <HorizontalLoadingAnimation2 text="Loading Questions"/>
+                        <LoadingHorizontalAnimation2 text="Loading Questions"/>
                     </div>
                 ): (
                     <>

@@ -1,7 +1,7 @@
 "use client"
 
 import { QuizQuestionTabProps } from "@/types/questions"
-import QuizTabWindow from "../ui/tab-window/quiz/QuizTabWindow"
+import QuizTabWindow from "../tab-window/quiz/QuizTabWindow"
 import useQuizQuestionTab from "@/hooks/dashboard/useQuizQuestionTab"
 import {useUserInformationContext} from "@/contexts/StudentInformationContext"
 
@@ -38,7 +38,7 @@ export default function QuizClient({section, activeTab}: TabWindowProps) {
 
     return (
         <>
-            <div className="w-full h-full">
+            <div className="w-full h-full px-6 md:px-4 lg:px-2 pb-4">
                 <QuizTabWindow
                     section={section}
                     activeTab={activeTab}

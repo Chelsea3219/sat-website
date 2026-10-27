@@ -8,6 +8,9 @@ import {IncomingSilverQuestions, MCProps, ImageCategory} from "@/types/question-
 import TopicSelector from "./ui/TopicSelector";
 import "@/css/forms/form.css"
 import AnswerEditor from "@/components/forms/ui/AnswerEditor";
+import SnippetButtons from "@/components/forms/ui/SnippetButtons";
+
+
 
 type UseFileUploaderReturn = ReturnType<typeof useFileUploader>
 
@@ -40,12 +43,12 @@ export default function QuestionAdder(
 
     return (
         <>
-            <div className="pt-16 md:px-2 lg:px-4 pb-4">
+            <div className="pt-16 md:px-2 lg:px-4 pb-4 w-full">
 
                 {/* Question Editor */}
-                <div className="flex gap-4 mt-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[4fr_1fr] gap-4 mt-4 w-full">
                     {/* Question Information ------------------------------------------------------------------------*/}
-                    <div className="flex-4 w-full space-y-4">
+                    <div className="w-full min-w-0 space-y-4">
 
                         {/* Section and Topic */}
                         <div className="flex flex-col sm:flex-row gap-4">
@@ -127,14 +130,20 @@ export default function QuestionAdder(
                             />
                         </div>
 
+                        {/* Equation and its Latex Preview */}
                         {form.section === "math" &&
-                            /* Equation and its Latex Preview */
                             <div className="input-group">
                                 <label>Equation</label>
-                                <LaTexInput
-                                    value={form.equation ?? ""}
-                                    onChangeAction={(value) => fieldChangeAction("equation", value)}
-                                />
+                                 <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
+                                    <div className="border-b border-primary pb-2 mb-2 ">
+                                            <SnippetButtons />
+                                    </div>
+                                    <LaTexInput
+                                        value={form.equation ?? ""}
+                                        isEquation
+                                        onChangeAction={(value) => fieldChangeAction("equation", value)}
+                                    />
+                                </div>
                             </div>
                         }
 
@@ -143,7 +152,8 @@ export default function QuestionAdder(
                             <div className="input-group w-full">
                                 <label>Multiple Choices</label>
                                 <MCEditor
-                                    mc={form.multiple_choices ?? {A: "", B: "", C: "", D: ""}}
+                                    mc={form.multiple_choices ?? { A: "", B: "", C: "", D: "" }}
+                                    isEquation={false}
                                     onChangeAction={(letter, value) => mcFieldChangeAction(letter, value)}
                                 />
                             </div>
@@ -175,7 +185,7 @@ export default function QuestionAdder(
                     </div>
 
                     {/* Question Preview ----------------------------------------------------------------------------*/}
-                    <div className="flex-1 sticky top-20 self-start h-full space-y-8">
+                    <div className="lg:col-span-1 min-w-0 sticky top-20 self-start space-y-4 ">
                         {/* Diagram Uploader */}
                         <div className={titleStyle}>
                             <label>Question Preview</label>

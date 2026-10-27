@@ -1,6 +1,7 @@
 "use client"
 
 import {Search} from 'lucide-react'
+import SearchBar from "@/components/forms/ui/SearchBar"
 import "@/css/forms/form.css"
 import TextEditor from "@/components/forms/ui/TextEditor";
 import LaTexInput from "@/components/forms/ui/LaTexInput";
@@ -10,6 +11,9 @@ import QuestionPreview from "@/components/forms/ui/QuestionMCPreview";
 import SubtopicEditor from "@/components/forms/ui/SubtopicEditor";
 import {IncomingSilverQuestions, SearchProps, MCProps, UseFileUploaderReturn, ImageCategory} from "@/types/question-processing";
 import AnswerEditor from "@/components/forms/ui/AnswerEditor";
+import SnippetButtons from "@/components/forms/ui/SnippetButtons";
+
+
 
 type Props = {
     form: IncomingSilverQuestions
@@ -65,6 +69,7 @@ export default function QuestionEditor(
                             className="flex items-center mt-1 justify-center rounded-lg text-xl text-white font-bold w-8 h-8 hover:border-2 hover:border-primary hover:scale-110"
                         />
                     </div>
+                    <SearchBar/>
 
                     {/* Question Editor */}
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-4">
@@ -134,15 +139,21 @@ export default function QuestionEditor(
                             {/* Equation and its Latex Preview */}
                             <div className="input-group">
                                 <label>Equation</label>
-                                <LaTexInput
-                                    value={form.equation ?? ""}
-                                    onChangeAction={(value) => fieldChangeAction("equation", value)}
-                                />
+                                 <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
+                                    <div className="border-b border-primary pb-2 mb-2 ">
+                                            <SnippetButtons />
+                                    </div>
+                                    <LaTexInput
+                                        value={form.equation ?? ""}
+                                        isEquation
+                                        onChangeAction={(value) => fieldChangeAction("equation", value)}
+                                    />
+                                </div>
                             </div>
 
                             {/* Diagram Uploader */}
                             <div >
-                                <label className="block mb-6 text-md font-medium uppercase tracking-wide text-main">Diagram</label>
+                                <label className="block mb-2 text-md font-medium uppercase tracking-wide text-main">Diagram</label>
                                 <FileUploader
                                     onFile={handleDiagramFile}
                                     previewURL={diagramUploader.previewURL}
@@ -158,6 +169,7 @@ export default function QuestionEditor(
                                     <label>Multiple Choices</label>
                                     <MCEditor
                                         mc={form.multiple_choices ?? { A: "", B: "", C: "", D: "" }}
+                                        isEquation={false}
                                         onChangeAction={(letter, value) => mcFieldChangeAction(letter, value)}
                                     />
                                 </div>

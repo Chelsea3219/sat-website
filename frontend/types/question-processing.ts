@@ -28,6 +28,7 @@ export type BaseBronzeQuestions = {
     question_type: string
     question_preview: string
     mc_preview?: string
+    reading_question: string | null 
     text:string
     uploaded_at: string
     source: string
@@ -53,6 +54,7 @@ export type IncomingSilverQuestions = {
     question_preview: string
     mc_preview?: string
 
+    reading_question: string | null 
     text:string
     equation?: string
     diagram?: string

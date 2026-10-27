@@ -7,33 +7,54 @@ import {useState} from "react";
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader"
 import QuestionAdder from "@/components/forms/QuestionAdder";
 import useQuestionAdder from "@/hooks/admin/question-processing/useQuestionAdder";
+import Preview from "@/components/forms/ui/Preview";
+
 
 
 export default function Page () {
     const [uploading, setUploading] = useState(false)
     const previewUploader = useFileUploader()
     const diagramUploader = useFileUploader()
-
+    const [preview, setPreview] = useState(false)
 
     const {
-        form, completedForm,
+        form, completedQuestions,
         error, setError,
         fieldChange, mcFieldChange, handleImageUpload, 
         saving, saveQuestion, handleSave, resetForm
     } = useQuestionAdder(previewUploader, diagramUploader)
 
-    const handleSaveClick = async() => {
+    // Open the preview without uploading anything
+    const handleOpenPreview = () => {
+        if (completedQuestions.length ===0) return 
+        setError("")
+        setPreview(true)
+    }
+
+    // Confirm the preview and upload the staged questions
+    const handleConfirmSave = async() => {
+        if (uploading || completedQuestions.length===0) return 
         setUploading(true)
-        if (!completedForm) return 
+        setError("")
+
         try {
-            await handleSave(completedForm)
+            await handleSave(completedQuestions)
             previewUploader.resetUpload()
             diagramUploader.resetUpload()
-            resetForm()
+            setPreview(false)
+        } catch (error) {
+            console.error("Unable to save question.", error)
+            setError("Failed to save question. Please try again.")
         } finally {
             setUploading(false)
         }
+
     }
+
+    // Continue the question
+    const handleDismiss = () => setPreview(false) 
+
+    const buttonStyle = "rounded-xl border-2 px-5 py-2 text-center cursor-pointer font-semibold transition-all disabled:opacity-50"
 
     return (
         <div className="pt-1 w-full">
@@ -45,26 +66,45 @@ export default function Page () {
                     />
                 </div>
             }
+            {preview && (
+                <Preview
+                    questions={completedQuestions}
+                    saving={uploading}
+                    onConfirm={handleConfirmSave}
+                    onDismiss={handleDismiss}
+                />
+            )}
+            
 
             <AdminHeader
                 title="Add Questions"
+                subtitle={`Completed ${completedQuestions.length} questions`}
                 actions = {
-                    <div className="flex items-center flex-row gap-x-2 ">
+                    <div className="grid grid-cols-3 gap-x-4 ">
+                        <button
+                            type="button"
+                            onClick={resetForm}
+                            disabled={saving}
+                            className={`${buttonStyle} bg-red-500 text-white hover:bg-red-500/70`}
+                        >
+                            Reset
+                        </button>
                         <button
                             type="button"
                             onClick={saveQuestion}
                             disabled={saving}
-                            className="min-w-25 rounded-btn bg-accent text-white "
+                            className={`${buttonStyle} bg-primary text-white hover:bg-primary/70`}
                         >
                             {saving ? "Saving..." : "Save"}
                         </button>
+
                         <button
                             type="button"
-                            onClick={handleSaveClick}
-                            disabled={uploading}
-                            className="min-w-25 rounded-btn bg-primary text-white "
+                            onClick={handleOpenPreview}
+                            disabled={completedQuestions.length===0}
+                            className={`${buttonStyle} border-primary text-primary hover:bg-primary/40`}
                         >
-                            {uploading ? "Uploading..." : "Upload"}
+                            Preview
                         </button>
                     </div>
                 }

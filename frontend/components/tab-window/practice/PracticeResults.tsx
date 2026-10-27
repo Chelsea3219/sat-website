@@ -1,7 +1,7 @@
 
 import { PracticeGradedResponse } from "@/types/mastery-score"
 import { SubtopicMastery } from "@/types/students"
-import ProgressCircle from "../../ProgressCircle"
+import ProgressCircle from "@/components/ui/ProgressCircle"
 import { toTitleCase, normalizeText } from "@/utils/renderFormattedText"
 import { colorChange } from "@/utils/renderColor"
 import {ArrowUp, ArrowDown, CircleCheck, CircleX, Clock} from "lucide-react"

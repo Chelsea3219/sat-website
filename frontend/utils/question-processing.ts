@@ -21,6 +21,7 @@ export const preprocessForm = (q:IncomingBronzeQuestions): IncomingSilverQuestio
         question_preview: q.question_preview,
         question_type: q.question_type,
         mc_preview: q.mc_preview ?? "",
+        reading_question: q.reading_question ?? "",
         text: q.text,
         difficulty: "",
         time_estimate:0,

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {QuizQuestionTabProps } from "@/types/questions"
 import { IncomingGradedAnswerSheet } from "@/types/mastery-score";
-import { ProgressBar } from "../../ProgressBar";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 import "@/css/tab-window.css"
 import MathQuestionTab from "../MathQuestionTab"
 import ReadingQuestionTab from "../ReadingQuestionTab";

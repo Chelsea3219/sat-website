@@ -2,9 +2,10 @@
 import { useState } from "react"
 
 const SNIPPETS = [
-    { label: "∑", text: "\\(\\)"},
+    { label: "∑", text: String.raw`\(\)` },
     { label: "{ }", text: "{}" },
-    { label: "{", text: "\\(\\begin{cases}  \\\\  \\end{cases}\\)" },
+    { label: "{", text: String.raw`\(\begin{cases}  \\  \end{cases}\)` },
+    { label: "½", text: String.raw`\frac{}{}` },
 ]
 
 export default function SnippetButtons() {
@@ -25,7 +26,7 @@ export default function SnippetButtons() {
                     onClick={() => copy(s.text)}
                     className="w-9 h-8 border rounded text-sm font-bold flex items-center justify-center gap-1 hover:bg-primary/20 transition-all"
                 >
-                    {copied === s.text ? "Copied!" : s.label}
+                    {copied === s.text ? "✓" : s.label}
                 </button>
             ))}
         </div>

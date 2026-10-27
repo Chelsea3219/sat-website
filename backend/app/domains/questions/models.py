@@ -14,9 +14,9 @@ class BronzeQuestions(Base):
     question_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     section = Column(String, nullable=False)
     topic = Column(String, nullable=False)
-    subtopic = Column(String, nullable=False)
+    subtopic = Column(String, nullable=True)
 
-    question_preview = Column(String, nullable=False)
+    question_preview = Column(String, nullable=True)
     question_type = Column(String, nullable=False)
     mc_preview = Column(String, nullable=True)
     reading_question = Column(Text, nullable=True)
@@ -36,12 +36,12 @@ class SilverQuestions(Base):
     question_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     section = Column(String, nullable=False)
     topic = Column(String, nullable=False)
-    subtopic = Column(JSONB, nullable=False) # returns as list
+    subtopic = Column(JSONB, nullable=True) # returns as list
 
     difficulty = Column(String, nullable=False)
     time_estimate = Column(Integer)
 
-    question_preview = Column(Text, nullable=False)
+    question_preview = Column(Text, nullable=True)
     question_type = Column(String, nullable=False)
     mc_preview = Column(Text, nullable=True)
 

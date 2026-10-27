@@ -7,7 +7,7 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 import useEditorNavigation from "@/hooks/admin/question-processing/useEditorNavigation"
 import useQuestionEditor from "@/hooks/admin/question-processing/useQuestionEditor";
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader"
-
+import Preview from "@/components/forms/ui/Preview";
 
 export default function Page () {
 
@@ -16,19 +16,50 @@ export default function Page () {
         questions, numQuestions,
         error,setError,
         currentIndex, nextIndex, previousIndex, processedCount,
-        completedQuestions, saving, saveQuestion, handleSave
+        completedQuestions, saving, saveQuestion, handleSave, 
+        resetCompleted
     } = useEditorNavigation()
 
     const currentQuestion = questions[currentIndex] ?? null
     const [uploading, setUploading] = useState(false)
     const diagramUploader = useFileUploader()
     const [savedKey, setSavedKey] = useState(0)
+    const [preview, setPreview] = useState(false)
 
     const {
         form, resetForm,
         fieldChange, mcFieldChange, handleImageUpload,
         handleDeleteQuestion,
     } = useQuestionEditor(currentQuestion, savedKey)
+
+    // Open the preview without uploading anything
+    const handleOpenPreview = () => {
+        if (completedQuestions.length ===0) return 
+        setError("")
+        setPreview(true)
+    }
+
+    // Confirm the preview and upload the staged questions
+    const handleConfirmSave = async() => {
+        if (uploading || completedQuestions.length===0) return 
+        setUploading(true)
+        setError("")
+
+        try {
+            await handleSave(completedQuestions)
+            setPreview(false)
+        } catch (error) {
+            console.error("Unable to save question.", error)
+            setError("Failed to save question. Please try again.")
+            return false 
+        } finally {
+            setUploading(false)
+        }
+
+    }
+
+    // Continue the question
+    const handleDismiss = () => setPreview(false) 
 
     // Save one question into the queue
     const handleSaveQuestionClick = async () => {
@@ -39,22 +70,9 @@ export default function Page () {
             nextIndex()
         } finally{
             diagramUploader.resetUpload()
-            resetForm()
         }
     }
     
-    // Upload Questions to the db
-    const handleSaveClick = async () => {
-        setUploading(true)
-        try {
-            await handleSave(completedQuestions)
-        } catch (error) {
-            console.error("Unable to save question.", error)
-            setError("Failed to save question")
-        } finally {
-            setUploading(false)
-        }
-    }
 
     const handleDeleteQuestionClick = async () => {
         if (!currentQuestion) return
@@ -75,18 +93,26 @@ export default function Page () {
 
     return (
         <div className = "pt-4">
-        {error &&
+            {error &&
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                   <ErrorMessage
-                       error={error}
-                       onDismiss={()=> setError("")}
-                   />
-               </div>
-           }
+                    <ErrorMessage
+                        error={error}
+                        onDismiss={()=> setError("")}
+                    />
+                </div>
+            }
+            {preview && (
+                <Preview
+                    questions={completedQuestions}
+                    saving={uploading}
+                    onConfirm={handleConfirmSave}
+                    onDismiss={handleDismiss}
+                />
+            )}
 
             <AdminHeader
                 title="Edit Questions"
-                subtitle={`Question ${processedCount+1} of ${numQuestions}`}
+                subtitle={`Question ${currentIndex+1} of ${numQuestions}`}
                 actions = {
                     <div className="flex items-center flex-row gap-x-2 ">
                         <button
@@ -109,11 +135,11 @@ export default function Page () {
 
                         <button
                             type="button"
-                            onClick={handleSaveClick}
-                            disabled={uploading || completedQuestions.length===0}
+                            onClick={handleOpenPreview}
+                            disabled={preview || completedQuestions.length===0}
                             className="min-w-25 rounded-btn bg-primary text-white "
                         >
-                            {uploading ? "Uploading" : "Upload"}
+                            Preview
                         </button>
 
                         <button

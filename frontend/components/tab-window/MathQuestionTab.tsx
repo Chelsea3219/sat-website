@@ -1,19 +1,14 @@
-import {PracticeQuestionTabProps} from "@/types/questions"
-import ReadOnlyContent from "@/components/ui/tab-window/helpers/ReadOnlyEditor"
+import {QuizQuestionTabProps} from "@/types/questions"
+import ReadOnlyContent from "./helpers/ReadOnlyEditor"
 import katex from 'katex'; 
 import 'katex/dist/katex.min.css'
 import { formatLatex } from "@/utils/latexHelpers";
-import InputAnswer from "@/components/ui/tab-window/helpers/InputAnswer";
+import InputAnswer from "./helpers/InputAnswer";
 import Image from "next/image";
-import HorizontalLoadingAnimation from "@/components/ui/loading-animation/HorizontalLoadingAnimation";
-import {Timer} from 'lucide-react'
+import HorizontalLoadingAnimation from "../ui/loading-animation/HorizontalLoadingAnimation";
 
 
-export default function MathPracticeTab({
-    currentQuestion, nextQuestion, 
-    answer, answerChangeAction, checkAnswerAction, isCorrect,
-    timeElapsed, error
-}:PracticeQuestionTabProps) {
+export default function MathQuestionTab({currentQuestion, answer, answerChangeAction, checkAnswerAction, timeElapsed, error}:QuizQuestionTabProps) {
     // Guard clause to handle the case when currentQuestion is null or undefined
     if (!currentQuestion) return <HorizontalLoadingAnimation text="Loading question..." />
 
@@ -24,16 +19,9 @@ export default function MathPracticeTab({
         return `${min}m ${sec.toString().padStart(2, "0")}s`
     }
 
-    const buttonStyle = `
-        flex-1
-        py-2 sm:py-3 rounded-full sm:text-2xl font-semibold shadow-lg
-        hover:bg-accent hover:border-accent hover:text-white transition-all duration-300
-        disabled:opacity-50 disabled:cursor-not-allowed                    
-    `
-
     return (
         <>
-            <div className="flex flex-col py-1 px-4 gap-y-1">
+            <div className="flex flex-col py-1 px-4 h-full gap-y-1">
                 {!currentQuestion && 
                     <>
                         <HorizontalLoadingAnimation text="Loading Questions"/>
@@ -67,12 +55,11 @@ export default function MathPracticeTab({
                 )}
 
                 {/* Multiple Choice and Diagram */}
-                {/* TODO for mobile screens make a toggle window to switch between multiple choices and graphs  */}
                 <div
                     className={
                         currentQuestion.question_type === "free response" && currentQuestion.diagram
                             ? "flex flex-col w-full"
-                            : "flex md:items-start w-full"
+                            : "flex items-start w-full"
                     }
                 >
                     {currentQuestion.diagram ? (
@@ -84,7 +71,6 @@ export default function MathPracticeTab({
                                         question={currentQuestion}
                                         answer={answer}
                                         fieldChangeAction={answerChangeAction}
-                                        isCorrect={isCorrect}
                                     />
                                 </div>
 
@@ -130,7 +116,6 @@ export default function MathPracticeTab({
                                         question={currentQuestion}
                                         answer={answer}
                                         fieldChangeAction={answerChangeAction}
-                                        isCorrect={isCorrect}
                                     />
                                 </div>
                             </>
@@ -141,7 +126,6 @@ export default function MathPracticeTab({
                                 question={currentQuestion}
                                 answer={answer}
                                 fieldChangeAction={answerChangeAction}
-                                isCorrect={isCorrect}
                             />
                         </div>
                     )}
@@ -153,30 +137,23 @@ export default function MathPracticeTab({
                 </div>
 
                 {/* Stopwatch and Submit Button */}
-                <div className="sticky bottom-0 border-t py-4 bg-white">
+                <div className="mt-auto border-t py-4 bg-white">
                     <p className="flex justify-center text-red-700">{error}</p>
                     <div className="flex flex-row items-center gap-4 mt-2">
+                        <div className="flex-1 text-xl font-semibold text-slate-900 text-center px-4 py-3 border-2 border-primary rounded-full">
+                            Time: {formatTime(timeElapsed)}
+                        </div>
+                        {/* Stopwatch */}
                         <button
-                            className={`border-primary bg-primary text-white ${buttonStyle}`}
+                            className=" flex-1
+                                py-3 border-primary bg-primary rounded-full text-white text-2xl font-semibold shadow-lg
+                                hover:bg-accent hover:border-accent hover:text-white transition-all duration-300
+                                disabled:opacity-50 disabled:cursor-not-allowed
+                            "
                             onClick={checkAnswerAction}
-                            disabled={answer === ""}
+                            // disabled={question.question_type ==="multiple choice" ? !selectedAnswer : freeResponse.trim() === ""}
                         >
                             SUBMIT
-                        </button>
-
-                        {/* Stopwatch */}
-                        <div className="flex-1 flex items-center justify-center sm:text-xl tabler-nums font-semibold text-slate-900 gap-1.5 px-3 py-2 sm:px-4 sm:py-3 border border-primary rounded-full">
-                            <Timer className="w-4 h-4 sm:w-6 sm:h-6"/>
-                            {formatTime(timeElapsed)}
-                        </div>
-
-                        <button
-                            className={`border-secondary bg-secondary text-main ${buttonStyle}`}
-                            onClick ={nextQuestion}
-                            disabled={!isCorrect}
-                            >
-                            Next<span className="hidden md:inline"> Question</span>
-
                         </button>
                     </div>
                 </div>
