@@ -9,13 +9,13 @@ import TopicMasteryChart from "../progress/TopicMasteryChart"
 import ProgressHistogramChart from "../progress/ProgressHistogramChart"
 import useProgress from "@/hooks/dashboard/useProgress"
 import Link from "next/link"
-import { formatMinutes, toTitleCase} from "@/utils/renderFormattedText"
+import { formatMinutes} from "@/utils/renderFormattedText"
 import DashboardCard from "../dashboard/DashboardCard"
 import "@/css/buttons.css"
-import { Calculator, BookOpen, Compass} from "lucide-react"
+import { Calculator, BookOpen} from "lucide-react"
 import WeaknessCard from "../progress/WeaknessCard"
 import Achievements from "../progress/Acheivements"
-import { sampleReadingTopicsMastery, sampleMathTopicsMastery} from "@/utils/samples/sampleTopicsMastery"
+//import { sampleReadingTopicsMastery, sampleMathTopicsMastery} from "@/utils/samples/sampleTopicsMastery"
 import NextSubtopic from "../progress/NextSubtopic"
 
 
@@ -113,7 +113,7 @@ export default function ProgressClient() {
                     </div>
 
                     {/* Calendar Tracker */}
-                    <div className="hidden sm:block">
+                    <div className="hidden sm:block min-w-40">
                         <ProgressCard color="primary" isLoading={uploader.isLoading} className=" flex-1 basis-0">
                             <LoginCalendarTracker loggedDays={uploader.loggedDatesOnly}/>
                         </ProgressCard>
@@ -210,7 +210,7 @@ export default function ProgressClient() {
 
 
                     {/* Next Topic  */}
-                    <div className="hidden sm:block">
+                    <div className="hidden sm:block min-h-0">
                         <ProgressCard color="primary" isLoading={uploader.isLoading} className="flex flex-col bg-[#F8F7FF] p-2 space-y-4">
                             <NextSubtopic nextSubtopic={nextSubtopic} cardTitleStyle={cardTitleStyle}/>
                         </ProgressCard>
