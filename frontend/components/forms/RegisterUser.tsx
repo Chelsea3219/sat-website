@@ -127,26 +127,8 @@ export default function RegisterUser() {
 
                     {/* form */}
                     <div className="space-y-4 w-full mb-8">
-                        {/* Identification */}
-                        <div className="flex flex-col sm:flex-row gap-6">
-                            <div className="input-group flex-1">
-                                <label>First Name</label>
-                                <input
-                                    type="text"
-                                    name = "first_name"
-                                    onChange={uploader.fieldChange}
-                                />
-                            </div>
-
-                            <div className="input-group flex-1">
-                                <label>Last Name</label>
-                                <input
-                                    type="text"
-                                    name = "last_name"
-                                    onChange={uploader.fieldChange}
-                                />
-                            </div>
-                        </div>
+                        {/* Identification TODO add an entry for a nickname or something else */}
+                        
 
                         {/* Demographics */}
                         <div className="input-group flex-1">
