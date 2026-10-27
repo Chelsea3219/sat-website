@@ -35,10 +35,17 @@ export default function DashboardClient2() {
     ]
 
     return (
-        <div className="flex flex-col gap-4 px-8 md:px-4 pb-6 md:pb-2 min-h-[calc(100dvh-8rem)]">
+        <div className={`
+            grid gap-4 px-8 md:px-4 pb-6 md:pb-2
+            h-[calc(100dvh-8rem)]
+            ${uploader.isLoading
+                ? "grid-rows-3"
+                : "grid-rows-[auto_auto_minmax(0,1fr)]"
+            }
+        `}>
 
             {/* FIRST ROW : helloBanner and Current & Target Score */}
-            <div className="flex flex-row w-full h-full gap-4 items-stretch">
+            <div className="flex flex-row w-full min-w-0 min-h-0 h-full gap-4 items-stretch">
 
                 <div className="flex-3/5 md:flex-2/3 items-stretch">
                     <HelloBanner
@@ -49,7 +56,7 @@ export default function DashboardClient2() {
                     />
                 </div>
 
-                <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4 min-w-50">
 
                     {firstRowItems.map((items => (
                         <DashboardCard
@@ -84,7 +91,7 @@ export default function DashboardClient2() {
 
 
             {/* SECOND ROW : Weaknesses, Back to Practice, Daily and Weekly Progress */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full min-h-20">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full min-w-0 min-h-0">
                 {/* Weaknesses */}
                 <DashboardCard 
                     color="accent"
@@ -166,7 +173,7 @@ export default function DashboardClient2() {
 
 
             {/* THIRD ROW : Section Breakdown and Quiz History */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full flex-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full min-h-0 flex-1">
                 {/* Section Breakdown — wrapper owns the column span */}
                 <div className="lg:col-span-2 flex">
                     <DashboardCard
