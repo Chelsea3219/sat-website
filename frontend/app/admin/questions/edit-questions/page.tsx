@@ -28,7 +28,7 @@ export default function Page () {
 
     const {
         form, resetForm,
-        fieldChange, mcFieldChange, handleImageUpload,
+        fieldChange, mcFieldChange, mcChangeAll, handleImageUpload,
         handleDeleteQuestion,
     } = useQuestionEditor(currentQuestion, savedKey)
 
@@ -154,19 +154,20 @@ export default function Page () {
                 }
             />
 
-           {questions.length === 0 ? (
+            {questions.length === 0 ? (
 
-               <div className="flex items-center justify-center pt-14">
-                   <div className=" text-primary text-3xl font-semibold uppercase">
-                       No questions to displayed
-                   </div>
-               </div>
+                <div className="flex items-center justify-center pt-14">
+                    <div className=" text-primary text-3xl font-semibold uppercase">
+                        No questions to displayed
+                    </div>
+                </div>
 
-           ) : (
-               <QuestionEditor
+            ) : (
+                <QuestionEditor
                     form={form}
                     fieldChangeAction={fieldChange}
                     mcFieldChangeAction={mcFieldChange}
+                    mcChangeAll={mcChangeAll}
                     search={search}
                     searchChangeAction={handleSearchChange}
                     handleSearchAction={handleSearch}
@@ -174,9 +175,8 @@ export default function Page () {
                     diagramUploader={diagramUploader}
                     onDeleteAction={handleDeleteQuestionClick}
                 />
-           )
-           }
-       </div>
+            )}
+        </div>
     )
 }
 

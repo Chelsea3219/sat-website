@@ -59,11 +59,16 @@ export default function useQuestionEditor(
 
     // Handles the MC field change -------------------------------------------------------------------------------------
     const mcFieldChange = (letter: keyof MCProps, value: string) => {
-        const currentMC = form.multiple_choices ?? {A:"", B:"", C:"", D:""}
-        const updatedMC: MCProps = {...currentMC, [letter]:value}
-        fieldChange("multiple_choices", updatedMC)
+        setForm(prev => ({
+            ...prev,
+            multiple_choices: {
+                ...(prev.multiple_choices ?? { A: "", B: "", C: "", D: "" }),
+                [letter]: value,
+            },
+        }))
     }
-
+    // Replace all four MC choices at once
+    const mcChangeAll = (mc: MCProps) => fieldChange("multiple_choices", mc)
 
     // Handles the Image Upload ----------------------------------------------------------------------------------------
     const handleImageUpload = async (diagram:File) => {
@@ -89,5 +94,5 @@ export default function useQuestionEditor(
 
     const resetForm = () => setForm(emptyForm)
 
-    return {form, fieldChange, mcFieldChange, handleImageUpload, resetForm, handleDeleteQuestion}
+    return {form, fieldChange, mcFieldChange, mcChangeAll, handleImageUpload, resetForm, handleDeleteQuestion}
 }

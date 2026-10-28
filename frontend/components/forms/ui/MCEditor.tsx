@@ -4,6 +4,8 @@ import { useState } from "react";
 import LaTexInput from "@/components/forms/ui/LaTexInput";
 import SnippetButtons from "@/components/forms/ui/SnippetButtons";
 import {wrapSigma, unwrapSigma} from "@/utils/latexHelpers";
+import type { MCProps } from "@/types/question-processing";
+
 
 const wrapMC = (mc: MCProps, enabled: boolean): MCProps => {
     const transform = (value: string) => {
@@ -23,20 +25,14 @@ const wrapMC = (mc: MCProps, enabled: boolean): MCProps => {
 };
 
 
-type MCProps = {
-    A: string
-    B: string
-    C: string
-    D: string
-}
-
 type MCEditorProps = {
     mc: MCProps
     isEquation?: boolean
-    onChangeAction : (letter: keyof MCProps, value: string) => void
+    onChangeAction: (letter: keyof MCProps, value: string) => void
+    onChangeAllAction: (mc: MCProps) => void
 }
 
-export default function MCEditor({mc, isEquation=false,  onChangeAction}: MCEditorProps) {
+export default function MCEditor({mc, isEquation=false,  onChangeAction, onChangeAllAction}: MCEditorProps) {
 
     const [equationMode, setEquationMode] = useState(isEquation)
 
@@ -44,11 +40,7 @@ export default function MCEditor({mc, isEquation=false,  onChangeAction}: MCEdit
         const next = !equationMode;
 
         // Update all four choices in the form data.
-        const updatedMC = wrapMC(mc, next);
-
-        (["A", "B", "C", "D"] as const).forEach((letter) => {
-            onChangeAction(letter, updatedMC[letter]);
-        });
+        onChangeAllAction(wrapMC(mc, next))   // one update instead of four
 
         // Update the preview mode.
         setEquationMode(next);
