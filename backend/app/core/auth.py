@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from clerk_backend_api import AuthenticateRequestOptions, authenticate_request
+from clerk_backend_api import AuthenticateRequestOptions, authenticate_request, Clerk 
 from clerk_backend_api.security.types import RequestState
 
 from app.core.config import settings
@@ -66,6 +66,9 @@ def get_authenticated_clerk_id(
     return state.payload["sub"]
 
 
+
+def get_clerk():
+    return Clerk(bearer_auth=settings.CLERK_SECRET_KEY)
 
 
 def require_permission(permission: str):
