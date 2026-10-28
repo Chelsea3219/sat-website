@@ -9,7 +9,7 @@ import FileUploader from "@/components/forms/FileUploader";
 import MCEditor from "@/components/forms/ui/MCEditor";
 import QuestionPreview from "@/components/forms/ui/QuestionMCPreview";
 import SubtopicEditor from "@/components/forms/ui/SubtopicEditor";
-import {IncomingSilverQuestions, SearchProps, MCProps, UseFileUploaderReturn, ImageCategory} from "@/types/question-processing";
+import {IncomingSilverQuestions, SearchFilters, MCProps, UseFileUploaderReturn, ImageCategory} from "@/types/question-processing";
 import AnswerEditor from "@/components/forms/ui/AnswerEditor";
 import SnippetButtons from "@/components/forms/ui/SnippetButtons";
 
@@ -19,7 +19,8 @@ type Props = {
     form: IncomingSilverQuestions
     fieldChangeAction: <K extends keyof IncomingSilverQuestions>(field: K, value: IncomingSilverQuestions[K]) => void
     mcFieldChangeAction: (letter: keyof MCProps, value: string) => void
-    search: SearchProps
+    mcChangeAll: (letter:MCProps) => void
+    search: SearchFilters
     searchChangeAction: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
     handleSearchAction: () => void
     handleImageAction: (field:File, category:ImageCategory) => void
@@ -27,8 +28,10 @@ type Props = {
     onDeleteAction: () => void
 }
 
+
+
 export default function QuestionEditor(
-    {form, fieldChangeAction, mcFieldChangeAction, search, searchChangeAction, handleSearchAction, handleImageAction, diagramUploader, onDeleteAction}: Props
+    {form, fieldChangeAction, mcFieldChangeAction, mcChangeAll, search, searchChangeAction, handleSearchAction, handleImageAction, diagramUploader, onDeleteAction}: Props
 ){
 
     const handleDiagramFile = async (file: File | null) => {
@@ -42,34 +45,11 @@ export default function QuestionEditor(
 
                 <div>
                     {/* Search Bar */}
-                    <div className="flex flex-row bg-primary/60 rounded-xl p-3 gap-x-4">
-                        <select
-                            name="searchName"
-                            value={search.searchName}
-                            onChange={searchChangeAction}
-                            className="w-40 bg-white rounded-xl p-2 font-semibold text-xl text-primary"
-                        >
-                            <option value="">Select type</option>
-                            <option value="section">Section</option>
-                            <option value="topic">Topic</option>
-                            <option value="subtopic">Subtopic</option>
-                        </select>
-
-                        <input
-                            name="searchValue"
-                            placeholder="Enter the filter"
-                            value={search.searchValue}
-                            onChange={searchChangeAction}
-                            className="flex-1 bg-white rounded-xl p-2 font-medium text-lg"
-                            onKeyDown={(e) => e.key === "Enter" && handleSearchAction()}
-                        />
-
-                        <Search
-                            onClick = {handleSearchAction}
-                            className="flex items-center mt-1 justify-center rounded-lg text-xl text-white font-bold w-8 h-8 hover:border-2 hover:border-primary hover:scale-110"
-                        />
-                    </div>
-                    <SearchBar/>
+                    <SearchBar
+                        search={search}
+                        searchChangeAction={searchChangeAction}
+                        handleSearchAction={handleSearchAction}
+                    />
 
                     {/* Question Editor */}
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-4">
@@ -139,7 +119,7 @@ export default function QuestionEditor(
                             {/* Equation and its Latex Preview */}
                             <div className="input-group">
                                 <label>Equation</label>
-                                 <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
+                                <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
                                     <div className="border-b border-primary pb-2 mb-2 ">
                                             <SnippetButtons />
                                     </div>
@@ -171,6 +151,7 @@ export default function QuestionEditor(
                                         mc={form.multiple_choices ?? { A: "", B: "", C: "", D: "" }}
                                         isEquation={false}
                                         onChangeAction={(letter, value) => mcFieldChangeAction(letter, value)}
+                                        onChangeAllAction={mcChangeAll}
                                     />
                                 </div>
                             }

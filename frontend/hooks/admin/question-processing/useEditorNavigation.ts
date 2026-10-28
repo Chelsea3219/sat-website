@@ -2,7 +2,7 @@
 "use client"
 
 import {useState, useEffect} from "react";
-import type {IncomingSilverQuestions, IncomingBronzeQuestions, QuestionSearchParameters, SearchProps} from "@/types/question-processing"
+import type {IncomingSilverQuestions, IncomingBronzeQuestions, SearchFilters, QuestionSearchParameters} from "@/types/question-processing"
 import {fetchRawQuestions, updateRawQuestions} from "@/services/api.document-processing";
 import { validateEditorForm } from "@/utils/question-processing";
 import timeEstimate from "@/utils/question-processing"
@@ -14,7 +14,8 @@ import { wrapSigma } from "@/utils/latexHelpers";
 export default function useEditorNavigation(){
 
     // Initialize the parameters ---------------------------------------------------------------------------------------
-    const [search, setSearch] = useState<SearchProps>({ searchName: "", searchValue:""})
+    const emptySearchForm : SearchFilters = { section:"", topic:"", subtopic:"", source:""}
+    const [search, setSearch] = useState<SearchFilters>(emptySearchForm)
 
     const [questions, setQuestions] = useState<IncomingBronzeQuestions[]>([])
     const numQuestions = questions.length 
@@ -35,7 +36,7 @@ export default function useEditorNavigation(){
         ( async () => {
             setLoading(true)
             try {
-                const searchParams : QuestionSearchParameters = {section: "", topic: "", subtopic: ""}
+                const searchParams : SearchFilters = emptySearchForm
                 const data = await fetchRawQuestions(searchParams)
                 if (!ignore) {
                     setQuestions(data)
@@ -64,8 +65,10 @@ export default function useEditorNavigation(){
 
     // Fetches the questions from the bronze.raw_questions --------------------------------------------------------------
     const handleSearch = async() => {
-        if (!search.searchName || !search.searchValue.trim()) {
-            setError("Please select a filter and enter a search value.")
+        console.log("search", search)
+
+        if (!search) {
+            setError("Please enter or select a condition.")
             return
         }
 
@@ -74,10 +77,11 @@ export default function useEditorNavigation(){
 
         try {
             // Identify the search parameters
-            const searchParams: QuestionSearchParameters = {
-                section: search.searchName === "section" ? search.searchValue.trim(): undefined, 
-                topic: search.searchName === "topic" ? search.searchValue.trim(): undefined,
-                subtopic: search.searchName === "subtopic" ? search.searchValue.trim(): undefined
+            const searchParams: SearchFilters = {
+                section: search.section?.trim() || undefined, 
+                topic: search.topic?.trim() || undefined, 
+                subtopic: search.subtopic?.trim() || undefined, 
+                source: search.source?.trim() || undefined 
             }
             const data = await fetchRawQuestions(searchParams)
             //console.log("backend data by filter: ", data)
@@ -90,7 +94,7 @@ export default function useEditorNavigation(){
             setQuestions(data)
             setCurrentIndex(0)
             setCompletedQuestions([])
-            setSearch({searchName: "", searchValue:""})
+            setSearch(emptySearchForm)
         } catch (error) {
             console.error("Unable to fetch questions.", error)
             setError("Failed to fetch questions.")

@@ -82,3 +82,4 @@ class SearchRawQuestions(BaseModel):
     section: Optional[str] = None
     topic: Optional[str] = None
     subtopic: Optional[str] = None
+    source: Optional[str] = None

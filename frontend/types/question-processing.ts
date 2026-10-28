@@ -84,10 +84,11 @@ export type MCProps = {
     D: string
 }
 
-
-export type SearchProps = {
-    searchName: string
-    searchValue: string
+export type SearchFilters = {
+    section: string | undefined 
+    topic: string | undefined 
+    subtopic: string | undefined 
+    source: string | undefined 
 }
 
 

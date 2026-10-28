@@ -1,4 +1,4 @@
-import type {IncomingSilverQuestions, BaseBronzeQuestions, QuestionSearchParameters} from "@/types/question-processing";
+import type {IncomingSilverQuestions, BaseBronzeQuestions, SearchFilters} from "@/types/question-processing";
 
 
 // Calls the APIs to preprocess, extract, and organize the questions from PDFs and workbooks
@@ -25,11 +25,12 @@ export async function bulkUploadQuestions(questions: BaseBronzeQuestions[]){
 
 
 // Calls the APIs to fetch questions from the bronze.raw_questions table
-export async function fetchRawQuestions(info: QuestionSearchParameters){
+export async function fetchRawQuestions(info: SearchFilters){
     const params = new URLSearchParams()
     if (info.section) params.append("section", info.section)
     if (info.topic) params.append("topic", info.topic)
     if (info.subtopic) params.append("subtopic", info.subtopic)
+    if (info.source) params.append("source", info.source)
 
     const response = await fetch(`/api/document-processing/fetch-raw-questions?${params.toString()}`, {
         method: 'GET'
