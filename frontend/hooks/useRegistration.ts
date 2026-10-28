@@ -2,7 +2,6 @@
 
 import type {StudentInfo} from "../types/students"
 import {useEffect, useState} from "react";
-import {useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
 import {registerUser} from "@/services/api.register";
 import {useUserInformationContext} from "@/contexts/StudentInformationContext"
