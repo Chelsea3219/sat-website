@@ -73,7 +73,7 @@ def upload_pinesat_questions(questions: List[PineSATQuestion]):
                 reading_question=q.question.question,
 
                 uploaded_at = now, 
-                source="pine sat", 
+                source="pinesat", 
                 reviewed=False
             )
             db.add(bronze_question)

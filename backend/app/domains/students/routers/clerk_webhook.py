@@ -7,10 +7,10 @@ from sqlalchemy.orm import Session
 
 from svix.webhooks import Webhook, WebhookVerificationError
 
-from clerk_backend_api.security.types import RequestState
+from clerk_backend_api import Clerk
 
-from app.core.config import settings
-from app.core.auth import require_auth
+from app.core.config import settings 
+from app.core.auth import require_auth, get_clerk
 from app.core.logging_config import setup_logging
 from app.core.database import get_db
 
@@ -26,19 +26,18 @@ logger = logging.getLogger("clerk-webhook")
 router = APIRouter(prefix="/api/clerk", tags=["students"])
 
 
-
 @router.post("/webhook")
 async def clerk_webhook(
     request: Request,
+    clerk: Annotated[Clerk, Depends(get_clerk)],
     db:Session =Depends(get_db)
 ):
-    logger.info("Stripe webhook endpoint was reached")
 
-    # Verify that the request before trusting its contents 
+    # Verify that the request before trusting its contents
     webhook_key = settings.CLERK_WEBHOOK
     if not webhook_key:
         logger.error("Clerk webhook secret key is not configured.")
-        raise HTTPException(status_code=500, detail="Webhook configuration error.")
+        raise HTTPException(status_code=500, detail="Clerk webhook configuration error.")
 
     raw_body = await request.body()
 
@@ -54,7 +53,9 @@ async def clerk_webhook(
     user_data = event.get("data", {})
     now = datetime.now(UTC)
 
-    # Ckecks to see if user exists in bronze or silver tables. If not, create and add new record
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Checks to see if user exists in bronze or silver tables. If not, create and add new record
     if event_type in ("user.created", "user.updated"):
         if not user_data.get("id"):
             raise HTTPException(status_code=400, detail="Missing Clerk ID")
@@ -68,6 +69,7 @@ async def clerk_webhook(
         first_name = user_data.get("first_name")
         last_name = user_data.get("last_name")
 
+        # Synced the bronze and silver tables
         with handle_db_errors(db, "sync Clerk user in the bronze and silver tables"):
             upsert(
                 db = db, 
@@ -97,11 +99,24 @@ async def clerk_webhook(
                 lookup_value=clerk_id, 
                 create_only={ "current_plan":"free", "current_plan_end":now, "status":"active"},
             )
-        db.commit()
+            db.commit()
+
+        # Update the public metadata
+        public_metadata = user_data.get("public_metadata") or {}
+        if public_metadata.get("role") is None:
+            try:
+                clerk.users.update_metadata_async(
+                    user_id=clerk_id,
+                    public_metadata={"role": "student"},
+                )
+            except Exception:
+                logger.exception("Failed to set Clerk role metadata for %s", clerk_id) 
+
         logger.info("Successfully synced Clerk user %s to BronzeUser and SilverUsers", clerk_id)
         return {"received": True, "event": event_type}
 
-    
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------
     elif event_type == "user.deleted":
         clerk_id = user_data.get("id")
 
@@ -117,7 +132,6 @@ async def clerk_webhook(
         # user.created or user.updated event.
 
         logger.info("Clerk user deletion received: %s", clerk_id)
-
         return {
             "received": True,
             "event": event_type,
