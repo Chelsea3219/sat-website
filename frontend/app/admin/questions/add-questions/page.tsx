@@ -20,7 +20,7 @@ export default function Page () {
     const {
         form, completedQuestions,
         error, setError,
-        fieldChange, mcFieldChange, handleImageUpload, 
+        fieldChange, mcFieldChange, mcChangeAll, handleImageUpload, 
         saving, saveQuestion, handleSave, resetForm
     } = useQuestionAdder(previewUploader, diagramUploader)
 
@@ -115,6 +115,7 @@ export default function Page () {
                 fieldChangeAction={fieldChange}
                 handleImageAction={handleImageUpload}
                 mcFieldChangeAction={mcFieldChange}
+                mcChangeAll={mcChangeAll}
                 previewUploader={previewUploader}
                 diagramUploader={diagramUploader}
             />
