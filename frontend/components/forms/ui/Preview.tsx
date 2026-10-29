@@ -74,7 +74,7 @@ export default function Preview({questions, saving, onConfirm, onDismiss}: Previ
                                             
                                             <div key={letter} className="flex flex-row gap-x-1 items-center">
                                                 <p className="font-bold text-primary p-1">{letter}</p>
-                                               <span className={`flex-1 min-w-0 p-1 h-auto leading-snug whitespace-normal text-base`}>
+                                                <span className={`flex-1 min-w-0 p-1 h-auto leading-snug whitespace-normal text-base`}>
                                                     <span
                                                         className="answer-choice flex-1"
                                                         dangerouslySetInnerHTML={{ __html: renderLatex(choice) }}

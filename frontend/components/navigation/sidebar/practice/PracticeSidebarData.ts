@@ -86,7 +86,7 @@ const items = [
                 children: [
                     {title: "Angles", path:"/math/geometry/angles"},
                     {title: "Shapes", path:"/math/geometry/shapes"},
-                    {title: "Similar Shapes", path:"/math/geometry/similar-shapes"},
+                    {title: "Similar Triangles", path:"/math/geometry/similar-triangles"},
                     {title: "Trigonometry", path:"/math/geometry/trigonometry"},
                     {title: "Circle Equation", path:"/math/geometry"},
 

@@ -5,8 +5,9 @@ type PreviewProps = {
     question_preview: string
     mc_preview: string
     onDeleteAction: () => void
+    deleting: boolean
 }
-export default function QuestionPreview({question_preview, mc_preview, onDeleteAction}:PreviewProps){
+export default function QuestionMCPreview({question_preview, mc_preview, onDeleteAction, deleting}:PreviewProps){
     if (!question_preview) return <p>No Question selected</p>
 
     return (
@@ -31,8 +32,9 @@ export default function QuestionPreview({question_preview, mc_preview, onDeleteA
                 <button 
                     className="px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-white hover:border-2 hover:border-red-500 hover:text-red-500 hover:font-bold transition-all"
                     onClick={onDeleteAction}
+                    disabled={deleting}
                     >
-                    Delete Question
+                    {deleting ? "Deleting..." : "Delete Question"}
                 </button>
             </div>
         </>

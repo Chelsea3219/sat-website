@@ -5,7 +5,7 @@ import { estimateSATSectionScore2, estimateSATScore} from "@/utils/scoreAlgorith
 import { fetchPastQuizAnalytics} from "@/services/api.student-info"
 import { toTitleCase } from "@/utils/renderFormattedText"
 import { topicBreakdown } from "@/utils/analytics"
-import { readingTopics, mathTopics } from "@/utils/topics"
+import { readingTopics, mathTopics } from "@/utils/admin/topics"
 import { useState, useEffect } from "react"
 import { Achievement } from "@/components/progress/Acheivements"
 import { fetchAchievements } from "@/services/api.student-info"
