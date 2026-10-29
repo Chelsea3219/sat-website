@@ -4,14 +4,12 @@
 import {useState} from "react";
 import type {IncomingSilverQuestions, IncomingBronzeQuestions, MCProps } from "@/types/question-processing";
 import {deleteQuestion, uploadQuestionImage} from "@/services/api.document-processing";
-import { preprocessForm} from "@/utils/question-processing";
-import { wrapSigma } from "@/utils/latexHelpers";
+import { preprocessForm} from "@/utils/admin/question-processing";
 
 
 
 export default function useQuestionEditor(
     currentQuestion: IncomingBronzeQuestions | null,
-    savedKey: number
 ){
 
     // Initialize the parameters ---------------------------------------------------------------------------------------
@@ -35,7 +33,6 @@ export default function useQuestionEditor(
         answer_key: "",
     }
     const [form, setForm] = useState<IncomingSilverQuestions>(emptyForm)
-
 
     // Track what (currentIndex, savedKey) the form was last synced to. -------------------------------------------------
     const [syncedKey, setSyncedKey] = useState<string | null>(null)

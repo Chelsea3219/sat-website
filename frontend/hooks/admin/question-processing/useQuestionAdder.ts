@@ -4,7 +4,7 @@
 import {useState} from "react";
 import type {IncomingSilverQuestions, ImageCategory, MCProps, UseFileUploaderReturn} from "@/types/question-processing";
 import {addQuestions, uploadQuestionImage} from "@/services/api.document-processing";
-import timeEstimate from "@/utils/question-processing";
+import timeEstimate from "@/utils/admin/question-processing";
 
 
 {/* RESPONSIBILITIES
@@ -59,6 +59,8 @@ export default function useQuestionAdder(
         const updatedMC: MCProps = {...currentMC, [letter]:value}
         fieldChange("multiple_choices", updatedMC)
     }
+    // Replace all four MC choices at once
+    const mcChangeAll = (mc: MCProps) => fieldChange("multiple_choices", mc)
 
 
     // Function to save the completedQuestion to the array so that you move onto the next question
@@ -120,12 +122,6 @@ export default function useQuestionAdder(
     // Handles the Image Upload ----------------------------------------------------------------------------------------
     const handleImageUpload = async (image:File, category:ImageCategory) => {
 
-        console.log("form at upload time:", {
-            section: form.section,
-            topic: form.topic,
-            subtopic: form.subtopic,
-        })
-
         try {
             const response = await uploadQuestionImage(image,category, form)
             fieldChange(category, response.url)
@@ -174,7 +170,7 @@ export default function useQuestionAdder(
     return {
         form, completedQuestions,
         error, setError,
-        fieldChange, mcFieldChange, validateForm, handleImageUpload, 
+        fieldChange, mcFieldChange, mcChangeAll, validateForm, handleImageUpload, 
         saving, saveQuestion, handleSave, resetForm
     }
 }
