@@ -29,7 +29,7 @@ class IncomingQuestions(BaseModel):
     multiple_choices: Optional[Dict[str, str]] = None
 
     answer_key: str
-    explanation_status: Literal["pending", "generating", "done", "failed"]
+    explanation_status: Literal["pending", "generating", "done", "failed", "no until review"]
     updated_at: datetime
 
 

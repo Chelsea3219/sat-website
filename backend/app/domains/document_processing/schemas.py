@@ -5,6 +5,13 @@ from pydantic import BaseModel
 from typing import Optional, List, Union
 
 
+class MC(BaseModel):
+    A:str
+    B:str
+    C:str 
+    D:str
+    
+
 # Class for incoming raw_questions from the frontend
 class UploadRawQuestions(BaseModel):
     section: str
@@ -13,6 +20,7 @@ class UploadRawQuestions(BaseModel):
     question_preview: str
     question_type: str
     mc_preview: Optional[str] = None
+    multiple_choices: Optional[MC] = None 
     reading_question: Optional[str] = None
     text: str
     source: str
@@ -27,17 +35,13 @@ class RawQuestionsIn(BaseModel):
     question_preview: Optional[str] = None
     question_type: str
     mc_preview: Optional[str] = None
+    multiple_choices: Optional[MC] = None 
     reading_question: Optional[str] = None
     text: str
     source: str
     uploaded_at: datetime 
     reviewed: bool
 
-class MC(BaseModel):
-    A:str
-    B:str
-    C:str 
-    D:str
 
 # Class for new ALREADY-EDITED clean questions from frontend
 class CleanQuestions(BaseModel):

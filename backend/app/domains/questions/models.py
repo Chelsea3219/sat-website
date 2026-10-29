@@ -19,6 +19,7 @@ class BronzeQuestions(Base):
     question_preview = Column(String, nullable=True)
     question_type = Column(String, nullable=False)
     mc_preview = Column(String, nullable=True)
+    multiple_choices = Column(JSONB(none_as_null=True)) # returns as dict 
     reading_question = Column(Text, nullable=True)
     text = Column(String, nullable=False)
 
