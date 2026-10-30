@@ -54,11 +54,11 @@ const items = [
                 title: "Algebra",
                 children:[
                     {title: "Algebra Skills", path:"/math/algebra/algebra-skills"},
+                    {title: "Functions", path:"/math/algebra/functions"},
                     {title: "Linear Functions", path:"/math/algebra/linear-functions"},
                     {title: "Linear Function Interpretations", path:"/math/algebra/linear-function-interpretations"},
-                    {title: "Systems of Linear Equations", path:"/math/algebra/system-of-linear-functions"},
-                    {title: "Functions", path:"/math/algebra/functions"},
                     {title: "Systems of Equations", path:"/math/algebra/system-of-equations"},
+                    {title: "Systems of Linear Equations", path:"/math/algebra/system-of-linear-equations"},
                 ]
             },
             {

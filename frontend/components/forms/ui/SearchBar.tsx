@@ -38,7 +38,7 @@ export default function SearchBar({search, searchChangeAction, handleSearchActio
                                     name={name}
                                     value={search[name] ?? ""}
                                     onChange={searchChangeAction}
-                                    className="flex w-full flex-1 bg-white rounded-md p-1 text-gray-500 capitalize italic h-7"
+                                    className="flex w-full flex-1 bg-white rounded-md p-1 text-gray-500 italic h-7"
                                 >
                                     <option value="">{name}</option>
                                     {options.map((o) => (
@@ -54,7 +54,7 @@ export default function SearchBar({search, searchChangeAction, handleSearchActio
                                         value={search[name] ?? ""}
                                         onChange={searchChangeAction}
                                         onKeyDown={(e) => e.key === "Enter" && handleSearchAction()}
-                                        className="w-full bg-white rounded-md p-1 text-gray-500 capitalize italic h-7"
+                                        className="w-full bg-white rounded-md p-1 text-gray-500 italic h-7"
                                     />
                                     <datalist id={`${name}-options`}>
                                         {options.map((o) => <option key={o} value={o} />)}

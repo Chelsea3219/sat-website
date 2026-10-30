@@ -18,6 +18,7 @@ type Props = {
     form: IncomingSilverQuestions
     fieldChangeAction: <K extends keyof IncomingSilverQuestions>(field: K, value: IncomingSilverQuestions[K]) => void
     mcFieldChangeAction: (letter: keyof MCProps, value: string) => void
+    mcChangeAll: (letter:MCProps) => void
     handleImageAction: (field:File, category:ImageCategory) => void
     previewUploader: UseFileUploaderReturn
     diagramUploader: UseFileUploaderReturn
@@ -25,7 +26,7 @@ type Props = {
 }
 
 export default function QuestionAdder(
-    {form, fieldChangeAction, handleImageAction, mcFieldChangeAction, previewUploader, diagramUploader}: Props
+    {form, fieldChangeAction, handleImageAction, mcFieldChangeAction, mcChangeAll, previewUploader, diagramUploader}: Props
 ) {
     const handlePreviewFile = async (file: File | null) => {
         if (!file) return
@@ -46,7 +47,7 @@ export default function QuestionAdder(
             <div className="pt-16 md:px-2 lg:px-4 pb-4 w-full">
 
                 {/* Question Editor */}
-                <div className="grid grid-cols-1 lg:grid-cols-[4fr_1fr] gap-4 mt-4 w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,18rem)] gap-6 mt-4 w-full">
                     {/* Question Information ------------------------------------------------------------------------*/}
                     <div className="w-full min-w-0 space-y-4">
 
@@ -134,7 +135,7 @@ export default function QuestionAdder(
                         {form.section === "math" &&
                             <div className="input-group">
                                 <label>Equation</label>
-                                 <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
+                                <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
                                     <div className="border-b border-primary pb-2 mb-2 ">
                                             <SnippetButtons />
                                     </div>
@@ -152,9 +153,11 @@ export default function QuestionAdder(
                             <div className="input-group w-full">
                                 <label>Multiple Choices</label>
                                 <MCEditor
+                                    section={form.section ?? "math"}
                                     mc={form.multiple_choices ?? { A: "", B: "", C: "", D: "" }}
                                     isEquation={false}
                                     onChangeAction={(letter, value) => mcFieldChangeAction(letter, value)}
+                                    onChangeAllAction={mcChangeAll}
                                 />
                             </div>
                         }
@@ -163,11 +166,10 @@ export default function QuestionAdder(
                         <div className="input-group">
                             <label>Answer</label>
                             {(form.question_type === "free response") &&
-                               <AnswerEditor
-                                        answer={form.answer_key ?? ""}
-                                        onChangeAction={answer_key => fieldChangeAction("answer_key", answer_key)}
-                               />
-
+                                <AnswerEditor
+                                            answer={form.answer_key ?? ""}
+                                            onChangeAction={answer_key => fieldChangeAction("answer_key", answer_key)}
+                                />
                             }
                             {(form.question_type === "multiple choice" || form.question_type === "") &&
                                 <select
@@ -185,7 +187,7 @@ export default function QuestionAdder(
                     </div>
 
                     {/* Question Preview ----------------------------------------------------------------------------*/}
-                    <div className="lg:col-span-1 min-w-0 sticky top-20 self-start space-y-4 ">
+                    <div className="min-w-0 w-full sticky top-20 self-start space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto overflow-x-hidden">
                         {/* Diagram Uploader */}
                         <div className={titleStyle}>
                             <label>Question Preview</label>
