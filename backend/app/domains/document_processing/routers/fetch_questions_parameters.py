@@ -1,7 +1,7 @@
 # Import Python libraries and files 
 from typing import List
 from fastapi import APIRouter, Depends
-from sqlalchemy import select
+from sqlalchemy import select, func 
 from sqlalchemy.orm import Session
 
 from app.domains.errors.error_handler import handle_db_errors
@@ -34,7 +34,9 @@ def fetch_raw_questions(
 
     # subtopic is an array column: match questions that contain it
     if search_info.subtopic:
-        conditions.append(BronzeQuestions.subtopic.any(search_info.subtopic.strip()))
+        conditions.append(
+            func.lower(func.trim(BronzeQuestions.subtopic)) == search_info.subtopic.strip().lower()
+        )
 
     with handle_db_errors(db, "fetching bronze questions based on the search parameters"):
         statement = select(BronzeQuestions).where(*conditions)
