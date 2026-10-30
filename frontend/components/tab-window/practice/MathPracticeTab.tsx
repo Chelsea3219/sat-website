@@ -7,6 +7,8 @@ import InputAnswer from "@/components/tab-window/helpers/InputAnswer";
 import Image from "next/image";
 import HorizontalLoadingAnimation from "@/components/ui/loading-animation/HorizontalLoadingAnimation";
 import {Timer} from 'lucide-react'
+import {wrapSigma, renderLatex} from "@/utils/latexHelpers"
+
 
 
 export default function MathPracticeTab({
@@ -33,7 +35,7 @@ export default function MathPracticeTab({
 
     return (
         <>
-            <div className="flex flex-col py-1 px-4 gap-y-1">
+            <div className="flex flex-col py-1 px-4 gap-y-2">
                 {!currentQuestion && 
                     <>
                         <HorizontalLoadingAnimation text="Loading Questions"/>
@@ -56,12 +58,9 @@ export default function MathPracticeTab({
                 {/* Equation */}
                 {currentQuestion.equation && (
                     <div
-                        className="flex items-center justify-center text-xl font-bold"
+                        className="flex items-center justify-center text-xl font-bold mb-1"
                         dangerouslySetInnerHTML={{
-                            __html: katex.renderToString(formatLatex(currentQuestion.equation), {
-                                throwOnError: false,
-                                displayMode: true,  // block/centered for equations
-                            })
+                            __html: renderLatex(currentQuestion.equation)
                         }}
                     />
                 )}

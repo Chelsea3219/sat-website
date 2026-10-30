@@ -28,6 +28,12 @@ export type BaseBronzeQuestions = {
     question_type: string
     question_preview: string
     mc_preview?: string
+    multiple_choices?:{
+        A: string
+        B: string
+        C: string
+        D: string
+    } | null
     reading_question: string | null 
     text:string
     uploaded_at: string
