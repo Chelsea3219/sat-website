@@ -38,7 +38,7 @@ export async function GET(req: Request) {
         if (!response.ok) return NextResponse.json({error: "Failed to fetch questions."}, {status: response.status})
 
         const data = await response.json()
-        console.log("data: ", data)
+        //console.log("data: ", data)
         return NextResponse.json(data)
 
 
