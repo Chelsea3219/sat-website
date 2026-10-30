@@ -5,7 +5,7 @@ import {estimateSATSectionScore2} from "@/utils/scoreAlgorithms"
 import { fetchDailyWeeklysStats, fetchPastQuizAnalytics} from "@/services/api.student-info"
 import { formatMinutes} from "@/utils/renderFormattedText"
 import { topicBreakdown } from "@/utils/analytics"
-import { readingTopics, mathTopics } from "@/utils/topics"
+import { readingTopics, mathTopics } from "@/utils/admin/topics"
 
 
 

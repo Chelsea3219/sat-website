@@ -2,11 +2,15 @@
 "use client"
 
 import {useState, useEffect} from "react";
-import type {IncomingSilverQuestions, IncomingBronzeQuestions, SearchFilters, QuestionSearchParameters} from "@/types/question-processing"
+import type {IncomingSilverQuestions, IncomingBronzeQuestions, SearchFilters} from "@/types/question-processing"
 import {fetchRawQuestions, updateRawQuestions} from "@/services/api.document-processing";
-import { validateEditorForm } from "@/utils/question-processing";
-import timeEstimate from "@/utils/question-processing"
+import { validateEditorForm } from "@/utils/admin/question-processing";
+import timeEstimate from "@/utils/admin/question-processing"
 import { wrapSigma } from "@/utils/latexHelpers";
+
+
+
+const emptySearchForm : SearchFilters = { section:"", topic:"", subtopic:"", source:""};
 
 
 
@@ -14,7 +18,6 @@ import { wrapSigma } from "@/utils/latexHelpers";
 export default function useEditorNavigation(){
 
     // Initialize the parameters ---------------------------------------------------------------------------------------
-    const emptySearchForm : SearchFilters = { section:"", topic:"", subtopic:"", source:""}
     const [search, setSearch] = useState<SearchFilters>(emptySearchForm)
 
     const [questions, setQuestions] = useState<IncomingBronzeQuestions[]>([])
@@ -29,31 +32,21 @@ export default function useEditorNavigation(){
     const [loading, setLoading] = useState(true)
 
 
-    // Automatically fetches the questions from the bronze.raw_questions -----------------------------------------------
-    useEffect( () => {
-        let ignore = false;
+    // Automatically fetches the questions from the bronze.raw_questions  once on mount -----------------------------------------------
+    // Fetch unreviewed questions once on mount
+    useEffect(() => {
+        let ignore = false
 
-        ( async () => {
-            setLoading(true)
-            try {
-                const searchParams : SearchFilters = emptySearchForm
-                const data = await fetchRawQuestions(searchParams)
-                if (!ignore) {
-                    setQuestions(data)
-                }
-
-            } catch (error) {
+        fetchRawQuestions(emptySearchForm)
+            .then((data) => { if (!ignore) setQuestions(data) })
+            .catch((error) => {
                 console.error("Unable to fetch questions.", error)
                 if (!ignore) setError("Failed to fetch questions.")
-            } finally {
-                if (!ignore) setLoading(false)
-            }
-        })()
+            })
+            .finally(() => { if (!ignore) setLoading(false) })
 
-        return () => {
-            ignore = true 
-        }
-    }, []);
+        return () => { ignore = true }
+    }, [])   // runs once
 
 
     // Handle the change in searchField  -------------------------------------------------------------------------------
@@ -107,7 +100,7 @@ export default function useEditorNavigation(){
     // Next and previous navigation ------------------------------------------------------------------------------------
     const completedIds = new Set(completedQuestions.map(q => q.question_id)) // tracks the localluy staged questions in completedQuestions
     const nextIndex = () => { // Advance to the next questions that hasnt been completed 
-        console.log("currentIndex", currentIndex)
+        //console.log("currentIndex", currentIndex)
         setCurrentIndex((prev) => {
             let next = prev + 1;
             while (next < questions.length) {
@@ -120,7 +113,7 @@ export default function useEditorNavigation(){
     )
     }
     const previousIndex = () => {
-        console.log("currentIndex", currentIndex)
+        //console.log("currentIndex", currentIndex)
         setCurrentIndex(prev => {
             let next = prev - 1
             while (next >= 0) {
