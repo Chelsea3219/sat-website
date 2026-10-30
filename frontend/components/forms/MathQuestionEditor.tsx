@@ -1,0 +1,189 @@
+"use client"
+
+
+import "@/css/forms/form.css"
+import TextEditor from "@/components/forms/ui/TextEditor";
+import LaTexInput from "@/components/forms/ui/LaTexInput";
+import FileUploader from "@/components/forms/FileUploader";
+import MCEditor from "@/components/forms/ui/MCEditor";
+import QuestionMCPreview from "@/components/forms/ui/QuestionMCPreview";
+import SubtopicEditor from "@/components/forms/ui/SubtopicEditor";
+import {IncomingSilverQuestions, MCProps, UseFileUploaderReturn, ImageCategory} from "@/types/question-processing";
+import AnswerEditor from "@/components/forms/ui/AnswerEditor";
+import SnippetButtons from "@/components/forms/ui/SnippetButtons";
+
+
+
+type Props = {
+    form: IncomingSilverQuestions
+    fieldChangeAction: <K extends keyof IncomingSilverQuestions>(field: K, value: IncomingSilverQuestions[K]) => void
+    mcFieldChangeAction: (letter: keyof MCProps, value: string) => void
+    mcChangeAll: (letter:MCProps) => void
+    handleImageAction: (field:File, category:ImageCategory) => void
+    diagramUploader: UseFileUploaderReturn
+    onDeleteAction: () => void
+    deleting: boolean
+}
+
+
+
+export default function MathQuestionEditor(
+    {form, fieldChangeAction, mcFieldChangeAction, mcChangeAll, handleImageAction, diagramUploader, onDeleteAction, deleting}: Props
+){
+
+    const handleDiagramFile = async (file: File | null) => {
+        if (!file) return
+        await handleImageAction(file, "diagram")
+    }
+
+    return (
+        <>
+            <div className=" max-w-7xl mx-auto px-2 md:px-6 lg:px-8">
+
+                <div>
+                    {/* Question Editor */}
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-4">
+
+                        {/* Question Information ------------------------------------------------------------------------*/}
+                        <div className="lg:col-span-4 min-w-0 space-y-4 ">
+
+                            {/* Section and Topic */}
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <div className="input-group flex-1">
+                                    <label>Section</label>
+                                    <div className="field">{form.section}</div>
+                                </div>
+                                <div className="input-group flex-1">
+                                    <label>Topic</label>
+                                    <div className="field">{form.topic}</div>
+                                </div>
+                            </div>
+
+                            {/* Subtopic */}
+                            <div className="input-group">
+                                <label>Subtopic(s)</label>
+                                <SubtopicEditor
+                                    subtopic={form.subtopic}
+                                    onChangeAction={subtopic => fieldChangeAction("subtopic", subtopic)}
+                                />
+                            </div>
+
+                            {/* Difficulty and Question Type */}
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <div className="input-group flex-1">
+                                    <label>Difficulty</label>
+                                    <select
+                                        value={form.difficulty}
+                                        onChange={(e) => fieldChangeAction("difficulty", e.target.value)}
+                                    >
+                                        <option value="">Please Select</option>
+                                        <option value="easy">Easy</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                                <div className="input-group flex-1">
+                                    <label>Question Type</label>
+                                    <select
+                                        value={form.question_type}
+                                        onChange={(e) => fieldChangeAction("question_type", e.target.value)}
+                                    >
+                                        <option value="">Please Select</option>
+                                        <option value="free response">Free Response</option>
+                                        <option value="multiple choice">Multiple Choice</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Text */}
+                            <div className="input-group">
+                                <label>Question Text</label>
+                                <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
+                                    <TextEditor
+                                        text={form.text}
+                                        fieldChangeAction={(value) => fieldChangeAction("text", value)}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Equation and its Latex Preview */}
+                            <div className="input-group">
+                                <label>Equation</label>
+                                <div className="w-full min-w-0 border border-primary rounded-lg p-2 min-h-30">
+                                    <div className="border-b border-primary pb-2 mb-2 ">
+                                            <SnippetButtons />
+                                    </div>
+                                    <LaTexInput
+                                        value={form.equation ?? ""}
+                                        isEquation
+                                        onChangeAction={(value) => fieldChangeAction("equation", value)}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Diagram Uploader */}
+                            <div >
+                                <label className="block mb-2 text-md font-medium uppercase tracking-wide text-main">Diagram</label>
+                                <FileUploader
+                                    onFile={handleDiagramFile}
+                                    previewURL={diagramUploader.previewURL}
+                                    resetUpload={diagramUploader.resetUpload}
+                                    handleChange={diagramUploader.handleChange}
+                                    inputRef={diagramUploader.inputRef}
+                                />
+                            </div>
+
+                            {/* Multiple Choice and its Latex Preview */}
+                            {form.question_type === "multiple choice" &&
+                                <div className="input-group w-full">
+                                    <label>Multiple Choices</label>
+                                    <MCEditor
+                                        section={form.section}
+                                        mc={form.multiple_choices ?? { A: "", B: "", C: "", D: "" }}
+                                        isEquation={false}
+                                        onChangeAction={(letter, value) => mcFieldChangeAction(letter, value)}
+                                        onChangeAllAction={mcChangeAll}
+                                    />
+                                </div>
+                            }
+
+                            {/* Correct Answer */}
+                            <div className="input-group">
+                                <label>Answer</label>
+                                {(form.question_type === "multiple choice" || form.question_type === "") &&
+                                    <select
+                                        value={form.answer_key}
+                                        onChange={(e) => fieldChangeAction("answer_key", e.target.value)}
+                                    >
+                                        <option className="">Select</option>
+                                        <option className="A">A</option>
+                                        <option className="B">B</option>
+                                        <option className="C">C</option>
+                                        <option className="D">D</option>
+                                    </select>
+                                }
+                                {form.question_type === "free response" &&
+                                    <AnswerEditor
+                                        answer={form.answer_key ?? ""}
+                                        onChangeAction={answer_key => fieldChangeAction("answer_key", answer_key)}
+                                    />
+                                }
+                            </div>
+                        </div>
+
+                        {/* Question Preview ----------------------------------------------------------------------------*/}
+                        <div className="lg:col-span-1 min-w-0 sticky top-20 self-start space-y-4 ">
+                            <QuestionMCPreview
+                                question_preview={form.question_preview}
+                                mc_preview={form.mc_preview ?? ""}
+                                onDeleteAction={() => onDeleteAction()}
+                                deleting={deleting}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+
+}
