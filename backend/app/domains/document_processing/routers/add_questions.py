@@ -6,11 +6,13 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.core.database import get_db
+from app.core.auth import require_admin
+from app.core.logging_config import setup_logging
+
 from app.domains.errors.error_handler import handle_db_errors
 from app.domains.document_processing.schemas import AddQuestions 
 
-from app.core.database import get_db
-from app.core.logging_config import setup_logging
 from app.domains.questions.models import BronzeQuestions, SilverQuestions
 from app.domains.questions.utils import content_hash
 
@@ -21,7 +23,7 @@ from app.domains.answer_explanations.services.normalization import normalize_ans
 
 setup_logging()
 logger = logging.getLogger("add-questions")
-router = APIRouter(prefix="/api/document-processing", tags=["document-processing"])
+router = APIRouter(prefix="/api/document-processing", tags=["document-processing"], dependencies=[Depends(require_admin)])
 
 
 # ADD THE NEW QUESTION IN THE BRONZE AND SILVER LAYER

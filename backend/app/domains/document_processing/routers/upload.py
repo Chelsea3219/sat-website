@@ -6,9 +6,10 @@ import cloudinary.uploader
 from fastapi import APIRouter, Form, UploadFile, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.core.logging_config import setup_logging
+from app.core.auth import require_admin
 from app.domains.errors.error_handler import handle_db_errors
 
-from app.core.logging_config import setup_logging
 from app.domains.document_processing.schemas import UploadRawQuestions 
 from app.domains.document_processing.pipelines.extraction.extract_pp import extract_text_pp
 from app.domains.document_processing.pipelines.clean import normalize_questions, mcq_diagram_identifier, normalize_text
@@ -19,7 +20,8 @@ from app.domains.questions.models import BronzeQuestions, SilverQuestions
 
 setup_logging()
 logger = logging.getLogger("upload-documents")
-router = APIRouter(prefix="/api/document-processing", tags=["document-processing"])
+router = APIRouter(prefix="/api/document-processing", tags=["document-processing"], dependencies=[Depends(require_admin)])
+
 
 
 # BULK UPLOAD THE EXTRACTED QUESTIONS INTO BRONZE QUESTIONS TABLE

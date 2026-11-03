@@ -1,8 +1,11 @@
 // responsible for updating the raw questions in the bronze table and inserting them in the silver table
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { withAdmin } from '@/lib/auth';
 
-export async function POST(req: NextRequest) {
+
+
+export const POST = withAdmin(async (req, _ctx, {token}) =>  {
 
     try {
         const questions = await req.json()
@@ -11,10 +14,9 @@ export async function POST(req: NextRequest) {
 
         // Forward Questions to save in the bronze.raw_questions dataset
         const baseURL = process.env.FASTAPI_URL
-        if (!baseURL) throw new Error("FASTAPI URL is not set in environment variables")
         const response = await fetch(`${baseURL}/api/document-processing/update-raw-question`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
             body: JSON.stringify(questions)
         })
 
@@ -29,4 +31,5 @@ export async function POST(req: NextRequest) {
         console.error("error: ", err)
         return NextResponse.json({error: 'Bronze and Silver Upload Failed'}, {status: 500});
     }
-}
+})
+

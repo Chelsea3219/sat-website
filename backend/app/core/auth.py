@@ -71,28 +71,15 @@ def get_clerk():
     return Clerk(bearer_auth=settings.CLERK_SECRET_KEY)
 
 
-def require_permission(permission: str):
+
+def require_role(*allowed_roles: str):
+    """Allow the request only if the session token's `role` claim is one of allowed_roles."""
     def _check(state: Annotated[RequestState, Depends(require_auth)]) -> RequestState:
-        org_permissions = state.payload.get("org_permissions") or []
-        if permission not in org_permissions:
-            raise HTTPException(status_code=403, detail=f"missing permission: {permission}")
+        role = (state.payload or {}).get("role")
+        if role not in allowed_roles:
+            logger.warning("Forbidden: user=%s role=%s needs=%s",(state.payload or {}).get("sub"), role, allowed_roles)
+            raise HTTPException(status_code=403, detail="Admins only")
         return state
     return _check
 
-
-def require_system_role(role: str):
-    """Check role for the user's ACTIVE organization (the one in `o.rol`).
-
-    Pass the role without the `org:` prefix (e.g., `"admin"`, `"member"`) to
-    match what Clerk stores in the claim.
-    """
-    def _check(
-        state: Annotated[RequestState, Depends(require_auth)],
-    ) -> RequestState:
-        if not state.payload.get("org_id"):
-            raise HTTPException(status_code=403, detail="no organization context")
-        if state.payload.get("org_role") != role:
-            raise HTTPException(status_code=403, detail=f"missing role: {role}")
-        return state
-    return _check
-
+require_admin = require_role("admin")

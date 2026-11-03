@@ -1,20 +1,9 @@
 import { NextResponse } from 'next/server'
-import {auth} from "@clerk/nextjs/server"
+import { withAdmin } from '@/lib/auth';
 
 
-export async function GET(req: Request) {
+export const GET = withAdmin(async (req, _ctx, {token}) =>  {
     try {
-        // Make sure that the user is authenticated and an admin 
-        const {userId, sessionClaims, getToken} = await auth()
-        if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-        
-        const token = await getToken()
-        if (!token) return NextResponse.json({error: "Missing authentication token"}, {status:401 })
-
-        // Check to see that the visitor is admin
-        if (sessionClaims?.metadata?.role !== "admin") {
-            return NextResponse.json({ error: "This section is locked from students and parents." }, { status: 403 })
-        }
 
         // Declare the question search parameters 
         const {searchParams} = new URL(req.url)
@@ -46,4 +35,4 @@ export async function GET(req: Request) {
         console.error("Unable to fetch BronzeQuestions : ", err)
         return NextResponse.json({error: 'Cannot fetch questions from the bronze.raw_questions'}, {status: 500});
     }
-}
+})

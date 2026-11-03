@@ -1,23 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-import {auth} from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { withAdmin } from '@/lib/auth';
 
-export async function DELETE( 
-    request: NextRequest,
-    { params }: {params: Promise<{ question_id: string }> }
-) {
+
+export const DELETE = withAdmin<{ question_id: string }>(async (_req, { params }, { token }) => {
   try {
-
-    // Makes sure that the user is an adminstrator
-    const {sessionClaims} = await auth();
-    console.log("Session Claims:", sessionClaims?.metadata?.role);
-    if (sessionClaims?.metadata?.role !== "admin") {
-        return NextResponse.json({ error: "Unauthorized to delete question" }, { status: 403 })
-    }
 
     // Extract the question_id from the request parameters
     const { question_id } = await params;
-    const response = await fetch(`${process.env.FASTAPI_URL}/api/document-processing/delete-questions/${question_id}`, {
+    const response = await fetch(`${process.env.FASTAPI_URL}/api/document-processing/delete-questions/${encodeURIComponent(question_id)}`, {
       method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
     });
     
     if (!response.ok) {
@@ -33,4 +26,6 @@ export async function DELETE(
     console.error("Delete error:", error);
     return NextResponse.json( {error: 'Failed to delete question'}, {status: 500})
   }
-}
+})
+
+

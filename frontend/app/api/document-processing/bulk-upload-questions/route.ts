@@ -1,20 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server'
+import {NextResponse } from 'next/server'
+import { withAdmin } from '@/lib/auth';
 
-export async function POST(req: NextRequest) {
+
+
+export const POST = withAdmin(async (req, _ctx, {token}) =>  {
 
     try {
         const questions = await req.json()
-        console.log("Raw questions being sent for upload", JSON.stringify(questions))
-
         if (!questions) return NextResponse.json({error: "No questions provided"}, {status: 400})
 
         // Forward Questions to save in the bronze.raw_questions dataset
         const baseURL = process.env.FASTAPI_URL
-        if (!baseURL) throw new Error("FASTAPI URL is not set in environment variables")
-
         const response = await fetch(`${baseURL}/api/document-processing/bulk-upload-questions`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
             body: JSON.stringify(questions)
         })
 
@@ -32,4 +31,4 @@ export async function POST(req: NextRequest) {
         console.error("error: ", err)
         return NextResponse.json({error: 'Upload and Extraction Failed'}, {status: 500});
     }
-}
+})

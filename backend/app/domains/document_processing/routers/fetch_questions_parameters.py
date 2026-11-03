@@ -8,10 +8,10 @@ from app.domains.errors.error_handler import handle_db_errors
 from app.domains.document_processing.schemas import SearchRawQuestions, RawQuestionsIn
 
 from app.core.database import get_db
-from app.core.auth import require_auth
-from app.domains.questions.models import BronzeQuestions
+from app.core.auth import require_admin
+from app.domains.questions.models import BronzeQuestions, SilverQuestions
 
-router = APIRouter(prefix="/api/document-processing", tags=["document-processing"])
+router = APIRouter(prefix="/api/document-processing", tags=["document-processing"], dependencies=[Depends(require_admin)])
 
 
 # FETCHES RAW QUESTIONS FROM THE BRONZE.RAW_QUESTIONS
@@ -41,3 +41,10 @@ def fetch_raw_questions(
     with handle_db_errors(db, "fetching bronze questions based on the search parameters"):
         statement = select(BronzeQuestions).where(*conditions)
         return db.scalars(statement).all()
+
+
+
+@router.get("/search-questions")
+def search_questions():
+
+    return 

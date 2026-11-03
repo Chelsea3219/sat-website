@@ -3,19 +3,20 @@ import os
 import logging
 import tempfile
 from typing import List
-from fastapi import APIRouter, Form, UploadFile, HTTPException
-
+from fastapi import APIRouter, Form, UploadFile, HTTPException, Depends, File
 
 from app.core.logging_config import setup_logging
+from app.core.auth import require_admin
 
 from app.domains.document_processing.schemas import UploadRawQuestions 
 from app.domains.document_processing.pipelines.extraction.extract_pp import extract_text_pp
 from app.domains.document_processing.pipelines.clean import normalize_questions, mcq_diagram_identifier
 from app.domains.document_processing.pipelines.upload_images import upload_image_to_cloudinary
 
+
 setup_logging()
 logger = logging.getLogger("extract-questions")
-router = APIRouter(prefix="/api/document-processing", tags=["document-processing"])
+router = APIRouter(prefix="/api/document-processing", tags=["document-processing"], dependencies=[Depends(require_admin)])
 
 
 # UPLOAD PDFs & WORKBOOKS TO EXTRACT QUESTIONS AND MCS -----------------------------------------------------------------
@@ -30,9 +31,7 @@ async def extract_text(
     text = await file.read()
     extracted_questions = [] # just in case, there is an error
     try:
-        if source != "preppros":
-            raise HTTPException(status_code=400, detail="Source not supported.")
-        
+
         # Save to temp file so your function gets the path it expects
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
             tmp.write(text)
@@ -40,6 +39,7 @@ async def extract_text(
 
         # Extract the text
         extracted_questions = extract_text_pp(tmp_path, section, topic, subtopic, source)
+        logger.info(f"Number of extracted questions ==>> {str(len(extracted_questions))}" )
 
         # Clean the text
         normalized_questions = normalize_questions(extracted_questions)
