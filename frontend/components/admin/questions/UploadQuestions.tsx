@@ -5,14 +5,16 @@ import useUploadQuestion from "@/hooks/admin/question-processing/useUploadQuesti
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import FileUploader from "@/components/forms/FileUploader";
 import {useState} from "react";
-import HorizontalLoadingAnimation2 from "@/components/ui/loading-animation/HorizontalLoadingAnimation";
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader";
 import {useRouter} from "next/navigation";
+import { buttonStyle } from "@/components/ui/buttons/buttonStyle"
+
+
 
 export default function UploadQuestions() {
     const router = useRouter()
 
-    const {fileForm, questions, error, setError, status, loading, fieldChange, handleSave, handlePreview, handleReset} = useUploadQuestion()
+    const {fileForm, questions, error, setError, status, uploading, extracting, fieldChange, handleSave, handlePreview, handleReset} = useUploadQuestion()
 
     const [file, setFile] = useState<File | null>(null)
     const { previewURL, resetUpload, handleChange, inputRef } = useFileUploader()
@@ -123,20 +125,16 @@ export default function UploadQuestions() {
                     </div>
 
                     {/* Preview Button */}
-                    <button
-                        type="button"
-                        className="rounded-btn bg-primary text-xl text-white"
-                        onClick={()=> handlePreview(file)}
-                        disabled={loading || !file}
-                    >
-                        {loading  ? (
-                            <div className="flex flex-row items-center justify-center gap-x-2">
-                                <HorizontalLoadingAnimation2 text="Processing"/>
-                            </div>
-                        ) : (
-                            'Preview Questions'
-                        )}
-                    </button>
+                    <div className='flex justify-center max-w-4xl mx-auto w-full'>
+                        <button
+                            type="button"
+                            className={`text-xl text-white bg-primary ${buttonStyle}`}
+                            onClick={()=> handlePreview(file)}
+                            disabled={extracting || uploading || !file}
+                        >
+                            {extracting ? 'Extracting Questions...': 'Extract Questions'}
+                        </button>
+                    </div>
 
                     {/* Preview the questions */}
                     {status === "preview" && (
@@ -153,7 +151,9 @@ export default function UploadQuestions() {
                             </div>
                             {/* Save OR Reset */}
                             <div className="flex gap-4">
-                                <button type ="button" onClick={handleSaveClick} className="rounded-btn bg-primary text-white text-xl">Confirm & Save</button>
+                                <button type ="button" onClick={handleSaveClick} className="rounded-btn bg-primary text-white text-xl">
+                                    {uploading ? 'Uploading Questions...':'Confirm & Save'}
+                                </button>
                                 <button type ="button" onClick={handleDiscardClick} className="rounded-btn border-2 border-primary text-primary text-xl">Discard</button>
                             </div>
                         </section>

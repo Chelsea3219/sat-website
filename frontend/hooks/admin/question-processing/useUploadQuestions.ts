@@ -1,23 +1,24 @@
 
 
-import type {QuestionInfo, BaseBronzeQuestions} from "@/types/question-processing";
+import type {QuestionFileInfo, BaseQuestion} from "@/types/question-processing";
 import {useState} from "react";
 import {bulkUploadQuestions, extractQuestions} from "@/services/api.document-processing";
 
 export default function useUploadQuestion() {
 
-    const emptyForm: QuestionInfo = {
+    const emptyForm: QuestionFileInfo = {
         section: "",
         topic: "",
         subtopic: "",
         source: ""
     }
 
-    const [fileForm, setFileForm] = useState<QuestionInfo>(emptyForm)
-    const [questions, setQuestions] = useState<BaseBronzeQuestions[]>([])
+    const [fileForm, setFileForm] = useState<QuestionFileInfo>(emptyForm)
+    const [questions, setQuestions] = useState<BaseQuestion[]>([])
     const [error, setError] = useState("")
     const [status, setStatus] = useState<'idle' | 'processing' | 'preview' | 'saving' | 'done'>('idle')
-    const [loading, setLoading] = useState(false)
+    const [uploading, setUploading] = useState(false)
+    const [extracting, setExtracting] = useState(false)
 
     // Detects if there is a change in the form
     const fieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -32,7 +33,7 @@ export default function useUploadQuestion() {
     const validateForm = () => {
         const missing: string[] = []
 
-        const missingFields: (keyof QuestionInfo)[] = ["section", "topic", "subtopic", "source"]
+        const missingFields: (keyof QuestionFileInfo)[] = ["section", "topic", "subtopic", "source"]
         missingFields.forEach(i => {
             if (!fileForm[i]) missing.push(i)
         })
@@ -54,7 +55,7 @@ export default function useUploadQuestion() {
 
         setError("")
         setStatus("processing")
-        setLoading(true)
+        setExtracting(true)
 
 
         // Uploads a file and its information to preprocess, extracts, and organizations the SAT questions
@@ -62,11 +63,10 @@ export default function useUploadQuestion() {
             // Upload a file
             const form = new FormData()
             form.append('file', file)
-
             Object.entries(fileForm).forEach( ([key, value]) => {
                 form.append(key, String(value))
             })
-
+            
             // Send to backend to preprocess, extract, and organize the questions
             const response = await extractQuestions(form)
             //console.log("raw questions ==>> ",  response)
@@ -88,7 +88,7 @@ export default function useUploadQuestion() {
             setError("Failed to process the file")
             setStatus('idle')
         } finally {
-            setLoading(false)
+            setExtracting(false)
         }
     }
 
@@ -96,7 +96,7 @@ export default function useUploadQuestion() {
         setFileForm(emptyForm)
         setQuestions([])
         setStatus('idle')
-        setLoading(false)
+        setExtracting(false)
         setError("")
     }
 
@@ -109,6 +109,7 @@ export default function useUploadQuestion() {
 
         // Save the questions in the bronze.raw_questions
         try {
+            setUploading(true)
             setStatus("saving")
             console.log("questions being sent for save: ", questions)
             await bulkUploadQuestions(questions)
@@ -118,8 +119,9 @@ export default function useUploadQuestion() {
             console.log("Error saving the questions", error)
             setError("Failed to save questions")
             setStatus('idle')
+            setUploading(false)
         }
         setStatus('done')
     }
-    return {fileForm, questions, error, setError, status, loading, fieldChange, handleSave, handlePreview, handleReset}
+    return {fileForm, questions, error, setError, status, uploading, extracting, fieldChange, handleSave, handlePreview, handleReset}
 }

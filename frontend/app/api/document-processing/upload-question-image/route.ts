@@ -17,7 +17,7 @@ export const POST = withAdmin(async (request, _ctx, {token}) =>  {
         const baseURL = process.env.FASTAPI_URL
         const response = await fetch(`${baseURL}/api/document-processing/upload-question-image`, {
             method: 'POST',
-            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}`, },
+            headers: { Authorization: `Bearer ${token}`, },
             body: formData, 
             cache: "no-store", 
         })

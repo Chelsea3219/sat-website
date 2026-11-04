@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react";
+import {useState, Suspense} from "react";
 import MathQuestionEditor from "@/components/forms/MathQuestionEditor";
 import ReadingQuestionEditor from "@/components/forms/ReadingQuestionEditor";
 import AdminHeader from "@/components/navigation/AdminHeader";
@@ -31,7 +31,6 @@ export default function Page () {
     const currentQuestion = questions[currentIndex] ?? null
     const [uploading, setUploading] = useState(false)
     const [deleting, setDeleting] = useState(false)
-    console.log("deleting", deleting)
     const diagramUploader = useFileUploader()
     const [preview, setPreview] = useState(false)
     
@@ -88,9 +87,9 @@ export default function Page () {
         if (!currentQuestion) return
         setDeleting(true)
         try {
-            const ok = await handleDeleteQuestion(currentQuestion.question_id)
+            const ok = await handleDeleteQuestion(currentQuestion.question_id ?? "")
             if (!ok) {
-                setError("Failed to delete question")
+                setError("Question already deleted.")
                 return
             }
             //console.log("Deleted question with ID:", currentQuestion.question_id)
@@ -109,10 +108,10 @@ export default function Page () {
             label:"Previous", onClick:previousIndex, disabled:currentIndex===0, className:`bg-primary border-transparent text-white ${buttonClass}`
         }, 
         {
-            label:"Save", onClick:handleSaveQuestionClick, disabled:saving || !currentQuestion, className:`bg-accent border-transparent text-white ${buttonClass}`
+            label:"Save", onClick:handleSaveQuestionClick, disabled:saving || !currentQuestion, className:`border-primary text-primary ${buttonClass}`
         }, 
         {
-            label:"Preview", onClick:handleOpenPreview, disabled:preview || completedQuestions.length===0, className:`border-primary bg-white text-primary ${buttonClass}`
+            label:"Preview", onClick:handleOpenPreview, disabled:preview || completedQuestions.length===0, className:`border-green-600 bg-white text-green-600 ${buttonClass}`
         }, 
         {
             label:"Next", onClick:nextIndex, disabled:currentIndex === questions.length-1,  className:`bg-primary border-transparent text-white ${buttonClass}`
@@ -156,8 +155,6 @@ export default function Page () {
                             </div>
                         ))}
                     </div>
-
-                    
                 }
             />
 
@@ -176,13 +173,12 @@ export default function Page () {
                 </div>
             }
 
-            {loading ? (
-                <div className="flex items-center justify-center pt-10">
-                    <CircleLoadingAnimation/>
-                </div>
+        
 
-            ) : (
-                    form.section === "math" ? (
+            <Suspense fallback={<div className="flex items-center justify-center pt-10">
+                    <CircleLoadingAnimation/>
+                </div>}>
+                {form.section === 'math' ? (
                         <MathQuestionEditor
                             form={form}
                             fieldChangeAction={fieldChange}
@@ -204,9 +200,8 @@ export default function Page () {
                             onDeleteAction={handleDeleteQuestionClick}
                             deleting={deleting}
                         />
-                    )
-                )
-            }
+                    )}
+            </Suspense>
         </div>
     )
 }

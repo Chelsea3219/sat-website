@@ -13,7 +13,6 @@ import AnswerEditor from "@/components/forms/ui/AnswerEditor";
 import SnippetButtons from "@/components/forms/ui/SnippetButtons";
 
 
-
 type Props = {
     form: IncomingSilverQuestions
     fieldChangeAction: <K extends keyof IncomingSilverQuestions>(field: K, value: IncomingSilverQuestions[K]) => void
@@ -42,7 +41,7 @@ export default function MathQuestionEditor(
 
                 <div>
                     {/* Question Editor */}
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mt-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 min-w-0">
 
                         {/* Question Information ------------------------------------------------------------------------*/}
                         <div className="lg:col-span-4 min-w-0 space-y-4 ">

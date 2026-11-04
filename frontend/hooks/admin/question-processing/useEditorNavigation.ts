@@ -7,7 +7,7 @@ import {fetchRawQuestions, updateRawQuestions} from "@/services/api.document-pro
 import { validateEditorForm } from "@/utils/admin/question-processing";
 import timeEstimate from "@/utils/admin/question-processing"
 import { wrapSigma } from "@/utils/latexHelpers";
-
+import { useAuthedFetch } from "@/lib/fetchWithFreshToken";
 
 
 const emptySearchForm : SearchFilters = { section:"", topic:"", subtopic:"", source:""};
@@ -20,7 +20,7 @@ export default function useEditorNavigation(){
     // Initialize the parameters ---------------------------------------------------------------------------------------
     const [search, setSearch] = useState<SearchFilters>(emptySearchForm)
 
-    const [questions, setQuestions] = useState<IncomingBronzeQuestions[]>([])
+    const [questions, setQuestions] = useState<(IncomingBronzeQuestions | IncomingSilverQuestions)[]>([])
     const numQuestions = questions.length 
     const [completedQuestions, setCompletedQuestions] = useState<IncomingSilverQuestions[]>([])
     const resetCompleted = () => setCompletedQuestions([])
@@ -34,10 +34,12 @@ export default function useEditorNavigation(){
 
     // Automatically fetches the questions from the bronze.raw_questions  once on mount -----------------------------------------------
     // Fetch unreviewed questions once on mount
+    const authedFetch = useAuthedFetch()
+
     useEffect(() => {
         let ignore = false
 
-        fetchRawQuestions(emptySearchForm)
+        fetchRawQuestions(emptySearchForm, authedFetch )
             .then((data) => { if (!ignore) setQuestions(data) })
             .catch((error) => {
                 console.error("Unable to fetch questions.", error)
@@ -46,7 +48,7 @@ export default function useEditorNavigation(){
             .finally(() => { if (!ignore) setLoading(false) })
 
         return () => { ignore = true }
-    }, [])   // runs once
+    }, [authedFetch])   // runs once
 
 
     // Handle the change in searchField  -------------------------------------------------------------------------------
@@ -76,7 +78,7 @@ export default function useEditorNavigation(){
                 subtopic: search.subtopic?.trim() || undefined, 
                 source: search.source?.trim() || undefined 
             }
-            const data = await fetchRawQuestions(searchParams)
+            const data = await fetchRawQuestions(searchParams, authedFetch)
             //console.log("backend data by filter: ", data)
 
             if (!Array.isArray(data)) {
@@ -137,10 +139,6 @@ export default function useEditorNavigation(){
                 setError(`Missing: ${missing.join(", ")}`)
                 return false
             }
-            if (!form.question_preview) {
-                setError("Missing: question preview")
-                return false 
-            }
 
             // Add delimiters to equation
             const equation = form.equation?.trim() ? wrapSigma(form.equation) : form.equation;
@@ -152,6 +150,7 @@ export default function useEditorNavigation(){
                 time_estimate: timeEstimate(form.difficulty ?? ""),
                 multiple_choices: form.question_type === "free response" ? null : form.multiple_choices
             }
+            // console.log("completed question ==>> ", updatedForm)
 
             setCompletedQuestions( prev => { // Prevents duplicate staged entries for the same question 
                 const withoutDupe = prev.filter(q => q.question_id !==updatedForm.question_id)
@@ -178,7 +177,7 @@ export default function useEditorNavigation(){
         setError("")
 
         try {
-            await updateRawQuestions(saved)
+            await updateRawQuestions(saved, authedFetch)
 
             // Update local array so that you don't navigate to completed questions by removing saved questions from the queue 
             const savedIds = new Set(saved.map(q => q.question_id))
