@@ -1,11 +1,14 @@
 
-
+// TODO separate subtopics based on topics 
 export const SUBTOPICS = [
-    'linear functions', 'algebra skills', 'median', 'plug-in', 'system of equations', 'slope-intercept form', 
-    'quadratics equations', 'percents', 'parallel lines', 'parallel lines & transversal', 'transformations', 'formulas', 'ratios', 'shapes',
+    'linear functions', 'algebra skills', 'median', 'plug-in', 'system of equations', 'slope-intercept form', 'functions',
+    'quadratic equations', 'percents','simple percent' , 'percent increase & decrease', 'parallel lines', 'parallel lines & transversal', 'transformations', 'formulas', 'ratios', 'shapes',
     'perpendicular lines', 'dot plot', 'box plot', 'midpoint', 'special triangles', 'statistical analysis', 'statistical bias', 'intercepts', 
     'slope', 'equilateral triangles', 'exponents', 'triangles', 'sampling', 'function notation', 'angles', 'unit conversions', 'mean', 'system of linear equations',
     'axis of symmetry', 'distance', 'standard deviation', 'quadratic formula', 'inequalities', 'factored-form', 'combining like terms', 
-    'quadratic equations', 'radical functions', 'probability', 'constants', 'linear function interpretations', 'margin of error', 'rational functions', 
-    'similar shapes', 'vertex-form', 'discriminant', 'word problems', 'nonlinear functions'
+    'radical functions', 'probability', 'constants', 'linear function interpretations', 'margin of error', 'rational equations', 'rational expressions',
+    'similar shapes', 'similar triangles', 'vertex-form', 'discriminant', 'word problems', 'nonlinear functions', 
+    'ratios & proportions', 'mean median mode & range', 'trigonometry', 'circle equation', 'exponential growth & decay', 'absolute value equations',
+
+    'main idea', 'main purpose', 'function', 'cross-text connections', 'claims', 'complete the text'
 ]
