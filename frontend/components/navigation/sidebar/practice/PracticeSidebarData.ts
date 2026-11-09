@@ -58,6 +58,7 @@ const items = [
                     {title: "Linear Functions", path:"/math/algebra/linear-functions"},
                     {title: "Linear Function Interpretations", path:"/math/algebra/linear-function-interpretations"},
                     {title: "Systems of Equations", path:"/math/algebra/system-of-equations"},
+                    {title: "Inequalities", path:"/math/algebra/inequalities"},
                     {title: "Systems of Linear Equations", path:"/math/algebra/system-of-linear-equations"},
                 ]
             },
@@ -68,7 +69,7 @@ const items = [
                     {title: "Roots", path:"/math/advanced-math/roots"},
                     {title: "Exponential Growth & Decay", path:"/math/advanced-math/exponential-growth-decay"},
                     {title: "Quadratic Equations", path:"/math/advanced-math/quadratic-equations"},
-                    {title: "", path:"/math/advanced-math"},
+                    {title: "Absolute Value Equations", path:"/math/advanced-math/absolute-value-equations"},
                 ]
             },
             {
@@ -78,7 +79,7 @@ const items = [
                     {title: "Mean, Median, Mode, & Range", path:"/math/problem-solving/mean-median-mode-range"},
                     {title: "Probability", path:"/math/problem-solving/probability"},
                     {title: "Ratios & Proportions", path:"/math/problem-solving/ratios-proportions"},
-                    {title: "Unit Conversion", path:"/math/problem-solving/unit-conversion"},
+                    {title: "Unit Conversions", path:"/math/problem-solving/unit-conversions"},
                 ]
             },
             {
