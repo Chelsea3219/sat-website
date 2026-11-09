@@ -117,3 +117,16 @@ export function renderLatex(text: string) {
 export const wrapSigma = (s: string) => /^\s*\\\(/.test(s) ? s : `\\(${s}\\)`
 export const unwrapSigma = (s: string) => s.replace(/^\s*\\\(([\s\S]*)\\\)\s*$/, "$1")
 export const wrapBraces = (s: string) => `{${s}}`
+
+
+// True if the text already contains math delimiters: $...$, $$...$$, \(...\) or \[...\]
+export function hasDelimiters(value: string): boolean {
+    return /\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\]/.test(value)
+}
+
+// Wrap in delimiters only when needed; empty input stays empty
+export function ensureDelimiters(value: string | null | undefined): string {
+    const trimmed = (value ?? "").trim()
+    if (!trimmed) return ""
+    return hasDelimiters(trimmed) ? trimmed : wrapSigma(trimmed)
+}
