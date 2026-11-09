@@ -1,9 +1,10 @@
 "use client"
 
 
-import { forwardRef, useState} from "react";
+import { forwardRef} from "react";
 import 'katex/dist/katex.min.css'
-import {wrapSigma, renderLatex} from "@/utils/latexHelpers"
+import { renderLatex, ensureDelimiters } from "@/utils/latexHelpers"
+
 
 
 type LaTexInputProps = {
@@ -16,7 +17,7 @@ type LaTexInputProps = {
 
 const LatexInput = forwardRef<HTMLTextAreaElement, LaTexInputProps>(({ value, isEquation = false, onChangeAction, onKeyDownAction, className}, ref) => {
         
-    const source = isEquation && value.trim() ? wrapSigma(value) : value
+    const source = isEquation ? ensureDelimiters(value) : value 
     const rendered = renderLatex(source) || "&nbsp;"
 
     return (

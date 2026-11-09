@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react";
-import LaTexInput from "@/components/forms/ui/LaTexInput";
-import SnippetButtons from "@/components/forms/ui/SnippetButtons";
+import LaTexInput from "@/components/admin/questions/ui/LaTexInput";
+import SnippetButtons from "@/components/admin/questions/ui/SnippetButtons";
 import {wrapSigma, unwrapSigma} from "@/utils/latexHelpers";
 import type { MCProps } from "@/types/question-processing";
 
