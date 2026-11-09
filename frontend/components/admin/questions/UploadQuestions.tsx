@@ -35,7 +35,7 @@ export default function UploadQuestions() {
 
     return (
         <>
-            <ErrorMessage error={error} onDismiss={()=> setError("")}/>
+            <ErrorMessage error={error} onDismiss={()=> setError("")} fillsPage={false}/>
 
 
             <div className='px-2 md:px-4 lg:px-6'>

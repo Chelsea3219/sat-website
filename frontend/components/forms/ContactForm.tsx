@@ -109,10 +109,7 @@ export default function ContactForm() {
                         {/* Error message */}
                         {error &&
                             <div className="p-4">
-                                <ErrorMessage
-                                    error={error}
-                                    onDismiss={() => setError("")}
-                                />
+                                <ErrorMessage error={error} onDismiss={() => setError("")} fillsPage={false} />
                             </div>
                         }
                     </div>

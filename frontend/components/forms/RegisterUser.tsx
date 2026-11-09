@@ -71,10 +71,7 @@ export default function RegisterUser() {
                     {/* Error message */}
                     {uploader.error &&
                         <div className="p-4">
-                            <ErrorMessage
-                                error={uploader.error}
-                                onDismiss={() => uploader.setError("")}
-                            />
+                            <ErrorMessage error={uploader.error} onDismiss={() => uploader.setError("")} fillsPage={false} />
                         </div>
                     }
                 </div>
