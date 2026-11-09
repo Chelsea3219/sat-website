@@ -11,7 +11,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.exceptions import RequestValidationError
 
 # APIs
-from app.domains.errors.router import general_http_exception_handler, validation_exception_handler, http_exception_handler
+from app.domains.errors.handler import http_error_handler, validation_error_handler
 from app.domains.admin.routers import marketing
 from app.domains.students.routers import register, student_info, clerk_webhook
 from app.domains.questions.routers import fetch_questions
@@ -56,9 +56,8 @@ def health():
 
 
 # ERROR HANDLING -------------------------------------------------------------------------------------------------------
-app.add_exception_handler(StarletteHTTPException, general_http_exception_handler)
-app.add_exception_handler(RequestValidationError, validation_exception_handler)
-app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(StarletteHTTPException, http_error_handler)   # also covers FastAPI's HTTPException
+app.add_exception_handler(RequestValidationError, validation_error_handler)
 
 # API ROUTES -----------------------------------------------------------------------------------------------------------
 app.include_router(marketing.router)
