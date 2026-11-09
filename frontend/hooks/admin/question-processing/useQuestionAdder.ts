@@ -5,6 +5,7 @@ import {useState} from "react";
 import type {IncomingSilverQuestions, ImageCategory, MCProps, UseFileUploaderReturn} from "@/types/question-processing";
 import {addQuestions, uploadQuestionImage} from "@/services/api.document-processing";
 import timeEstimate from "@/utils/admin/question-processing";
+import { ensureDelimiters } from "@/utils/latexHelpers";
 
 
 {/* RESPONSIBILITIES
@@ -55,7 +56,7 @@ export default function useQuestionAdder(
 
     // Handles the MC field change --------------------------------------------------------------------------------------
     const mcFieldChange = (letter: keyof MCProps, value: string) => {
-        const currentMC = form.multiple_choices ?? {A:"", B:"", C:"", D:""}
+        const currentMC = form.multiple_choices ?? { A: "", B: "", C: "", D: "" }  
         const updatedMC: MCProps = {...currentMC, [letter]:value}
         fieldChange("multiple_choices", updatedMC)
     }
@@ -78,21 +79,17 @@ export default function useQuestionAdder(
             setSaving(false)
             return
         }
-        if (!form.question_preview) {
-            setError("Missing: question preview")
-            setSaving(false)
-            return
-        }
         // Auto-set the timeEstimate to the question
         const updatedForm = {
             ...form,
+            equation: ensureDelimiters(form.equation), 
             question_id: crypto.randomUUID(), // temporary question id
-            time_estimate:timeEstimate(form.difficulty ?? "")
+            time_estimate:timeEstimate(form.difficulty ?? ""), 
+            multiple_choices: form.multiple_choices ? form.multiple_choices : null 
         }
 
         // Add the completedQuestion to the array
         const updatedArray = [...completedQuestions, updatedForm]
-        console.log("saved questions ==>> ", updatedArray)
         setCompletedQuestions(updatedArray)
         setSaving(false)
         previewUploader.resetUpload()
