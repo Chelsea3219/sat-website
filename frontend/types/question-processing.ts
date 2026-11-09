@@ -12,8 +12,9 @@ export type FileUpload = {
 // Category to determine whether to upload the image to cloudinary and save to database as a diagram or question_preview
 export type ImageCategory = "diagram" | "question_preview"
 
-// PDFs and workbooks information
-export type QuestionInfo = {
+
+// PDFs and workbooks information ----------------------------------------------------------------------------------------
+export type QuestionFileInfo = {
     file?: File | null
     section: string
     topic: string
@@ -21,68 +22,49 @@ export type QuestionInfo = {
     source: string
 }
 
-export type BaseBronzeQuestions = {
+// Base Questions Paramaters that both silver and bronze questions tables have ------------------------------------------------
+export type BaseQuestion = {
     section: string
     topic: string
-    subtopic: string
+
     question_type: string
     question_preview: string
     mc_preview?: string
-    multiple_choices?:{
-        A: string
-        B: string
-        C: string
-        D: string
-    } | null
-    reading_question: string | null 
-    text:string
-    uploaded_at: string
+
+    text: string 
+    reading_question: string
+    multiple_choices?: MCProps | null
+    answer_key?: string | string[]
+
+}
+
+export type IncomingBronzeQuestions = BaseQuestion & {
+    question_id: string 
+    subtopic: string 
     source: string
     reviewed: string
 }
 
-export type IncomingBronzeQuestions = BaseBronzeQuestions & {
-    question_id: string 
-    uploaded_at: string
-    reviewed: string
-}
-
-export type IncomingSilverQuestions = {
+export type IncomingSilverQuestions = BaseQuestion & {
     question_id?: string
-    section: string
-    topic: string
-    subtopic: string[]
+    subtopic: string[] | []
 
     difficulty?: string
     time_estimate?: number
 
-    question_type: string
-    question_preview: string
-    mc_preview?: string
-
-    reading_question: string | null 
-    text:string
     equation?: string
     diagram?: string
 
-    multiple_choices?:{
-        A: string
-        B: string
-        C: string
-        D: string
-    } | null
-    answer_key?: string | string[]
     source?:string
 }
 
-export type QuestionSearchParameters = {
-    section?: string
-    topic?: string
-    subtopic?: string
+
+export type QuestionEditorForm = BaseQuestion & IncomingSilverQuestions & {
+    reviewed: string
 }
 
 
-// MC Props
+// MC Props --------------------------------------------------------------------------------------------------------
 export type MCProps = {
     A: string
     B: string
@@ -90,6 +72,7 @@ export type MCProps = {
     D: string
 }
 
+// Question Search Filters ----------------------------------------------------------------------------------------
 export type SearchFilters = {
     section: string | undefined 
     topic: string | undefined 
@@ -97,5 +80,18 @@ export type SearchFilters = {
     source: string | undefined 
 }
 
+export type SearchParameters = {
+    question_id: string | undefined 
+    section: string | undefined 
+    topic: string | undefined 
+    subtopic: string | undefined 
+    text: string | undefined 
+    reviewed?: boolean | undefined 
+    source: string | undefined 
+}
+
 
 export type UseFileUploaderReturn = ReturnType<typeof useFileUploader>
+
+
+export type AnyQuestion = IncomingBronzeQuestions | IncomingSilverQuestions
