@@ -1,17 +1,17 @@
 "use client"
 
-import {useState, Suspense} from "react";
-import MathQuestionEditor from "@/components/forms/MathQuestionEditor";
-import ReadingQuestionEditor from "@/components/forms/ReadingQuestionEditor";
+import {useState} from "react";
+import MathQuestionEditor from "@/components/admin/questions/MathQuestionEditor";
+import ReadingQuestionEditor from "@/components/admin/questions/ReadingQuestionEditor";
 import AdminHeader from "@/components/navigation/AdminHeader";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import useEditorNavigation from "@/hooks/admin/question-processing/useEditorNavigation"
 import useQuestionEditor from "@/hooks/admin/question-processing/useQuestionEditor";
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader"
-import Preview from "@/components/forms/ui/Preview";
+import Preview from "@/components/admin/questions/ui/Preview";
 import CircleLoadingAnimation from "@/components/ui/loading-animation/circleLoadingAnimation"; 
-import SearchBar from "@/components/forms/ui/SearchBar"
-
+import SearchBar from "@/components/admin/questions/ui/SearchBar"
+import useQuestionSearch from "@/hooks/admin/question-processing/useQuestionSearch";
 
 
 const buttonClass = "rounded-xl min-w-20 py-1 text-md font-semibold border-2 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer "
@@ -19,14 +19,17 @@ const buttonClass = "rounded-xl min-w-20 py-1 text-md font-semibold border-2 hov
 
 export default function Page () {
 
+    const {search, hasSearched, questions, setQuestions, searchError, setSearchError, loading,  handleSearchChange, handleSearch} = useQuestionSearch({reviewed:false, loadOnMount: true})
 
-    const {
-        search, handleSearchChange, handleSearch,
-        questions, numQuestions, loading, 
-        error,setError,
-        currentIndex, nextIndex, previousIndex,
-        completedQuestions, saving, saveQuestion, handleSave, 
-    } = useEditorNavigation()
+    const { error,setError, currentIndex, nextIndex, previousIndex, completedQuestions, saving, saveQuestion, handleSave, resetNavigation } = useEditorNavigation({questions, setQuestions})
+
+    // New search: fetch, then start navigation from the first question
+    const onSearch = async () => {
+        if (await handleSearch()) resetNavigation()
+    }
+
+    const pageError = error || searchError
+    const dismissError = () => { setError(""); setSearchError("")}
 
     const currentQuestion = questions[currentIndex] ?? null
     const [uploading, setUploading] = useState(false)
@@ -34,12 +37,7 @@ export default function Page () {
     const diagramUploader = useFileUploader()
     const [preview, setPreview] = useState(false)
     
-
-    const {
-        form,
-        fieldChange, mcFieldChange, mcChangeAll, handleImageUpload,
-        handleDeleteQuestion,
-    } = useQuestionEditor(currentQuestion)
+    const { form, fieldChange, mcFieldChange, mcChangeAll, handleImageUpload, handleDeleteQuestion} = useQuestionEditor(currentQuestion)
 
     // Open the preview without uploading anything
     const handleOpenPreview = () => {
@@ -81,13 +79,13 @@ export default function Page () {
             diagramUploader.resetUpload()
         }
     }
-    
 
     const handleDeleteQuestionClick = async () => {
         if (!currentQuestion) return
         setDeleting(true)
         try {
             const ok = await handleDeleteQuestion(currentQuestion.question_id ?? "")
+            console.log("backend message from delete_question ", ok)
             if (!ok) {
                 setError("Question already deleted.")
                 return
@@ -104,30 +102,16 @@ export default function Page () {
     }
 
     const adminHeaderButtons = [
-        {
-            label:"Previous", onClick:previousIndex, disabled:currentIndex===0, className:`bg-primary border-transparent text-white ${buttonClass}`
-        }, 
-        {
-            label:"Save", onClick:handleSaveQuestionClick, disabled:saving || !currentQuestion, className:`border-primary text-primary ${buttonClass}`
-        }, 
-        {
-            label:"Preview", onClick:handleOpenPreview, disabled:preview || completedQuestions.length===0, className:`border-green-600 bg-white text-green-600 ${buttonClass}`
-        }, 
-        {
-            label:"Next", onClick:nextIndex, disabled:currentIndex === questions.length-1,  className:`bg-primary border-transparent text-white ${buttonClass}`
-        }
+        { label:"Previous", onClick:previousIndex, disabled:currentIndex===0, className:`bg-primary border-transparent text-white ${buttonClass}` }, 
+        { label:"Save", onClick:handleSaveQuestionClick, disabled:saving || !currentQuestion, className:`border-primary text-primary ${buttonClass}` }, 
+        { label:"Preview", onClick:handleOpenPreview, disabled:preview || completedQuestions.length===0, className:`border-green-600 bg-white text-green-600 ${buttonClass}` }, 
+        { label:"Next", onClick:nextIndex, disabled:currentIndex === questions.length-1,  className:`bg-primary border-transparent text-white ${buttonClass}` }
     ]
 
     return (
         <div>
-            {error &&
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                    <ErrorMessage
-                        error={error}
-                        onDismiss={()=> setError("")}
-                    />
-                </div>
-            }
+            {error && <ErrorMessage error={pageError} onDismiss={dismissError} fillsPage={true}/> }
+
             {preview && (
                 <Preview
                     questions={completedQuestions}
@@ -139,7 +123,7 @@ export default function Page () {
 
             <AdminHeader
                 title="Edit Questions"
-                subtitle={questions.length !== 0 ?`Question ${currentIndex+1} of ${numQuestions}` : ``}
+                subtitle={questions.length !== 0 ?`Question ${currentIndex+1} of ${questions.length}` : ``}
                 actions = {
                     <div className="grid grid-cols-4 gap-2">
                         {adminHeaderButtons.map((button) => (
@@ -160,48 +144,42 @@ export default function Page () {
 
             {/* Search: always visible, even when no questions match */}
             <div className="px-6 pt-20">
-                <SearchBar
-                    search={search}
-                    searchChangeAction={handleSearchChange}
-                    handleSearchAction={handleSearch}
+                <SearchBar 
+                    search={search} 
+                    searchChangeAction={handleSearchChange} 
+                    handleSearchAction={onSearch} 
+                    selectedParameters={['question_id', 'section', 'topic', 'subtopic', 'source']}
                 />
             </div>
+            
 
-            {questions.length === 0 && !loading &&
-                <div className="flex items-center justify-center pt-10">
-                    <p>No more questions. Try a different search parameters. </p>
-                </div>
-            }
-
-        
-
-            <Suspense fallback={<div className="flex items-center justify-center pt-10">
-                    <CircleLoadingAnimation/>
-                </div>}>
-                {form.section === 'math' ? (
-                        <MathQuestionEditor
-                            form={form}
-                            fieldChangeAction={fieldChange}
-                            mcFieldChangeAction={mcFieldChange}
-                            mcChangeAll={mcChangeAll}
-                            handleImageAction = {handleImageUpload}
-                            diagramUploader={diagramUploader}
-                            onDeleteAction={handleDeleteQuestionClick}
-                            deleting={deleting}
-                        />
-                    ) : (
-                        <ReadingQuestionEditor
-                            form={form}
-                            fieldChangeAction={fieldChange}
-                            mcFieldChangeAction={mcFieldChange}
-                            mcChangeAll={mcChangeAll}
-                            handleImageAction = {handleImageUpload}
-                            diagramUploader={diagramUploader}
-                            onDeleteAction={handleDeleteQuestionClick}
-                            deleting={deleting}
-                        />
-                    )}
-            </Suspense>
+            {loading ? (
+                <CircleLoadingAnimation />
+            ) : (hasSearched && questions.length === 0) ? (
+                <p>No more questions. Try different search parameters.</p>
+            ) : form.section === "math" ? (
+                <MathQuestionEditor
+                    form={form}
+                    fieldChangeAction={fieldChange}
+                    mcFieldChangeAction={mcFieldChange}
+                    mcChangeAll={mcChangeAll}
+                    handleImageAction={handleImageUpload}
+                    diagramUploader={diagramUploader}
+                    onDeleteAction={handleDeleteQuestionClick}
+                    deleting={deleting}
+                />
+            ) : (
+                <ReadingQuestionEditor
+                    form={form}
+                    fieldChangeAction={fieldChange}
+                    mcFieldChangeAction={mcFieldChange}
+                    mcChangeAll={mcChangeAll}
+                    handleImageAction={handleImageUpload}
+                    diagramUploader={diagramUploader}
+                    onDeleteAction={handleDeleteQuestionClick}
+                    deleting={deleting}
+                />
+            )}
         </div>
     )
 }

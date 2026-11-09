@@ -5,10 +5,12 @@ import AdminHeader from "@/components/navigation/AdminHeader";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import {useState} from "react";
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader"
-import QuestionAdder from "@/components/forms/QuestionAdder";
+import QuestionAdder from "@/components/admin/questions/QuestionAdder";
 import useQuestionAdder from "@/hooks/admin/question-processing/useQuestionAdder";
-import Preview from "@/components/forms/ui/Preview";
+import Preview from "@/components/admin/questions/ui/Preview";
 
+
+const buttonClass = "rounded-xl min-w-20 py-1 text-md font-semibold border-2 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer "
 
 
 export default function Page () {
@@ -54,58 +56,38 @@ export default function Page () {
     // Continue the question
     const handleDismiss = () => setPreview(false) 
 
-    const buttonStyle = "rounded-xl border-2 px-5 py-2 text-center cursor-pointer font-semibold transition-all disabled:opacity-50"
+    const adminHeaderButtons = [
+        {
+            label:"Reset", onClick:resetForm, disabled:saving, className:`bg-red-500 hover:bg-red-500/70 border-transparent text-white ${buttonClass}`
+        }, 
+        {
+            label:"Save", onClick:saveQuestion, disabled:saving, className:`bg-primary border-transparent hover:bg-primary/70 text-white ${buttonClass}`
+        }, 
+        {
+            label:"Preview", onClick:handleOpenPreview, disabled:preview || completedQuestions.length===0, className:`border-green-600 bg-white text-green-600 ${buttonClass}`
+        }, 
+    ]
 
     return (
-        <div className="pt-1 w-full">
-            {error &&
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                    <ErrorMessage
-                        error={error}
-                        onDismiss={()=> setError("")}
-                    />
-                </div>
-            }
-            {preview && (
-                <Preview
-                    questions={completedQuestions}
-                    saving={uploading}
-                    onConfirm={handleConfirmSave}
-                    onDismiss={handleDismiss}
-                />
-            )}
+        <div className="w-full">
             
-
             <AdminHeader
                 title="Add Questions"
                 subtitle={`Completed ${completedQuestions.length} questions`}
                 actions = {
-                    <div className="grid grid-cols-3 gap-x-4 ">
-                        <button
-                            type="button"
-                            onClick={resetForm}
-                            disabled={saving}
-                            className={`${buttonStyle} bg-red-500 text-white hover:bg-red-500/70`}
-                        >
-                            Reset
-                        </button>
-                        <button
-                            type="button"
-                            onClick={saveQuestion}
-                            disabled={saving}
-                            className={`${buttonStyle} bg-primary text-white hover:bg-primary/70`}
-                        >
-                            {saving ? "Saving..." : "Save"}
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={handleOpenPreview}
-                            disabled={completedQuestions.length===0}
-                            className={`${buttonStyle} border-primary text-primary hover:bg-primary/40`}
-                        >
-                            Preview
-                        </button>
+                    <div className="grid grid-cols-3 gap-2">
+                        {adminHeaderButtons.map((button) => (
+                            <div key={button.label}>
+                                <button
+                                    type="button"
+                                    onClick={button.onClick}
+                                    disabled={button.disabled}
+                                    className={button.className}
+                                >
+                                    {button.label}
+                                </button>
+                            </div>
+                        ))}
                     </div>
                 }
             />
@@ -119,6 +101,17 @@ export default function Page () {
                 previewUploader={previewUploader}
                 diagramUploader={diagramUploader}
             />
+
+            {error && <ErrorMessage error={error} onDismiss={()=> setError("")} fillsPage={true}/> }
+            
+            {preview && (
+                <Preview
+                    questions={completedQuestions}
+                    saving={uploading}
+                    onConfirm={handleConfirmSave}
+                    onDismiss={handleDismiss}
+                />
+            )}
         </div>
     )
 }

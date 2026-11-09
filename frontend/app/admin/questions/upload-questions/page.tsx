@@ -1,4 +1,4 @@
-import UploadQuestions from "@/components/forms/UploadQuestions";
+import UploadQuestions from "@/components/admin/questions/UploadQuestions";
 import AdminHeader from "@/components/navigation/AdminHeader";
 
 export default function Page () {
