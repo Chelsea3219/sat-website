@@ -1,14 +1,14 @@
-import SubtopicEditor from "@/components/forms/ui/SubtopicEditor";
-import TextEditor from "@/components/forms/ui/TextEditor";
-import LaTexInput from "@/components/forms/ui/LaTexInput";
+import SubtopicEditor from "@/components/admin/questions/ui/SubtopicEditor";
+import TextEditor from "@/components/admin/questions/ui/TextEditor";
+import LaTexInput from "@/components/admin/questions/ui/LaTexInput";
 import FileUploader from "@/components/forms/FileUploader";
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader";
-import MCEditor from "@/components/forms/ui/MCEditor";
+import MCEditor from "@/components/admin/questions/ui/MCEditor";
 import {IncomingSilverQuestions, MCProps, ImageCategory} from "@/types/question-processing";
-import TopicSelector from "./ui/TopicSelector";
+import TopicSelector from "@/components/admin/questions/ui/TopicSelector";
 import "@/css/forms/form.css"
-import AnswerEditor from "@/components/forms/ui/AnswerEditor";
-import SnippetButtons from "@/components/forms/ui/SnippetButtons";
+import AnswerEditor from "@/components/admin/questions/ui/AnswerEditor";
+import SnippetButtons from "@/components/admin/questions/ui/SnippetButtons";
 
 
 

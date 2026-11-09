@@ -2,15 +2,15 @@
 
 
 import "@/css/forms/form.css"
-import TextEditor from "@/components/forms/ui/TextEditor";
-import LaTexInput from "@/components/forms/ui/LaTexInput";
+import TextEditor from "@/components/admin/questions/ui/TextEditor";
+import LaTexInput from "@/components/admin/questions/ui/LaTexInput";
 import FileUploader from "@/components/forms/FileUploader";
-import MCEditor from "@/components/forms/ui/MCEditor";
-import QuestionMCPreview from "@/components/forms/ui/QuestionMCPreview";
-import SubtopicEditor from "@/components/forms/ui/SubtopicEditor";
+import MCEditor from "@/components/admin/questions/ui/MCEditor";
+import QuestionMCPreview from "@/components/admin/questions/ui/QuestionMCPreview";
+import SubtopicEditor from "@/components/admin/questions/ui/SubtopicEditor";
 import {IncomingSilverQuestions, MCProps, UseFileUploaderReturn, ImageCategory} from "@/types/question-processing";
-import AnswerEditor from "@/components/forms/ui/AnswerEditor";
-import SnippetButtons from "@/components/forms/ui/SnippetButtons";
+import AnswerEditor from "@/components/admin/questions/ui/AnswerEditor";
+import SnippetButtons from "@/components/admin/questions/ui/SnippetButtons";
 
 
 type Props = {
@@ -37,7 +37,7 @@ export default function MathQuestionEditor(
 
     return (
         <>
-            <div className=" max-w-7xl mx-auto px-2 md:px-6 lg:px-8">
+            <div className=" max-w-7xl mx-auto px-2 md:px-6 lg:px-8 pt-4">
 
                 <div>
                     {/* Question Editor */}

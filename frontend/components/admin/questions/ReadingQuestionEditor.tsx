@@ -3,10 +3,10 @@
 "use client"
 
 import "@/css/forms/form.css"
-import TextEditor from "@/components/forms/ui/TextEditor";
+import TextEditor from "@/components/admin/questions/ui/TextEditor";
 import FileUploader from "@/components/forms/FileUploader";
-import MCEditor from "@/components/forms/ui/MCEditor";
-import SubtopicEditor from "@/components/forms/ui/SubtopicEditor";
+import MCEditor from "@/components/admin/questions/ui/MCEditor";
+import SubtopicEditor from "@/components/admin/questions/ui/SubtopicEditor";
 import {IncomingSilverQuestions, MCProps, UseFileUploaderReturn, ImageCategory} from "@/types/question-processing";
 
 
@@ -38,7 +38,7 @@ export default function ReadingQuestionEditor(
 
     return (
         <>
-            <div className="px-2 md:px-6 lg:px-8 ">
+            <div className="px-2 md:px-6 lg:px-8 pt-4">
 
                 {/* Question Information ------------------------------------------------------------------------*/}
                 <div className="lg:col-span-4 min-w-0 space-y-4 ">
