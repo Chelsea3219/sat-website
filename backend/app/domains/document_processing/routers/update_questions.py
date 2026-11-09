@@ -58,7 +58,7 @@ def update_raw_question(questions: List[CleanQuestions], db: Session = Depends(g
                 silver = SilverQuestions(
                     question_id=question.question_id, 
                     **data,
-                    updated_now=now,
+                    updated_at=now,
                     explanation_status="generating"
                 )
                 db.add(silver)
@@ -85,4 +85,4 @@ def update_raw_question(questions: List[CleanQuestions], db: Session = Depends(g
         ])
     except Exception:
         logger.exception("Failed to enqueue explanation job; sweeper will retry")
-    return {"added": len(num_updated)}
+    return {"added": num_updated}

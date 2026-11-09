@@ -46,6 +46,7 @@ def add_questions(questions: List[AddQuestions], db: Session = Depends(get_db)):
                 question_type=question.question_type,
                 mc_preview=question.mc_preview,
                 text=question.text,
+                reading_question = question.reading_question, 
 
                 uploaded_at=now,
                 source=question.source,
