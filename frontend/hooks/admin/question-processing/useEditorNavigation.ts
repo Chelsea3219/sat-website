@@ -1,27 +1,27 @@
 
 "use client"
 
-import {useState, useEffect} from "react";
-import type {IncomingSilverQuestions, IncomingBronzeQuestions, SearchFilters} from "@/types/question-processing"
-import {fetchRawQuestions, updateRawQuestions} from "@/services/api.document-processing";
+import {useState} from "react";
+import type {IncomingSilverQuestions, AnyQuestion} from "@/types/question-processing"
+import {updateRawQuestions} from "@/services/api.document-processing";
 import { validateEditorForm } from "@/utils/admin/question-processing";
 import timeEstimate from "@/utils/admin/question-processing"
 import { wrapSigma } from "@/utils/latexHelpers";
 import { useAuthedFetch } from "@/lib/fetchWithFreshToken";
 
-
-const emptySearchForm : SearchFilters = { section:"", topic:"", subtopic:"", source:""};
+type Props = {
+    questions: AnyQuestion[]
+    setQuestions: (questions:AnyQuestion[]) => void 
+}
 
 
 
 // Responsible for fetching questions, navigating and saving them to the database
-export default function useEditorNavigation(){
+export default function useEditorNavigation(
+    {questions, setQuestions}: Props 
+){
 
     // Initialize the parameters ---------------------------------------------------------------------------------------
-    const [search, setSearch] = useState<SearchFilters>(emptySearchForm)
-
-    const [questions, setQuestions] = useState<(IncomingBronzeQuestions | IncomingSilverQuestions)[]>([])
-    const numQuestions = questions.length 
     const [completedQuestions, setCompletedQuestions] = useState<IncomingSilverQuestions[]>([])
     const resetCompleted = () => setCompletedQuestions([])
     const [saving, setSaving] = useState(false)
@@ -29,73 +29,12 @@ export default function useEditorNavigation(){
 
     const [currentIndex, setCurrentIndex] = useState(0)
     const [processedCount, setProcessedCount] = useState(0)
-    const [loading, setLoading] = useState(true)
 
 
-    // Automatically fetches the questions from the bronze.raw_questions  once on mount -----------------------------------------------
-    // Fetch unreviewed questions once on mount
-    const authedFetch = useAuthedFetch()
-
-    useEffect(() => {
-        let ignore = false
-
-        fetchRawQuestions(emptySearchForm, authedFetch )
-            .then((data) => { if (!ignore) setQuestions(data) })
-            .catch((error) => {
-                console.error("Unable to fetch questions.", error)
-                if (!ignore) setError("Failed to fetch questions.")
-            })
-            .finally(() => { if (!ignore) setLoading(false) })
-
-        return () => { ignore = true }
-    }, [authedFetch])   // runs once
-
-
-    // Handle the change in searchField  -------------------------------------------------------------------------------
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const {name, value} = e.target
-        setSearch(prev => ({...prev, [name]: value }))
-    }
-
-
-    // Fetches the questions from the bronze.raw_questions --------------------------------------------------------------
-    const handleSearch = async() => {
-        console.log("search", search)
-
-        if (!search) {
-            setError("Please enter or select a condition.")
-            return
-        }
-
-        setError("")
-        setLoading(true)
-
-        try {
-            // Identify the search parameters
-            const searchParams: SearchFilters = {
-                section: search.section?.trim() || undefined, 
-                topic: search.topic?.trim() || undefined, 
-                subtopic: search.subtopic?.trim() || undefined, 
-                source: search.source?.trim() || undefined 
-            }
-            const data = await fetchRawQuestions(searchParams, authedFetch)
-            //console.log("backend data by filter: ", data)
-
-            if (!Array.isArray(data)) {
-                setError("Unexpected response from server.")
-                return
-            }
-
-            setQuestions(data)
-            setCurrentIndex(0)
-            setCompletedQuestions([])
-            setSearch(emptySearchForm)
-        } catch (error) {
-            console.error("Unable to fetch questions.", error)
-            setError("Failed to fetch questions.")
-        } finally {
-            setLoading(false)
-        }
+    // Start over on new list (call after a new search)
+    const resetNavigation = () => {
+        setCurrentIndex(0)
+        setCompletedQuestions([])
     }
 
 
@@ -168,11 +107,11 @@ export default function useEditorNavigation(){
     
     // Updates and Saves Questions in the dataset ------------------------------------------------------------------------
     const [isSavingBatch, setIsSavingBatch] = useState(false)
+    const authedFetch = useAuthedFetch()
+
     const handleSave = async (saved:IncomingSilverQuestions[]) => {
         //console.log("questions being sent ==>> ", completedQuestions)
-
         if (saved.length === 0 || isSavingBatch) return 
-        
         setIsSavingBatch(true)
         setError("")
 
@@ -203,11 +142,9 @@ export default function useEditorNavigation(){
 
 
     return {
-        search, handleSearchChange, handleSearch,
-        questions, numQuestions,
-        error,setError, loading,
+        error,setError,
         currentIndex, nextIndex, previousIndex, processedCount,
         completedQuestions, saving, saveQuestion, handleSave, 
-        resetCompleted
+        resetCompleted, resetNavigation
     }
 }
