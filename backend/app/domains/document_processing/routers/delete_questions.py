@@ -10,7 +10,7 @@ from app.core.auth import require_admin
 from app.core.logging_config import setup_logging
 
 from app.domains.errors.error_handler import handle_db_errors
-from app.domains.questions.models import BronzeQuestions
+from app.domains.questions.models import BronzeQuestions, SilverQuestions
 from app.domains.answer_explanations.models import SilverHintsAnswerExplanations
 
 
@@ -25,6 +25,7 @@ def delete_questions(question_id: str, db=Depends(get_db)):
 
         # Fetches the question and answer_explanation
         bronze_question = db.query(BronzeQuestions).filter(BronzeQuestions.question_id == question_id).first()
+        silver_question = db.query(SilverQuestions).filter(SilverQuestions.question_id == question_id).first()
         answer_explanation = db.query(SilverHintsAnswerExplanations).filter(SilverHintsAnswerExplanations.question_id == question_id).first()
 
         if not bronze_question:
@@ -34,5 +35,7 @@ def delete_questions(question_id: str, db=Depends(get_db)):
         # Delete the question and answer explanation
         db.delete(bronze_question)
         if answer_explanation: db.delete(answer_explanation)
+        if silver_question: db.delete(silver_question)
+        
         db.commit()
         return {"message": "Question deleted successfully"}
