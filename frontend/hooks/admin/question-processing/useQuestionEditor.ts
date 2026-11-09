@@ -2,46 +2,60 @@
 "use client"
 
 import {useState} from "react";
-import type {IncomingSilverQuestions, IncomingBronzeQuestions, MCProps } from "@/types/question-processing";
+import type {IncomingSilverQuestions, IncomingBronzeQuestions, MCProps, AnyQuestion} from "@/types/question-processing";
 import {deleteQuestion, uploadQuestionImage} from "@/services/api.document-processing";
 import { preprocessForm} from "@/utils/admin/question-processing";
 
 
 
-export default function useQuestionEditor(
-    currentQuestion: IncomingBronzeQuestions | null,
-){
+// Module level: created once
+const EMPTY_MC: MCProps = { A: "", B: "", C: "", D: "" }
+const EMPTY_FORM: IncomingSilverQuestions = {
+    question_id: "",
+    section: "",
+    topic: "",
+    subtopic: [],                 // [] not [""]: an empty string would show up as a blank chip
+    difficulty: "",
+    time_estimate: 0,
+    question_type: "",
+    question_preview: "",
+    mc_preview: "",
+    reading_question: "",
+    text: "",
+    equation: "",
+    diagram: "",
+    multiple_choices: EMPTY_MC,
+    answer_key: "",
+}
 
-    // Initialize the parameters ---------------------------------------------------------------------------------------
-    const emptyForm: IncomingSilverQuestions = {
-        question_id: "",
-        section: "",
-        topic: "",
-        subtopic: [""],
-        difficulty: "",
-        time_estimate: 0,
-        question_type: "",
-        question_preview: "",
-        mc_preview: "",
-        reading_question:"",
-        text: "",
-        equation: "",
-        diagram: "",
-        multiple_choices: {
-            A: "", B: "", C: "", D:""
-        },
-        answer_key: "",
+// Type guard: `reviewed` only exists on bronze rows
+const isBronze = (q: AnyQuestion): q is IncomingBronzeQuestions => "reviewed" in q
+
+// Convert either kind of question into the form shape
+const toForm = (q: AnyQuestion | null | undefined): IncomingSilverQuestions => {
+    if (!q) return EMPTY_FORM
+    if (isBronze(q)) return preprocessForm(q)
+    return {
+        ...EMPTY_FORM,                              // fill any missing optional fields
+        ...q,
+        subtopic: q.subtopic ?? [],
+        multiple_choices: q.multiple_choices ?? EMPTY_MC,
     }
-    const [form, setForm] = useState<IncomingSilverQuestions>(emptyForm)
+}
 
-    // Track what (currentIndex, savedKey) the form was last synced to. -------------------------------------------------
-    const [syncedKey, setSyncedKey] = useState<string | null>(null)
-    const resetKey = currentQuestion?.question_id ?? "none"
-    // Adjust state during render instead of in an Effect: avoids the extra
-    // commit-then-recommit cycle an Effect would cause here.
+
+
+export default function useQuestionEditor(
+    currentQuestion: AnyQuestion | null,
+){
+    const [form, setForm] = useState<IncomingSilverQuestions>(() => toForm(currentQuestion))
+
+    // Resync the form when a different question is selected (adjusting state during render)
+    const [syncedKey, setSyncedKey] = useState<string | null>(currentQuestion?.question_id ?? null)
+    const resetKey = currentQuestion?.question_id ?? null
     if (resetKey !== syncedKey) {
         setSyncedKey(resetKey)
-        setForm(currentQuestion ? preprocessForm(currentQuestion) : emptyForm)
+        setForm(toForm(currentQuestion))
     }
 
 
@@ -89,7 +103,7 @@ export default function useQuestionEditor(
         }
     }
 
-    const resetForm = () => setForm(emptyForm)
+    const resetForm = () => setForm(EMPTY_FORM)
 
     return {form, fieldChange, mcFieldChange, mcChangeAll, handleImageUpload, resetForm, handleDeleteQuestion}
 }
