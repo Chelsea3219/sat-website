@@ -82,8 +82,12 @@ class AddQuestions(BaseModel):
     source: str
 
 
-class SearchRawQuestions(BaseModel):
+
+class SearchParameters(BaseModel):
+    question_id: Optional[str]= None
     section: Optional[str] = None
     topic: Optional[str] = None
     subtopic: Optional[str] = None
     source: Optional[str] = None
+    text: Optional[str] = None
+    reviewed: Optional[bool] = True
