@@ -5,7 +5,7 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
 from app.domains.errors.error_handler import handle_db_errors
-from app.domains.document_processing.schemas import SearchRawQuestions, RawQuestionsIn, SearchParameters
+from app.domains.document_processing.schemas import SearchParameters
 
 from app.core.database import get_db
 from app.core.auth import require_admin
