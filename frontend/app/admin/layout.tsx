@@ -1,12 +1,10 @@
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
+
+import { requireAdmin } from '@/lib/auth'
+
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { sessionClaims } = await auth()
 
-  if (sessionClaims?.metadata?.role !== 'admin') {
-    redirect('/dashboard')
-  }
+  await requireAdmin()
 
   return (
     <>
