@@ -1,6 +1,6 @@
 # Import Python libraries and files
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 # TRIM THE EXCESSIVE WHITESPACE ----------------------------------------------------------------------------------------
@@ -78,3 +78,40 @@ def crop_question_blocks(pil_image, padding=2):
         crop = pil_image.crop((0, top, width, bottom))
         cropped.append(crop)
     return cropped
+
+
+def remove_image_whitespace(image, padding=0):
+    threshold = 240
+
+    # Convert image to RGB
+    image = image.convert("RGB")
+
+    # Create a grayscale version
+    grayscale = ImageOps.grayscale(image)
+
+    # Convert near-white pixels to white and content to black
+    threshold_image = grayscale.point(
+        lambda pixel: 255 if pixel > threshold else 0
+    )
+    
+    # Invert the colors so white background becomes black (0, 0, 0)
+    inverted_image = ImageOps.invert(threshold_image)
+    
+    # Find the bounding box of all non-black pixels
+    bbox = inverted_image.getbbox()
+    
+    if bbox:
+        left, top, right, bottom = bbox
+        
+        # Apply padding if requested
+        if padding > 0:
+            left = max(0, left - padding)
+            top = max(0, top - padding)
+            right = min(image.width, right + padding)
+            bottom = min(image.height, bottom + padding)
+            
+        # Crop the original image to the bounding box coordinates
+        cropped_image = image.crop((left, top, right, bottom))
+        return cropped_image
+    else:
+        print("No whitespace to remove (or the image is entirely white).")
