@@ -35,3 +35,12 @@ build/
 *.log
 backend/app.log
 backend/.env.stripe
+
+# --- Sample Pages from preppros textbooks ---
+backend/split_pages/page_1_left.png
+backend/split_pages/page_2_left.png
+backend/split_pages/page_3_left.png
+backend/split_pages/page_1_right.png
+backend/split_pages/page_2_right.png
+backend/split_pages/page_3_right.png
+
