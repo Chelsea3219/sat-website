@@ -69,7 +69,9 @@ const items = [
                     {title: "Roots", path:"/math/advanced-math/roots"},
                     {title: "Exponential Growth & Decay", path:"/math/advanced-math/exponential-growth-decay"},
                     {title: "Quadratic Equations", path:"/math/advanced-math/quadratic-equations"},
+                    {title: "Rational Equations", path:"/math/advanced-math/rational-equations"},
                     {title: "Absolute Value Equations", path:"/math/advanced-math/absolute-value-equations"},
+                    {title: "In Terms of", path:"/math/advanced-math/in-terms-of"},
                 ]
             },
             {
