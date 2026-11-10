@@ -1,11 +1,21 @@
 # Import Python libraries and files
 import re
 import os
+import shutil
 import pprint
 from pdf2image import convert_from_path
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_CMD", "/opt/homebrew/bin/tesseract")
 
+
+tesseract_path = (
+    os.getenv("TESSERACT_CMD")
+    or shutil.which("tesseract")
+)
+
+if not tesseract_path:
+    raise RuntimeError("Tesseract OCR is not installed.")
+
+pytesseract.pytesseract.tesseract_cmd = tesseract_path
 from app.domains.document_processing.pipelines.image_processing import *
 
 
