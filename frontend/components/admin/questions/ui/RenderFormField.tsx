@@ -35,7 +35,7 @@ export default function RenderFormField({ label, value, type, options = [], fiel
                     value={value ?? ""}
                     onChange={(e) => fieldChangeAction(e.target.value)}
                     placeholder={label}
-                    className="w-full bg-white rounded-md p-1 text-gray-700"
+                    className={`w-full bg-white rounded-md p-1 text-gray-700 min-h-28 ${fieldClass}`}
                 />
             ) : (
                 <>

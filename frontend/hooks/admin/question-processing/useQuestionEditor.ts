@@ -46,7 +46,7 @@ const toForm = (q: AnyQuestion | null | undefined): IncomingSilverQuestions => {
 
 
 export default function useQuestionEditor(
-    currentQuestion: AnyQuestion | null,
+    currentQuestion: AnyQuestion | null | undefined,
 ){
     const [form, setForm] = useState<IncomingSilverQuestions>(() => toForm(currentQuestion))
 

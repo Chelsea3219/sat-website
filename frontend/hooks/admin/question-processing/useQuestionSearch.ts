@@ -2,8 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuthedFetch } from "@/lib/fetchWithFreshToken";
 import { searchQuestions } from "@/services/api.document-processing";
-import { SearchParameters } from "@/types/question-processing";
-import { AnyQuestion } from "@/types/question-processing";
+import { SearchParameters, QuestionSearchResults } from "@/types/question-processing";
 
 type Props = {
     reviewed: boolean
@@ -12,16 +11,21 @@ type Props = {
 const EMPTY_FILTERS = { question_id: "", section: "", topic: "", subtopic: "", text: "", source: "" }
 
 
-
 export default function useQuestionSearch({reviewed, loadOnMount = false}: Props ) {
 
     // Initialize the parameters
     const [search, setSearch] = useState<SearchParameters>({...EMPTY_FILTERS, reviewed})
-    const [questions, setQuestions] = useState<AnyQuestion[]>([])
+    const [questions, setQuestions] = useState<QuestionSearchResults[]>([])
+    const [currentIndex, setCurrentIndex] = useState(0)
     const [searchError, setSearchError] = useState("")
     const [loading, setLoading] = useState(loadOnMount)
     const [hasSearched, setHasSearched] = useState(false)
 
+    // Next and Previous Question Navigation
+    const selectQuestion = (index: number) => {
+        if (index < 0 || index >= questions.length) return
+        setCurrentIndex(index)
+    }
 
     // Handle the change in searchField  -------------------------------------------------------------------------------
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -37,6 +41,7 @@ export default function useQuestionSearch({reviewed, loadOnMount = false}: Props
         setLoading(true)
         try {
             setQuestions( await searchQuestions(params, authedFetch) )
+            setCurrentIndex(0)
             return true
         } catch (error) {
             console.error("Unable to fetch questions based on search parameters ", error)
@@ -70,5 +75,5 @@ export default function useQuestionSearch({reviewed, loadOnMount = false}: Props
     }, [loadOnMount, reviewed, authedFetch])
 
 
-    return {search, hasSearched, handleSearchChange, handleSearch, questions, setQuestions, searchError, setSearchError, loading}
+    return {search, hasSearched, handleSearchChange, handleSearch, questions, setQuestions, currentIndex, selectQuestion, searchError, setSearchError, loading}
 }

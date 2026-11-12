@@ -8,13 +8,14 @@ import {SUBTOPICS} from "@/utils/admin/subtopics"
 type Props = {
     subtopic: string | string[]
     onChangeAction: (subtopic: string[]) => void
+    showOptions?: boolean
 }
 
 type Option = { label: string; value: string }
 const toOption = (s: string): Option => ({ label: s, value: s })
 
 
-export default function SubtopicEditor({subtopic, onChangeAction}:Props) {
+export default function SubtopicEditor({subtopic, onChangeAction, showOptions=true}:Props) {
 
     // Normalizes the subtopic array
     const subtopics: string[] = Array.isArray(subtopic) // Checks to see if it is an array
@@ -32,7 +33,7 @@ export default function SubtopicEditor({subtopic, onChangeAction}:Props) {
                 instanceId={id}
                 isMulti
                 placeholder="Type or pick a subtopic"
-                options={SUBTOPICS.map(toOption)}              // your existing subtopic list
+                options={showOptions ? SUBTOPICS.map(toOption) : undefined}
                 value={subtopics.map(toOption)}
                 onChange={(selected) => onChangeAction(selected.map((o) => o.value))}
                 formatCreateLabel={(input) => `Add "${input.trim().toLowerCase()}"`}
