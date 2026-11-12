@@ -1,10 +1,11 @@
 "use client"
+
 import SearchBar from "@/components/admin/questions/ui/SearchBar"
-import useEditorNavigation from "@/hooks/admin/question-processing/useEditorNavigation"
+import useExplanationEditor from "@/hooks/admin/useExplanationEditor"
 import useQuestionEditor from "@/hooks/admin/question-processing/useQuestionEditor"
-import {AnyQuestion} from "@/types/question-processing"
+import {QuestionSearchResults} from "@/types/question-processing"
 import { useState, Fragment } from "react"
-import QuestionEditorPreview from "./ui/QuestionEditorPreview"
+import QuestionEditorPreview from "./search/QuestionEditorPreview"
 import CircleLoadingAnimation from "../../ui/loading-animation/circleLoadingAnimation"
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader"
 import {ChevronsLeft, ChevronsRight} from 'lucide-react'
@@ -12,14 +13,27 @@ import { getPageWindow } from "@/utils/admin/pagination"
 import useQuestionSearch from "@/hooks/admin/question-processing/useQuestionSearch"
 import ErrorMessage from "@/components/ui/ErrorMessage"
 
+// Styles
+const linkClass = `cursor-pointer hover:text-accent hover:font-semibold text-lg text-left font-semibold`
+const navStyle = 'flex flex-row items-center uppercase gap-2 bg-primaryOne rounded-2xl w-25 py-1 px-2 disabled:opacity-50 hover:bg-accent transition-all'      
+
+
 
 export default function SearchQuestionsClient() {
-    const {search, hasSearched, questions, setQuestions, searchError, setSearchError, loading,  handleSearchChange, handleSearch} = useQuestionSearch({reviewed:true, loadOnMount:false})
-    const { saveQuestion } = useEditorNavigation({questions, setQuestions})
+
+    const [currentQuestion, setCurrentQuestion] = useState<QuestionSearchResults| null>(null)
+
+    // Declare the variables and functions
+    const {search, hasSearched, questions, currentIndex, selectQuestion, searchError, setSearchError, loading,  handleSearchChange, handleSearch} = useQuestionSearch({reviewed:true, loadOnMount:false})
+    const {form, fieldChange, mcFieldChange, mcChangeAll, handleImageUpload, handleDeleteQuestion} = useQuestionEditor(currentQuestion?.question)
+    const {explanationForm, setExplanationForm, activeTab, setActiveTab, explanationFieldChange, error, setError, saving, saveQuestion, saveExplanation} = useExplanationEditor(currentQuestion?.explanation ?? null )
+    const diagramUploader = useFileUploader()
+
+    // Error Handling 
+    const pageError = searchError || error
+    const dismissError = () => { setError(""); setSearchError("")} 
 
     const isLanding = !hasSearched && !loading
-
-    const diagramUploader = useFileUploader()
     
     // Organize question in sets of 20
     const PAGE_SIZE=20
@@ -32,18 +46,37 @@ export default function SearchQuestionsClient() {
     const previousPage = () => setPage(Math.max(0, currentPage - 1))
     const nextPage = () => setPage(Math.min(numPages - 1, currentPage + 1)) 
 
-    const [currentQuestion, setCurrentQuestion] = useState<AnyQuestion| null>(null)
-    const {form, fieldChange, mcFieldChange, mcChangeAll, handleImageUpload, handleDeleteQuestion} = useQuestionEditor(currentQuestion)
+    // Previous and Next Question 
+    const navigateQuestion = (direction: "next" | "previous") => {
+        const next = direction === "next"
+            ? currentIndex + 1
+            : currentIndex - 1
 
-    const [deleting, setDeleting] = useState(false)
+        if (next < 0 || next >= questions.length) return
 
-    const linkClass = `cursor-pointer hover:text-accent hover:font-semibold text-lg text-left font-semibold`
-    const navStyle = 'flex flex-row items-center uppercase gap-2 bg-primaryOne rounded-2xl w-25 py-1 px-2 disabled:opacity-50 hover:bg-accent transition-all'                
+        const selected = questions[next]
 
+        selectQuestion(next)
+        setCurrentQuestion(selected)
+        setExplanationForm(selected.explanation ?? null)
+    }
+
+    const [deleting, setDeleting] = useState(false)          
 
     // Controls the previewEditor
-    const openEditor = (q: AnyQuestion) => setCurrentQuestion(q)
-    const closeEditor = () => setCurrentQuestion(null)
+    const openEditor = (q: QuestionSearchResults) => {
+        const index = questions.findIndex(
+            item => item.question.question_id === q.question.question_id
+        )
+
+        if (index === -1) return
+
+        selectQuestion(index)
+        setActiveTab("Question")
+        setCurrentQuestion(q)
+        setExplanationForm(q.explanation ?? null)
+    }
+    const closeEditor = () => {setCurrentQuestion(null); setExplanationForm(null)}
 
 
     return (
@@ -51,20 +84,28 @@ export default function SearchQuestionsClient() {
 
             {isLanding && <h1 className="text-5xl text-primaryOne tracking-wide font-semibold pb-2">Search Questions</h1>}
 
-            {searchError && <ErrorMessage error={searchError} onDismiss={()=> setSearchError("")} fillsPage={true}/> }
+            {pageError && <ErrorMessage error={pageError} onDismiss={dismissError} fillsPage={true}/> }
 
             {/* Pop Editor Window ------------------------------------------------------------------------------------------------ */}
             {currentQuestion && 
                 <QuestionEditorPreview 
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
                     question={form} 
+                    explanation={explanationForm}
+                    explanationFieldChange={explanationFieldChange}
                     fieldChangeAction={fieldChange} 
                     mcFieldChangeAction={mcFieldChange}
                     mcChangeAll={mcChangeAll} 
                     handleImageAction={handleImageUpload}
                     diagramUploader={diagramUploader}
                     saveQuestion={saveQuestion}
+                    saveExplanation={saveExplanation}
+                    saving={saving}
                     handleDelete={handleDeleteQuestion}
                     deleting={deleting}
+                    nextIndex={()=> navigateQuestion('next')}
+                    previousIndex={()=> navigateQuestion('previous')}
                     onClose={closeEditor}
                 />
             }
@@ -84,18 +125,18 @@ export default function SearchQuestionsClient() {
                 <>
                     <div className="bg-coolwhite border border-primaryOne rounded-lg p-2 mt-2">
                         <div className="flex flex-col w-full gap-2">
-                            {visibleQuestions.map((q) => {
-                                const normalizedSubtopic = Array.isArray(q.subtopic) ? q.subtopic.join(", ") : q.subtopic
-                                const meta = [q.section, q.topic, normalizedSubtopic].filter(Boolean)
+                            {visibleQuestions.map(({question, explanation}) => {
+                                const normalizedSubtopic = Array.isArray(question.subtopic) ? question.subtopic.join(", ") : question.subtopic
+                                const meta = [question.section, question.topic, normalizedSubtopic].filter(Boolean)
                                 return (
-                                    <div key={q.question_id} className="flex flex-col rounded-lg p-2 bg-coolwhite border border-primaryOne">
+                                    <div key={question.question_id} className="flex flex-col rounded-lg p-2 bg-coolwhite border border-primaryOne">
                                         <div className="flex flex-col">
                                             <button
                                                 type="button"
-                                                onClick={() => openEditor(q)}
+                                                onClick={() => openEditor({question, explanation})}
                                                 className={linkClass}
                                             >
-                                                {q.question_id}
+                                                {question.question_id}
                                             </button>
 
                                             <ul className="flex flex-row flex-wrap items-center list-none gap-1 p-0 text-xs text-gray-500 leading-tight">
@@ -107,7 +148,7 @@ export default function SearchQuestionsClient() {
                                                 ))}
                                             </ul>
                                         </div>                                       
-                                        <p className="text-sm line-clamp-2">{q.text}</p>
+                                        <p className="text-sm line-clamp-2">{question.text}</p>
                                     </div>
                                 )
                             })}

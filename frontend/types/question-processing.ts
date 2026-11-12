@@ -1,4 +1,6 @@
 import useFileUploader from "@/hooks/admin/question-processing/useFileUploader"
+import { IncomingAnswerExplanations } from "./answer-explanations"
+
 
 // File Upload Information
 export type FileUpload = {
@@ -95,3 +97,8 @@ export type UseFileUploaderReturn = ReturnType<typeof useFileUploader>
 
 
 export type AnyQuestion = IncomingBronzeQuestions | IncomingSilverQuestions
+
+export type QuestionSearchResults = {
+    question: AnyQuestion 
+    explanation: IncomingAnswerExplanations | null
+}
