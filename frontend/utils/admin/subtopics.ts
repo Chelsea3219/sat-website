@@ -8,7 +8,7 @@ export const SUBTOPICS = [
     'axis of symmetry', 'distance', 'standard deviation', 'quadratic formula', 'inequalities', 'factored-form', 'combining like terms', 
     'radical functions', 'probability', 'constants', 'linear function interpretations', 'margin of error', 'rational equations', 'rational expressions',
     'similar shapes', 'similar triangles', 'vertex-form', 'discriminant', 'word problems', 'nonlinear functions', 
-    'ratios & proportions', 'mean median mode & range', 'trigonometry', 'circle equation', 'exponential growth & decay', 'absolute value equations',
+    'ratios & proportions', 'mean median mode & range', 'trigonometry', 'circle equation', 'exponential growth & decay', 'absolute value equations', 'scatterplots', 'in terms of', 
 
     'main idea', 'main purpose', 'function', 'cross-text connections', 'claims', 'complete the text'
 ]
