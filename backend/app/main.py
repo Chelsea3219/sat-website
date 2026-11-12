@@ -19,7 +19,7 @@ from app.domains.analytics.routers import router as analytics_router, past_analy
 from app.domains.document_processing.routers import extract_questions, fetch_questions_parameters, upload, add_questions, update_questions, delete_questions
 from app.domains.achievements import router as achievement
 from app.domains.payments.routers import stripe_webhook, checkout
-from app.domains.answer_explanations.router import fetch_answer_explanations
+from app.domains.answer_explanations.router import fetch_answer_explanations, update_answer_explanation
 
 
 # Configuration
@@ -77,6 +77,7 @@ app.include_router(achievement.router)
 app.include_router(stripe_webhook.router)
 app.include_router(checkout.router)
 app.include_router(fetch_answer_explanations.router)
+app.include_router(update_answer_explanation.router)
 
 
 @app.get("/debug/routes", include_in_schema=False)

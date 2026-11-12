@@ -68,7 +68,7 @@ class GeneratedAnswerExplanations(BaseModel):
 
 class OutgoingAnswerExplanations(GeneratedAnswerExplanations):
     question_id: UUID
-
+    question_explanation: Optional[str] = Field(description="The explanation for the question, provided by a human.")
     status: Optional[Literal["generating", "pending_review", "approved", "rejected", "needs_review"]] = "pending_review"
     model_name: str
     created_at: datetime 
