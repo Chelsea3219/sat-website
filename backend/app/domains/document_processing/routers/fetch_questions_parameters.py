@@ -10,9 +10,10 @@ from app.domains.document_processing.schemas import SearchParameters
 from app.core.database import get_db
 from app.core.auth import require_admin
 from app.domains.questions.models import BronzeQuestions, SilverQuestions
+from app.domains.answer_explanations.models import SilverHintsAnswerExplanations
 
-router = APIRouter(prefix="/api/document-processing", tags=["document-processing"], dependencies=[Depends(require_admin)])
 
+router = APIRouter(prefix="/api/document-processing", tags=["document-processing"]) #, dependencies=[Depends(require_admin)]
 
 
 
@@ -49,5 +50,6 @@ def search_questions(search_parameters: SearchParameters = Depends(), db: Sessio
         conditions.append( model.text.ilike(search_term) )
 
     with handle_db_errors(db, "fetching bronze questions based on the search parameters"):
-        statement = select(model).where(*conditions)
-        return db.scalars(statement).all() 
+        statement = select(model, SilverHintsAnswerExplanations).outerjoin(SilverHintsAnswerExplanations,model.question_id == SilverHintsAnswerExplanations.question_id).where(*conditions)
+        results = db.execute(statement).all() 
+        return [{"question":question, "explanation":explanation} for question, explanation in results]
