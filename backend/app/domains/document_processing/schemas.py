@@ -50,14 +50,14 @@ class CleanQuestions(BaseModel):
     topic: str
     subtopic: Optional[List[str]]=None
     difficulty: str
-    time_estimate: int
+    time_estimate: Optional[int]=None
     question_preview:Optional[str]=None
     question_type: str
-    mc_preview: str
+    mc_preview: Optional[str]=None
     reading_question: Optional[str] = None
     text: str
-    equation: str
-    diagram: str
+    equation: Optional[str]=None
+    diagram: Optional[str]=None
     multiple_choices: Optional[MC] = None 
     answer_key: Optional[Union[str, List[str]]]
     source: Optional[str] = None
