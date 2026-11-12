@@ -1,6 +1,6 @@
 import type {IncomingSilverQuestions, BaseQuestion, SearchFilters, SearchParameters} from "@/types/question-processing";
 import type { AuthedFetch } from "@/lib/fetchWithFreshToken";
-import { ALLOWED_SEARCH_PARAMETERS } from '@/utils/admin/search';
+import { IncomingAnswerExplanations } from "@/types/answer-explanations";
 
 
 // Calls the APIs to preprocess, extract, and organize the questions from PDFs and workbooks
@@ -65,6 +65,24 @@ export async function updateRawQuestions(question: IncomingSilverQuestions[], au
         const error = await response.json()
         console.error("422 Detail:", JSON.stringify(error, null, 2))
         throw new Error(error.detail || "Failed to update question")
+    }
+    const data = await response.json()
+    return data
+}
+
+
+// Calls the APIs to update questions in the bronze.raw_questions and insert into the silver.clean_questions
+export async function updateAnswerExplanation(explanation: IncomingAnswerExplanations[], authedFetch: AuthedFetch=fetch){
+    const response = await authedFetch('/api/document-processing/save-answer-explanation', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(explanation)
+    })
+
+    if (!response.ok) {
+        const error = await response.json()
+        console.error("422 Detail:", JSON.stringify(error, null, 2))
+        throw new Error(error.detail || "Failed to update answer explanation")
     }
     const data = await response.json()
     return data
